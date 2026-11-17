@@ -1,0 +1,196 @@
+<title>Yetak dizayn tizimi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+/* Layout: reference sheet — logo, colour, type, components, then one assembled chat screen. */
+:root{
+  --bg:#f7f5f2; --card:#ffffff; --fg:#14213d; --muted:#5d667a; --border:#e2ddd5;
+  --primary:#f26a1b; --primary-soft:#fde9dc; --on-primary:#ffffff;
+  --success:#12805c; --success-soft:#dff3ea; --warning:#9a6a00; --warning-soft:#fbf0d3; --destructive:#b93a32;
+  --ink-fixed:#14213d; --paper-fixed:#f7f5f2; --dark-fixed:#0f131c; --light-fixed:#eef1f7; --orange-dark-fixed:#ff8a45;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:"Golos Text",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f131c; --card:#181e2b; --fg:#eef1f7; --muted:#9ba6b9; --border:#2a3344;
+  --primary:#ff8a45; --primary-soft:#3a2416; --on-primary:#14213d;
+  --success:#5fd0a4; --success-soft:#143328; --warning:#f0c15a; --warning-soft:#3a2e10; --destructive:#ff8f86;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f131c; --card:#181e2b; --fg:#eef1f7; --muted:#9ba6b9; --border:#2a3344;
+  --primary:#ff8a45; --primary-soft:#3a2416; --on-primary:#14213d;
+  --success:#5fd0a4; --success-soft:#143328; --warning:#f0c15a; --warning-soft:#3a2e10; --destructive:#ff8f86;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(28px,6vw,40px)} h2{font-size:22px}
+p{margin:0}
+.lead{color:var(--muted);margin-top:10px;max-width:60ch}
+section{display:flex;flex-direction:column;gap:16px}
+.label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.note{font-size:14px;color:var(--muted)}
+.logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.plate{border-radius:12px;padding:36px 20px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid var(--border)}
+.plate.light{background:var(--paper-fixed);color:var(--ink-fixed)}
+.plate.dark{background:var(--dark-fixed);color:var(--light-fixed)}
+.plate.orange{background:#f26a1b;color:#ffffff}
+.plate svg{width:52px;height:52px;flex:none}
+.plate .word{font-family:var(--display);font-weight:700;font-size:38px;letter-spacing:-.02em}
+.sizes{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.sw{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px}
+.sw i{display:block;height:54px}
+.sw div{padding:8px 10px;display:flex;flex-direction:column}
+.sw code{color:var(--muted);font-size:12px}
+.type{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.type .d{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.15}
+.type .n{font-variant-numeric:tabular-nums;font-size:24px;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:inherit;font-weight:600;border-radius:8px;padding:10px 18px;border:1px solid transparent;cursor:pointer}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.s{background:var(--card);color:var(--fg);border-color:var(--border)}
+.btn.g{background:transparent;color:var(--fg)}
+.btn:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.pill{font-size:13px;font-weight:600;border-radius:999px;padding:4px 12px}
+.pill.ok{background:var(--success-soft);color:var(--success)}
+.pill.wait{background:var(--warning-soft);color:var(--warning)}
+.pill.run{background:var(--primary-soft);color:var(--primary)}
+/* chat */
+.app{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:1fr 260px}
+.chat{display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--border)}
+.top{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.top svg{width:28px;height:28px}
+.top b{font-family:var(--display);font-size:18px}
+.prog{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px;font-size:14px}
+.bar{height:8px;border-radius:999px;background:var(--bg);overflow:hidden}
+.bar i{display:block;height:100%;width:71.4%;background:var(--primary);border-radius:999px}
+.msgs{padding:16px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:82%;padding:10px 14px;border-radius:12px;font-size:15px}
+.m.a{background:var(--bg);align-self:flex-start;border-bottom-left-radius:4px}
+.m.u{background:var(--primary-soft);align-self:flex-end;border-bottom-right-radius:4px}
+.quick{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 16px}
+.quick .btn{padding:8px 14px;font-size:14px}
+.side{padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.doc{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--border)}
+.doc:last-child{border-bottom:0}
+ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+@media (max-width:640px){.app{grid-template-columns:1fr}.chat{border-right:0;border-bottom:1px solid var(--border)}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <h1>Yetak dizayn tizimi</h1>
+  <p class="lead">Belgi, ranglar, shriftlar, tugmalar va chat ekrani. Asosi shadcn/ui. Fayllar repoda: <code>assets/</code> va <code>docs/DIZAYN.md</code>.</p>
+</header>
+
+<section>
+  <div class="label">Belgi</div>
+  <div class="logos">
+    <div class="plate light">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="#14213d"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="#14213d" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="#f26a1b"/></svg>
+      <span class="word">Yetak</span>
+    </div>
+    <div class="plate dark">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="#eef1f7"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="#eef1f7" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="#ff8a45"/></svg>
+      <span class="word">Yetak</span>
+    </div>
+    <div class="plate orange">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="#ffffff"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="#14213d"/></svg>
+      <span class="word">Yetak</span>
+    </div>
+  </div>
+  <p>Kichik nuqta — tadbirkor. Yo'l — biz. Katta nuqta — maqsad: tayyor ariza.</p>
+  <div class="sizes" aria-label="Belgi turli o'lchamlarda">
+    <svg width="64" height="64" viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="var(--fg)"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="var(--primary)"/></svg>
+    <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="var(--fg)"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="var(--primary)"/></svg>
+    <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="var(--fg)"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="var(--fg)" stroke-width="4" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="var(--primary)"/></svg>
+    <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="5" fill="var(--fg)"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round"/><circle cx="37" cy="12" r="7.5" fill="var(--primary)"/></svg>
+    <span class="note">64 · 40 · 24 · 16 px</span>
+  </div>
+</section>
+
+<section>
+  <div class="label">Ranglar</div>
+  <div class="sw-grid">
+    <div class="sw"><i style="background:var(--primary)"></i><div><b>To'q sariq</b><code>--primary</code>Keyingi qadam</div></div>
+    <div class="sw"><i style="background:var(--fg)"></i><div><b>To'q ko'k</b><code>--foreground</code>Matn, belgi</div></div>
+    <div class="sw"><i style="background:var(--bg);border-bottom:1px solid var(--border)"></i><div><b>Fon</b><code>--background</code>Sahifa</div></div>
+    <div class="sw"><i style="background:var(--primary-soft)"></i><div><b>Och sariq</b><code>--primary-soft</code>Tadbirkor xabari</div></div>
+    <div class="sw"><i style="background:var(--success)"></i><div><b>Yashil</b><code>--success</code>Tayyor</div></div>
+    <div class="sw"><i style="background:var(--warning)"></i><div><b>Sariq</b><code>--warning</code>Yetishmaydi</div></div>
+    <div class="sw"><i style="background:var(--destructive)"></i><div><b>Qizil</b><code>--destructive</code>Xato</div></div>
+    <div class="sw"><i style="background:var(--muted)"></i><div><b>Kulrang</b><code>--muted-foreground</code>Izoh</div></div>
+  </div>
+  <p class="note">Qoida: ekranda bir vaqtda bitta to'q sariq tugma. Yashil va binafsha asosiy rang sifatida ishlatilmaydi: Ipak Yo'li, Hamkorbank va Uzum shu ranglarda.</p>
+</section>
+
+<section>
+  <div class="label">Shrift</div>
+  <div class="type">
+    <div><span class="note">Sarlavha · Bricolage Grotesque 700</span><div class="d">Arizangiz tayyor bo'lishiga ikki qadam qoldi</div></div>
+    <div><span class="note">Matn · Golos Text 400</span><p>Bank sizdan ijara shartnomasini so'raydi. Bu do'koningiz joyini qonuniy ijaraga olganingizni ko'rsatadigan hujjat.</p></div>
+    <div><span class="note">Raqam · bir xil kenglikda</span><div class="n">120 000 000 so'm</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="label">Tugmalar va holatlar</div>
+  <div class="row">
+    <button class="btn p" id="b1" type="button">Davom etish</button>
+    <button class="btn s" id="b2" type="button">Hujjat yuklash</button>
+    <button class="btn g" id="b3" type="button">Keyinroq</button>
+  </div>
+  <div class="row">
+    <span class="pill ok">Tayyor</span>
+    <span class="pill wait">Yetishmaydi</span>
+    <span class="pill run">Tekshirilmoqda</span>
+  </div>
+</section>
+
+<section>
+  <div class="label">Chat ekrani (namuna)</div>
+  <div class="app">
+    <div class="chat">
+      <div class="top">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="var(--fg)"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="var(--primary)"/></svg>
+        <b>Yetak</b>
+      </div>
+      <div class="prog">
+        <span><b>7 ta hujjatdan 5 tasi tayyor</b></span>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="msgs">
+        <div class="m a">Zo'r, guvohnomangizni oldim. Endi ijara shartnomasi kerak. Do'koningiz joyi o'zingiznikimi yoki ijaradami?</div>
+        <div class="m u">Ijarada, lekin shartnoma eskirgan</div>
+        <div class="m a">Tushunarli. Bank amaldagi shartnomani so'raydi. Uni ijara beruvchi bilan yangilash kerak. Qanday yangilashni tushuntirib beraymi?</div>
+      </div>
+      <div class="quick">
+        <button class="btn p" id="q1" type="button">Ha, tushuntiring</button>
+        <button class="btn s" id="q2" type="button">Keyingisiga o'tamiz</button>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="label">Hujjatlar</div>
+      <div>
+        <div class="doc"><span>Guvohnoma</span><span class="pill ok">Tayyor</span></div>
+        <div class="doc"><span>Pasport</span><span class="pill ok">Tayyor</span></div>
+        <div class="doc"><span>Soliq hisoboti</span><span class="pill run">Tekshirilmoqda</span></div>
+        <div class="doc"><span>Ijara shartnomasi</span><span class="pill wait">Yetishmaydi</span></div>
+        <div class="doc"><span>Garov hujjati</span><span class="pill wait">Yetishmaydi</span></div>
+      </div>
+    </aside>
+  </div>
+  <p class="note">Namuna. Hujjatlar ro'yxati to'qima: haqiqiy ro'yxat bankdan olinadi.</p>
+  <ul>
+    <li>Bir vaqtda bitta savol.</li>
+    <li>Jarayon doim yuqorida ko'rinadi: qancha qolgani.</li>
+    <li>Mumkin bo'lgan joyda yozish o'rniga tugma.</li>
+    <li>Bank atamasi chiqsa, darhol oddiy tilda tushuntiriladi.</li>
+    <li>«Kredit olasiz» demaymiz. «Arizangiz tayyor» deymiz.</li>
+  </ul>
+</section>
+
+</div>
