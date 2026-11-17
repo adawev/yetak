@@ -20,4 +20,4 @@ Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026. Tadbirkorlik yo'nalishi, 2
 
 ## Holat
 
-Kod hali yozilmagan. Shakl: veb chat.
+Server tayyor (`server/`). Web — `web/` (chat egasi). Shakl: veb chat.

@@ -1,0 +1,380 @@
+// Yagona qoidalar joyi. Hukm, topilmalar, yo'l xaritasi va barcha hisoblar shu yerda.
+// Agent ham, web ham hisoblamaydi — faqat shu fayl.
+// Har qoidada manba bor. Manbasi yo'q yoki bizning hisobimiz bo'lsa: taxmin = true.
+// Manbalar ro'yxati: docs/QOIDALAR.md. U yerda yangi qator chiqsa — shu yerga kiritiladi.
+
+import {
+  PROFIL_MAYDONLARI,
+  type Hisob,
+  type Hukm,
+  type Manba,
+  type Natija,
+  type Profil,
+  type Qadam,
+  type Topilma,
+} from "../../shared/types";
+
+export const MANBALAR = {
+  kapitalbank: {
+    nom: "Spot.uz — Kapitalbank kredit talablari (reklama materiali)",
+    url: "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/",
+  },
+  kafolat: {
+    nom: "gov.uz — Tadbirkorlikni rivojlantirish kompaniyasi kafolati",
+    url: "https://gov.uz/oz/quvasoy/news/view/224414",
+  },
+  mikrokredit: {
+    nom: "Anhor — garovsiz mikrokredit",
+    url: "https://anhor.uz/news/microcredit-boost/",
+  },
+  kompensatsiya: {
+    nom: "Spot.uz — foiz kompensatsiyasi",
+    url: "https://www.spot.uz/oz/2026/09/12/loans-entrepreneurs/",
+  },
+  biznesStart: {
+    nom: "gov.uz — «Biznes start» dasturi",
+    url: "https://gov.uz/oz/bv-jizzax/news/view/207503",
+  },
+  stavka: {
+    nom: "UzDaily — milliy valyutadagi kreditlar o'rtacha stavkasi",
+    url: "https://www.uzdaily.uz/en/average-loan-rate-in-uzbekistan-falls-to-204/",
+  },
+  tadbircore: {
+    nom: "UzA — TadbirCore: turli banklar takliflari bir joyda",
+    url: "https://uza.uz/ar/posts/tadbircoreuz-turli-banklarning-takliflarini-bir-joyda-jamlagan-platforma_885812",
+  },
+} satisfies Record<string, Manba>;
+
+/** Raqamli qoidalar. Har biri manbasi bilan (yuqorida). */
+export const QOIDA = {
+  /** Kamida 6 oy faoliyat — Kapitalbank (matbuot). */
+  minFaoliyatOy: 6,
+  /** Garov kredit summasining kamida 125 foizi — Kapitalbank (matbuot). */
+  garovUlushi: 1.25,
+  /** Kafolat: kredit summasining 75 foizigacha — gov.uz. */
+  kafolatUlushi: 0.75,
+  /** Garovsiz mikrokredit: 200 mln so'mgacha — Anhor (matbuot). */
+  mikrokreditMax: 200_000_000,
+  /** «Biznes start»: 200 mln so'mgacha garovsiz — gov.uz, to'liq shartlari topilmadi. */
+  biznesStartMax: 200_000_000,
+  /** Milliy valyutadagi kreditlar o'rtacha stavkasi, 2026-sentabr — UzDaily. Taxminiy. */
+  yillikStavka: 20.4,
+  /** Bizning ehtiyot chegaramiz (bank qoidasi emas): to'lov foydaning yarmidan oshmasin. */
+  tolovFoydaUlushiMax: 0.5,
+};
+
+export const MAJBURIY_MAYDONLAR = PROFIL_MAYDONLARI;
+
+export function toldirilganSoni(p: Profil): number {
+  return MAJBURIY_MAYDONLAR.filter((k) => p[k] !== undefined && p[k] !== null).length;
+}
+
+export function yetishmayotgan(p: Profil): (keyof Profil)[] {
+  return MAJBURIY_MAYDONLAR.filter((k) => p[k] === undefined || p[k] === null);
+}
+
+export function profilTolami(p: Profil): boolean {
+  return yetishmayotgan(p).length === 0;
+}
+
+/** "12 500 000 so'm" */
+export function somda(n: number): string {
+  return `${Math.round(n).toLocaleString("en-US").replace(/,/g, " ")} so'm`;
+}
+
+/** Oylik annuitet to'lovi. */
+export function oylikTolov(summa: number, yillikFoiz: number, oylar: number): number {
+  if (summa <= 0 || oylar <= 0) return 0;
+  const r = yillikFoiz / 100 / 12;
+  if (r === 0) return summa / oylar;
+  return (summa * r) / (1 - Math.pow(1 + r, -oylar));
+}
+
+/** Shu oylik to'lov bilan olsa bo'ladigan eng katta summa (annuitetning teskarisi). */
+export function tolovgaMosSumma(tolov: number, yillikFoiz: number, oylar: number): number {
+  if (tolov <= 0 || oylar <= 0) return 0;
+  const r = yillikFoiz / 100 / 12;
+  if (r === 0) return tolov * oylar;
+  return (tolov * (1 - Math.pow(1 + r, -oylar))) / r;
+}
+
+/** Pastga, 1 mln ga yaxlitlaydi — maslahatdagi summa chiroyli ko'rinsin, oshib ketmasin. */
+const mlnPastga = (n: number) => Math.max(0, Math.floor(n / 1_000_000) * 1_000_000);
+
+type TolaProfil = Required<Profil>;
+
+/**
+ * Asosiy funksiya. Profil to'liq bo'lmasa — null.
+ * `bajarilgan` — tadbirkor belgilagan qadamlar kalitlari.
+ */
+export function baholash(profil: Profil, bajarilgan: string[] = []): Natija | null {
+  if (!profilTolami(profil)) return null;
+  const p = profil as TolaProfil;
+
+  const topilmalar: Topilma[] = [];
+  const qadamlar: Omit<Qadam, "bajarildi">[] = [];
+  let olmangSababi: string | null = null;
+
+  // --- Hisob (hammasi kodda) ---
+  const oylik_foyda = p.oylik_tushum - p.oylik_xarajat;
+  const yillik_stavka = QOIDA.yillikStavka;
+  const oylik_tolov = Math.round(oylikTolov(p.kredit_summa, yillik_stavka, p.kredit_muddat_oy));
+  const kerakli_garov = Math.round(p.kredit_summa * QOIDA.garovUlushi);
+  const hisob: Hisob = { oylik_foyda, oylik_tolov, yillik_stavka, kerakli_garov };
+
+  // --- 1. Rasmiy ro'yxatdan o'tish ---
+  if (p.shakl === "norasmiy") {
+    topilmalar.push({
+      kalit: "shakl",
+      daraja: "tosiq",
+      matn: "Biznes ro'yxatdan o'tmagan. Bank biznes kreditini rasmiy tadbirkorga beradi.",
+      taxmin: true,
+    });
+    qadamlar.push({
+      kalit: "royxat",
+      sarlavha: "Biznesni ro'yxatdan o'tkazing",
+      izoh: "Yakka tartibdagi tadbirkor (YaTT) yoki o'zini o'zi band qilgan sifatida. Qaysi biri sizga mosligini davlat xizmatlari markazida so'rang.",
+    });
+  } else if (p.shakl === "ozini_band") {
+    topilmalar.push({
+      kalit: "shakl",
+      daraja: "ogohlantirish",
+      matn: "O'zini o'zi band qilganlarga biznes krediti shartlarini hali aniqlay olmadik. Bankdan so'rash kerak.",
+      taxmin: true,
+    });
+  } else {
+    topilmalar.push({
+      kalit: "shakl",
+      daraja: "yaxshi",
+      matn: p.shakl === "yatt" ? "Yakka tartibdagi tadbirkor sifatida ro'yxatdan o'tgansiz." : "MChJ sifatida ro'yxatdan o'tgansiz.",
+    });
+  }
+
+  // --- 2. Faoliyat muddati ---
+  if (p.faoliyat_oy >= QOIDA.minFaoliyatOy) {
+    topilmalar.push({
+      kalit: "faoliyat_muddati",
+      daraja: "yaxshi",
+      matn: `${p.faoliyat_oy} oydan beri ishlaysiz. Bank odatda kamida ${QOIDA.minFaoliyatOy} oy so'raydi.`,
+      manba: MANBALAR.kapitalbank,
+    });
+  } else {
+    const qoldi = QOIDA.minFaoliyatOy - p.faoliyat_oy;
+    topilmalar.push({
+      kalit: "faoliyat_muddati",
+      daraja: "tosiq",
+      matn: `${p.faoliyat_oy} oydan beri ishlaysiz. Bank odatda kamida ${QOIDA.minFaoliyatOy} oy so'raydi: yana ${qoldi} oy kerak.`,
+      manba: MANBALAR.kapitalbank,
+    });
+    qadamlar.push({
+      kalit: "faoliyat_muddati",
+      sarlavha: `Yana ${qoldi} oy ishlang`,
+      izoh: "Shu vaqt ichida har oylik tushum va xarajatni yozib boring: bank pul oqimini so'raydi.",
+      manba: MANBALAR.kapitalbank,
+    });
+  }
+
+  // --- 3. Foyda (zarar bo'lmasligi kerak) ---
+  if (oylik_foyda <= 0) {
+    olmangSababi = "biznes hozir zarar bilan ishlayapti: xarajat tushumdan ko'p yoki teng";
+    topilmalar.push({
+      kalit: "foyda",
+      daraja: "tosiq",
+      matn: `Oylik xarajat (${somda(p.oylik_xarajat)}) tushumdan (${somda(p.oylik_tushum)}) kam emas. Bank zarar bilan ishlaydigan biznesga kredit bermaydi.`,
+      manba: MANBALAR.kapitalbank,
+    });
+    qadamlar.push({
+      kalit: "foyda",
+      sarlavha: "Avval biznesni foydaga chiqaring",
+      izoh: "Xarajatlarni qayta ko'rib chiqing. Qarz bilan zararni yopish zararni kattalashtiradi.",
+    });
+  } else {
+    topilmalar.push({
+      kalit: "foyda",
+      daraja: "yaxshi",
+      matn: `Oyiga taxminan ${somda(oylik_foyda)} foyda qolyapti.`,
+      manba: MANBALAR.kapitalbank,
+    });
+
+    // --- 4. To'lov yuki (bizning hisobimiz) ---
+    const ulush = oylik_tolov / oylik_foyda;
+    const xavfsizSumma = mlnPastga(
+      tolovgaMosSumma(oylik_foyda * QOIDA.tolovFoydaUlushiMax, yillik_stavka, p.kredit_muddat_oy),
+    );
+    if (ulush > 1) {
+      olmangSababi = `oylik to'lov (${somda(oylik_tolov)}) oylik foydadan (${somda(oylik_foyda)}) katta`;
+      topilmalar.push({
+        kalit: "tolov_yuki",
+        daraja: "tosiq",
+        matn: `Oylik to'lov taxminan ${somda(oylik_tolov)}, foyda esa ${somda(oylik_foyda)}. Qarzni foydadan qaytara olmaysiz.`,
+        manba: MANBALAR.stavka,
+        taxmin: true,
+      });
+    } else if (ulush > QOIDA.tolovFoydaUlushiMax) {
+      topilmalar.push({
+        kalit: "tolov_yuki",
+        daraja: "ogohlantirish",
+        matn: `Oylik to'lov taxminan ${somda(oylik_tolov)} — foydaning ${Math.round(ulush * 100)} foizi. Biz yarmidan oshmasligini maslahat beramiz: savdo pasaysa, to'lay olmay qolasiz.`,
+        manba: MANBALAR.stavka,
+        taxmin: true,
+      });
+    } else {
+      topilmalar.push({
+        kalit: "tolov_yuki",
+        daraja: "yaxshi",
+        matn: `Oylik to'lov taxminan ${somda(oylik_tolov)} — foydaning ${Math.round(ulush * 100)} foizi.`,
+        manba: MANBALAR.stavka,
+        taxmin: true,
+      });
+    }
+    if (ulush > QOIDA.tolovFoydaUlushiMax) {
+      qadamlar.push({
+        kalit: "summa",
+        sarlavha:
+          xavfsizSumma > 0
+            ? `Summani ${somda(xavfsizSumma)} gacha kamaytiring`
+            : "Summani kamaytiring yoki muddatni uzaytiring",
+        izoh: `Shunda oylik to'lov foydaning yarmidan oshmaydi (${p.kredit_muddat_oy} oy muddatda, ${yillik_stavka} foiz taxminiy stavka bilan). Yoki muddatni uzaytiring.`,
+        manba: MANBALAR.stavka,
+      });
+    }
+  }
+
+  // --- 5. Kredit tarixi ---
+  if (p.kredit_tarixi === "yomon") {
+    topilmalar.push({
+      kalit: "kredit_tarixi",
+      daraja: "tosiq",
+      matn: "Kredit tarixida kechikish yoki to'lanmagan qarz bor. Bank salbiy tarixli mijozni odatda rad etadi.",
+      manba: MANBALAR.kapitalbank,
+    });
+    qadamlar.push({
+      kalit: "kredit_tarixi",
+      sarlavha: "Eski qarzlarni to'liq yoping",
+      izoh: "Kechikkan to'lovlarni yoping va bankdan kredit tarixingiz haqida ma'lumot so'rang.",
+      manba: MANBALAR.kapitalbank,
+    });
+  } else if (p.kredit_tarixi === "yoq") {
+    topilmalar.push({
+      kalit: "kredit_tarixi",
+      daraja: "ogohlantirish",
+      matn: "Kredit tarixingiz yo'q. Foiz kompensatsiyasi dasturida kredit tarixini shart qilish taqiqlangan.",
+      manba: MANBALAR.kompensatsiya,
+    });
+  } else {
+    topilmalar.push({
+      kalit: "kredit_tarixi",
+      daraja: "yaxshi",
+      matn: "Kredit tarixingiz yaxshi.",
+      manba: MANBALAR.kapitalbank,
+    });
+  }
+
+  // --- 6. Garov ---
+  const mikrokreditgaMos =
+    p.avval_mikrokredit && p.kredit_tarixi === "yaxshi" && p.kredit_summa <= QOIDA.mikrokreditMax;
+  if (p.garov_qiymati >= kerakli_garov) {
+    topilmalar.push({
+      kalit: "garov",
+      daraja: "yaxshi",
+      matn: `Garovingiz (${somda(p.garov_qiymati)}) yetarli: kamida ${somda(kerakli_garov)} kerak.`,
+      manba: MANBALAR.kapitalbank,
+    });
+  } else if (mikrokreditgaMos) {
+    topilmalar.push({
+      kalit: "garov",
+      daraja: "yaxshi",
+      matn: `Garov yetmaydi, lekin siz garovsiz mikrokreditga mos kelishingiz mumkin: ${somda(QOIDA.mikrokreditMax)} gacha, ilgari mikrokredit olib vaqtida qaytarganlarga.`,
+      manba: MANBALAR.mikrokredit,
+    });
+    qadamlar.push({
+      kalit: "mikrokredit",
+      sarlavha: "Bankdan garovsiz mikrokredit haqida so'rang",
+      izoh: "Avvalgi mikrokreditni vaqtida qaytarganingizni aytib, shu dastur bo'yicha ariza bering.",
+      manba: MANBALAR.mikrokredit,
+    });
+  } else {
+    const yetmaydi = kerakli_garov - p.garov_qiymati;
+    topilmalar.push({
+      kalit: "garov",
+      daraja: "tosiq",
+      matn:
+        p.garov_qiymati > 0
+          ? `Garov yetmaydi: kamida ${somda(kerakli_garov)} kerak, sizda ${somda(p.garov_qiymati)}. Yana ${somda(yetmaydi)} yetishmaydi.`
+          : `Garov yo'q. Bank odatda kredit summasining 125 foizicha garov so'raydi: ${somda(kerakli_garov)}.`,
+      manba: MANBALAR.kapitalbank,
+    });
+    qadamlar.push({
+      kalit: "kafolat",
+      sarlavha: "Davlat kafolati bilan ariza bering",
+      izoh: `Tadbirkorlikni rivojlantirish kompaniyasi garovi yetmaydiganlarga kredit summasining ${Math.round(QOIDA.kafolatUlushi * 100)} foizigacha kafolat beradi. Bankdan shu kafolat bilan ariza qabul qilishini so'rang.`,
+      manba: MANBALAR.kafolat,
+    });
+    if (p.kredit_summa <= QOIDA.biznesStartMax) {
+      topilmalar.push({
+        kalit: "biznes_start",
+        daraja: "ogohlantirish",
+        matn: `«Biznes start» dasturida ${somda(QOIDA.biznesStartMax)} gacha garovsiz kredit bor. To'liq shartlarini hali aniqlay olmadik.`,
+        manba: MANBALAR.biznesStart,
+        taxmin: true,
+      });
+    }
+  }
+
+  // --- 7. Elektron imzo ---
+  if (p.eri_bor) {
+    topilmalar.push({ kalit: "eri", daraja: "yaxshi", matn: "Elektron imzongiz bor." });
+  } else {
+    topilmalar.push({
+      kalit: "eri",
+      daraja: "ogohlantirish",
+      matn: "Elektron imzo (ERI) yo'q. Onlayn ariza uchun u kerak bo'ladi.",
+      taxmin: true,
+    });
+    qadamlar.push({
+      kalit: "eri",
+      sarlavha: "Elektron imzo (ERI) oling",
+      izoh: "Elektron imzo — onlayn hujjatga qo'yiladigan shaxsiy imzo. Uni faqat o'zingiz ishlatasiz.",
+    });
+  }
+
+  // --- Hukm ---
+  const tosiqlar = topilmalar.filter((t) => t.daraja === "tosiq");
+  let hukm: Hukm;
+  let xulosa: string;
+  if (olmangSababi) {
+    hukm = "olmang";
+    xulosa = `Hozir qarz olmang: ${olmangSababi}. Avval shuni tuzating, keyin qayta tekshiramiz.`;
+  } else if (tosiqlar.length > 0) {
+    hukm = "hali_emas";
+    xulosa = `Hali tayyor emassiz: ${tosiqlar.length} ta to'siq bor. Yo'l xaritasidagi qadamlarni bajarsangiz, ariza berishingiz mumkin.`;
+  } else {
+    hukm = "tayyor";
+    xulosa =
+      "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi.";
+  }
+
+  if (hukm !== "olmang") {
+    qadamlar.push({
+      kalit: "ariza",
+      sarlavha: "TadbirCore yoki bankka ariza bering",
+      izoh: "TadbirCore — bir arizani bir nechta bankka yuboradigan davlat platformasi. Arizani o'zingiz yuborasiz.",
+      manba: MANBALAR.tadbircore,
+    });
+  } else {
+    qadamlar.push({
+      kalit: "qayta_tekshirish",
+      sarlavha: "Holat yaxshilangach qayta tekshiring",
+      izoh: "Foyda oshganda yoki summani kamaytirganda Yetak'ga qayting — natijani qayta hisoblaymiz.",
+    });
+  }
+
+  const belgilangan = new Set(bajarilgan);
+  return {
+    hukm,
+    xulosa,
+    topilmalar,
+    qadamlar: qadamlar.map((q) => ({ ...q, bajarildi: belgilangan.has(q.kalit) })),
+    hisob,
+  };
+}

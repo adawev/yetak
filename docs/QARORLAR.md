@@ -19,6 +19,10 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-17 | Kimga: har tomonlama — rad olganlar, kira olmaydiganlar va TadbirCore'ni umuman bilmaydiganlar | Sardor qarori |
 | 2026-11-17 | Birinchi foydalanuvchi: tadbirkorning o'zi | Demo va taqdimot uchun eng tushunarli |
 | 2026-11-17 | Pul: bank faqat berilgan kredit uchun to'laydi. Taqdimotda «reja» deb aytiladi | Hali bank tasdiqlamagan; halol aytish kerak |
+| 2026-11-17 | Server: Node + Hono, ma'lumot bitta JSON faylda, 30 kun ishlatilmagan sessiya o'chadi | Demo uchun tez va oddiy; keraksiz ma'lumot saqlanmaydi |
+| 2026-11-17 | Agent hisoblamaydi: profilni to'ldiradi, natijani `rules.ts` beradi | «Hisobni kod qiladi» qoidasi |
+| 2026-11-17 | Manbasi yo'q qoida kodda «taxmin» belgisi bilan turadi va tadbirkorga shunday aytiladi | Faktni o'ylab topmaymiz, lekin demo to'xtamasin |
+| 2026-11-17 | Server manzili vaqtincha `yetak-api.63-177-216-224.sslip.io` | Domen hali tanlanmagan; HTTPS kerak |
 
 ## Hali hal qilinmagan
 
