@@ -14,6 +14,10 @@ Muhimligi bo'yicha. Javob topilsa, shu yerga yoziladi.
 | 8 | Tadbirkor agentga daromadini aytishga tayyormi? | 5–10 tadbirkor | — |
 | 9 | Uchala mentor bali qanday qo'shiladi? | Tashkilotchi | — |
 | 10 | Tayyor koddan foydalanish mumkinmi? | Tashkilotchi | — |
+| 11 | Kichik biznes krediti o'rtacha stavkasi qancha? Kodda hozir 20,4% (milliy valyutadagi barcha kreditlar, UzDaily, tekshirilmagan). | Tadqiqotchi, cbu.uz | — |
+| 12 | TadbirCore'da ariza uchun elektron imzo shartmi? Kodda «taxmin» deb turibdi. | Tadqiqotchi | — |
+| 13 | Ro'yxatdan o'tmagan (norasmiy) va o'zini o'zi band qilganlarga bank biznes krediti beradimi? Kodda «taxmin». | Bank xodimi | — |
+| 14 | To'lov foydaning necha foizidan oshmasligi kerak? Kodda bizning ehtiyot chegaramiz — 50%. | Bank xodimi | — |
 
 ## Shaxsiy ma'lumot bo'yicha bilganimiz
 

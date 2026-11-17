@@ -1,0 +1,23 @@
+[Unit]
+Description=Yetak API (kredit yo'l xaritasi)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=yetak
+Group=yetak
+WorkingDirectory=/opt/apps/yetak
+EnvironmentFile=/opt/apps/yetak/yetak.env
+Environment=NODE_ENV=production PORT=8787 HOST=127.0.0.1 DATA_DIR=/opt/apps/yetak/data
+ExecStart=/usr/bin/node /opt/apps/yetak/current.js
+Restart=always
+RestartSec=2
+MemoryMax=300M
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/apps/yetak/data
+
+[Install]
+WantedBy=multi-user.target

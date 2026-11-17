@@ -20,7 +20,15 @@ assets/           — belgi
 
 ## API
 
-Asos: `http://localhost:8787` (web'da `VITE_API_URL`). Hammasi JSON. Xato bo'lsa: 4xx/5xx va `{ "xato": "sabab" }`.
+Asos: lokal `http://localhost:8787`, server `https://yetak-api.63-177-216-224.sslip.io` (web'da `VITE_API_URL`). Hammasi JSON. Xato bo'lsa: 4xx/5xx va `{ "xato": "sabab" }` — `xato` matnini tadbirkorga to'g'ridan-to'g'ri ko'rsatsa bo'ladi.
+
+Xato kodlari (web shularni ajratadi):
+
+- `400` — so'rov noto'g'ri (bo'sh xabar va h.k.). `404` — sessiya yoki qadam topilmadi (sessiya 30 kun ishlatilmasa o'chadi → yangisini oching). `409` — agent oldingi xabarga javob yozyapti. `413` — xabar 2000 belgidan uzun. `422` — rozilik natijadan oldin, yoki agent javob bera olmadi. `429` — juda tez yozilyapti.
+- `503` — sun'iy intellekt band yoki sozlanmagan. `504` — agent uzoq o'ylab, javob kelmadi. Ikkala holatda tadbirkor xabari saqlanmaydi: qayta yuborsa bo'ladi.
+- `GET /api/health` → `{ "ok": true, "agent": boolean }` — `agent: false` bo'lsa kalit qo'yilmagan.
+
+Hukm, topilmalar, qadamlar, hisob — `natija` ichida, profil 12 maydonning hammasi to'lganda chiqadi. Qadam kalitlari: `royxat`, `faoliyat_muddati`, `foyda`, `summa`, `kredit_tarixi`, `mikrokredit`, `kafolat`, `eri`, `ariza`, `qayta_tekshirish`.
 
 | Usul | Yo'l | So'rov | Javob |
 |---|---|---|---|
