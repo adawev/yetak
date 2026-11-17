@@ -11,9 +11,12 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-17 | Reja: 3–5 bank bilan shartnoma | Bank shartlarini bilish va haq olish uchun |
 | 2026-11-17 | TadbirCore'ni raqib demaymiz, uni takrorlamaymiz | U yaxshi ishlaydi; biz undan oldingi qadammiz |
 | 2026-11-17 | Asosiy urg'u: bizni ajratib turadigan narsa — odamni oxirigacha yetaklash | Taqdimot sodda va aniq bo'lishi kerak |
+| 2026-11-17 | Nom: **Yetak** | «Oxirigacha yetaklaymiz» — farqimizning o'zi |
+| 2026-11-17 | Belgi: nuqtadan nuqtaga yo'l; ranglar to'q ko'k va to'q sariq | Yashil va binafsha band; `DIZAYN.md` |
+| 2026-11-17 | Shakl: veb chat (asosiy). Telegram keyinroq ko'riladi | Telegram bot juda oddiy ko'rinadi; vebda jarayon va hujjatlar ro'yxatini ko'rsatsa bo'ladi |
+| 2026-11-17 | Mahsulot uch qism: tadbirkor chati, hujjat tekshiruvchi, bank oynasi | 5 kishilik jamoa parallel ishlashi uchun; `VAZIFALAR.md` |
 
 ## Hali hal qilinmagan
 
-- Nom va logotip
-- Shakl: Telegram bot yoki veb-platforma
 - Bankka yuborish yo'li: to'g'ridan-to'g'ri yoki TadbirCore orqali
+- Domen va tovar belgisi tekshiruvi (Yetak)

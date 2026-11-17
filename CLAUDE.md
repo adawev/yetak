@@ -1,6 +1,6 @@
 # Loyiha ko'rsatmalari (agentlar uchun)
 
-Umummilliy AI Xakaton loyihasi. Nomi hali tanlanmagan.
+Yetak — Umummilliy AI Xakaton loyihasi.
 
 ## Mahsulot bir gapda
 

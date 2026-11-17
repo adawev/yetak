@@ -1,4 +1,4 @@
-# Xakaton loyihasi (nomi hali tanlanmagan)
+# Yetak
 
 Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026. Tadbirkorlik yo'nalishi, 20-muammo (kichik biznes krediti).
 
@@ -20,4 +20,4 @@ Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026. Tadbirkorlik yo'nalishi, 2
 
 ## Holat
 
-Kod hali yozilmagan. Shakli (Telegram bot yoki veb-platforma) hali tanlanmagan.
+Kod hali yozilmagan. Shakl: veb chat.
