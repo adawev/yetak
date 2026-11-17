@@ -8,7 +8,7 @@ Avval hamma o'qiydi: `docs/VISION.md`, `docs/QARORLAR.md`, `docs/TANQID.md`.
 
 ---
 
-## 1. Sardor — texnik asos (server)
+## 1. Sardor (adawev) — texnik asos (server)
 
 Papka: `server/`, `shared/`
 
@@ -17,7 +17,7 @@ Papka: `server/`, `shared/`
 - Saqlash, API, serverga joylashtirish.
 - **Natija (18-noyabr 12:00):** API ishlaydi, chat egasi ulana oladi.
 
-## 2. Chat egasi — tadbirkor ko'radigan hamma narsa
+## 2. Chat egasi (muhammadnuruz) — tadbirkor ko'radigan hamma narsa
 
 Papka: `web/`
 
@@ -31,7 +31,7 @@ Papka: `web/`
 - Asos: `docs/ARXITEKTURA.md` (API), `shared/types.ts` (turlar), `docs/DIZAYN.md` va dizayn sahifasi (ko'rinish).
 - **Natija (18-noyabr 15:00):** bitta tadbirkor telefondan boshidan oxirigacha o'tadi.
 
-## 3. Tadqiqotchi — kredit aslida qanday beriladi
+## 3. Tadqiqotchi (AlibekIsayev) — kredit aslida qanday beriladi
 
 Fayl: `docs/QOIDALAR.md` (tayyor jadval, to'ldirish kerak)
 
@@ -46,7 +46,7 @@ Bu eng muhim ish: agent aynan shu ma'lumotga tayanadi. Xato ma'lumot — xato ma
 - Manbalar: bank saytlari, lex.uz, cbu.uz, bank xodimi, mentorlar.
 - **Natija (18-noyabr 11:00):** `QOIDALAR.md` to'ldirilgan, sardor uni kodga kiritadi.
 
-## 4. Zaif joylar egasi — dalil va xavflar
+## 4. Zaif joylar egasi (Ilyos056) — dalil va xavflar
 
 Fayl: `docs/TANQID.md` (muammolar), `docs/OCHIQ-SAVOLLAR.md` (javoblar shu yerga yoziladi)
 
@@ -59,7 +59,7 @@ Mustaqil tanqid 5 ta jiddiy muammo topdi. Bu rol ularni yopadi.
 - **Sinov.** Tayyor mahsulotni 2–3 tadbirkorga berib, fikrini yozib olish.
 - **Natija (18-noyabr 15:00):** har muammo yonida javob yoki «topilmadi». Taqdimotchiga raqamlar va iqtiboslar beriladi.
 
-## 5. Taqdimotchi
+## 5. Taqdimotchi (shoxjahon20007-gif)
 
 - Slaydlar va 3–5 daqiqalik nutq. Tartib: muammo → Yetak → farq → demo → pul → jamoa.
 - Mezonlar bo'yicha tekshirish (`MEZONLAR.md`): 15 ta mezonning har biriga javob bormi.
