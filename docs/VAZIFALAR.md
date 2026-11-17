@@ -16,6 +16,8 @@ Papka: `server/`, `shared/`
 - Agent: Claude bilan suhbat, profilni to'ldirish.
 - Saqlash, API, serverga joylashtirish.
 - **Natija (18-noyabr 12:00):** API ishlaydi, chat egasi ulana oladi.
+- ✅ **Bajarildi (17-noyabr):** API `https://yetak-api.diyorjon.com` da ishlaydi, agent Claude bilan ulangan, 3 xil tadbirkor haqiqiy suhbatda sinaldi (tayyor, hali emas, olmang). Qo'llanma: `server/README.md`.
+- Qolgan bitta bog'liqlik: tadqiqotchi `QOIDALAR.md` ni to'ldirgach, yangi raqamlarni `rules.ts` ga kiritish.
 
 ## 2. Chat egasi (muhammadnuruz) — tadbirkor ko'radigan hamma narsa
 
