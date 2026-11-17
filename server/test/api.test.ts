@@ -35,7 +35,7 @@ describe("API", () => {
     const s = (await (await app.request("/api/sessions", post())).json()) as SessiyaHolati;
     expect(s.xabarlar[0].kim).toBe("agent");
     expect(s.natija).toBeNull();
-    expect(s.jarayon).toEqual({ toldirilgan: 0, jami: 12 });
+    expect(s.jarayon).toEqual({ toldirilgan: 0, jami: 11 });
 
     // Rozilik natijasiz — rad
     expect((await app.request(`/api/sessions/${s.id}/rozilik`, post({ rozi: true }))).status).toBe(422);

@@ -63,14 +63,28 @@ export const QOIDA = {
   tolovFoydaUlushiMax: 0.5,
 };
 
-export const MAJBURIY_MAYDONLAR = PROFIL_MAYDONLARI;
+/**
+ * Hukm uchun kerakli maydonlar. «avval_mikrokredit» faqat garovsiz mikrokredit yo'li
+ * ochiq bo'lganda so'raladi: tarix yaxshi, garov yetmaydi, summa chegarada.
+ */
+export function kerakliMaydonlar(p: Profil): (keyof Profil)[] {
+  const s = p.kredit_summa;
+  const g = p.garov_qiymati;
+  const mikrokreditKerak =
+    p.kredit_tarixi === "yaxshi" &&
+    s != null &&
+    g != null &&
+    g < Math.round(s * QOIDA.garovUlushi) &&
+    s <= QOIDA.mikrokreditMax;
+  return PROFIL_MAYDONLARI.filter((k) => k !== "avval_mikrokredit" || mikrokreditKerak);
+}
 
 export function toldirilganSoni(p: Profil): number {
-  return MAJBURIY_MAYDONLAR.filter((k) => p[k] !== undefined && p[k] !== null).length;
+  return kerakliMaydonlar(p).filter((k) => p[k] !== undefined && p[k] !== null).length;
 }
 
 export function yetishmayotgan(p: Profil): (keyof Profil)[] {
-  return MAJBURIY_MAYDONLAR.filter((k) => p[k] === undefined || p[k] === null);
+  return kerakliMaydonlar(p).filter((k) => p[k] === undefined || p[k] === null);
 }
 
 export function profilTolami(p: Profil): boolean {
