@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NAMUNALAR } from "../src/namunalar";
-import { baholash, oylikTolov, tolovgaMosSumma } from "../src/rules";
+import { baholash, oylikTolov, tolovgaMosSumma, yetishmayotgan } from "../src/rules";
 
 describe("baholash", () => {
   it("profil to'liq bo'lmasa null", () => {
@@ -71,5 +71,14 @@ describe("baholash", () => {
         expect(t.manba || t.taxmin, `${t.kalit}: manba yoki taxmin belgisi kerak`).toBeTruthy();
       }
     }
+  });
+
+  it("mikrokredit savoli faqat garovsiz yo'l ochiq bo'lsa kerak", () => {
+    const { avval_mikrokredit: _, ...garovli } = NAMUNALAR.tayyor;
+    expect(yetishmayotgan(garovli)).toEqual([]);
+    expect(baholash(garovli)?.hukm).toBe("tayyor");
+    const garovsiz = { ...garovli, garov_qiymati: 0, kredit_tarixi: "yaxshi" as const };
+    expect(yetishmayotgan(garovsiz)).toEqual(["avval_mikrokredit"]);
+    expect(baholash(garovsiz)).toBeNull();
   });
 });
