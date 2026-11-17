@@ -2,7 +2,7 @@
 
 Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026. Tadbirkorlik yo'nalishi, 20-muammo (kichik biznes krediti).
 
-**Bir gapda:** sun'iy intellektli agent tadbirkorni kredit arizasiga tayyorlaydi va tayyor holda bankka yuboradi.
+**Bir gapda:** TadbirCore — bankning eshigi. Yetak — o'sha eshikkacha bo'lgan yo'l: agent tadbirkorni kreditgacha yetaklaydi.
 
 ## Hujjatlar
 

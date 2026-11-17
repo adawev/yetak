@@ -1,57 +1,78 @@
-# Vision
+# Yetak — vision
+
+**Bir gapda:** TadbirCore — bankning eshigi. Yetak — o'sha eshikkacha bo'lgan yo'l.
 
 ## Muammo
 
-Bankda pul bor, tadbirkorga pul kerak, lekin tadbirkor arizani oxirigacha yetkaza olmaydi.
+Tadbirkorga pul kerak, lekin u kredit yo'lini bilmaydi.
 
-- Bank kredit uchun 102 ta hujjat so'raydi (53 tasi takror, 22 tasi keraksiz).
+- Qaysi kredit yoki davlat dasturi unga mos — bilmaydi.
+- Nega rad etilishi mumkin va nimani tuzatish kerak — bilmaydi.
+- Qayerga borishni bilmaydi. Davlat platformasi TadbirCore borligini ham ko'pchilik bilmasligi mumkin: unga arizalar soni iyuldagi 1 465 tadan avgustda 596 taga tushgan.
+- Garovi, kredit tarixi yoki elektron imzosi bo'lmasa, yo'l umuman yopiqdek ko'rinadi.
+
+Raqamlar:
+- TadbirCore'da 01.06–17.09.2026 da 3 262 ariza, 1 005 kredit (31 foiz).
 - Davlat banklari bir yilda 35 000 mijozni garov yoki kafil yo'qligi uchun rad etgan.
 - Kichik korxonalarning faqat 10 foizi kredit ishlatadi.
-- Davlat platformasi TadbirCore'da bir oyda 1 500 ga yaqin ariza tushgan, 415 tasi kredit olgan.
 
-Tadbirkor qaysi hujjat yetishmasligini, nega rad etilishini va nimani tuzatish kerakligini bilmaydi. Buni unga hech kim tushuntirmaydi.
+Manbalar: `MANBALAR.md`, `TANQID.md`.
 
-## Biz nima qilamiz
+## Yetak nima qiladi
 
-Sun'iy intellektli agent tadbirkor bilan oddiy tilda gaplashadi va uni kreditga tayyorlaydi.
+Sun'iy intellektli agent tadbirkor bilan oddiy tilda gaplashadi va uni kreditgacha yetaklaydi.
 
-1. **Tinglaydi.** Tadbirkor o'z holatini va muammosini o'z so'zi bilan aytadi.
-2. **Nima yetishmasligini aytadi.** «Sizda mana bu shartnoma yo'q», «mana bu ma'lumot yetishmaydi».
-3. **Birga tayyorlaydi.** Tadbirkor hujjatni yuboradi, agent tekshiradi. Tushunmagan joyini tushuntiradi.
-4. **Oxirigacha yetaklaydi.** «Bitta hujjat qoldi, shuni to'ldirsangiz bo'ldi.»
-5. **Bankka yuboradi.** Tayyor to'plam bilan. Tadbirkor bankda hammasini qaytadan topshirmaydi.
-
-Maqsad: tadbirkor yarim yo'lda tashlab ketmasin va birinchi urinishda ma'qullansin.
+1. **Holatni aniqlaydi.** Nima ish, qancha tushum, garov bormi, kredit tarixi bormi, pul nimaga kerak.
+2. **Halol javob beradi.** Uch yo'ldan biri:
+   - «Hozir mana bu dasturga mos kelasiz.»
+   - «Hali tayyor emassiz. Mana bu 3 ishni qiling, keyin olasiz.»
+   - «Hozir qarz olmang.» Sababi bilan.
+3. **Reja beradi.** Qadam-baqadam: qaysi hujjat, qaysi dastur, qachon.
+4. **Yetaklaydi.** Qancha qolganini ko'rsatadi, eslatadi, tushunmagan joyini tushuntiradi.
+5. **Eshikkacha olib boradi.** Tayyor bo'lganda TadbirCore yoki bankka yo'naltiradi. Arizani tadbirkor o'zi yuboradi.
 
 ## Kimga
 
-- **Foydalanuvchi:** kredit olmoqchi bo'lgan kichik tadbirkor. Bepul.
-- **To'lovchi:** bank.
+Kredit olmoqchi bo'lgan har qanday kichik tadbirkor. Ayniqsa:
+- TadbirCore yoki bankdan rad javobi olganlar;
+- garovi, kredit tarixi yoki elektron imzosi yo'qlar;
+- TadbirCore va davlat dasturlari haqida umuman bilmaydiganlar.
 
-## Qanday pul topamiz
+Birinchi foydalanuvchi — tadbirkorning o'zi. Veb chat orqali kiradi.
 
-3–5 bank bilan shartnoma. Bank bizga tayyor mijoz uchun to'laydi (har bir berilgan kredit uchun haq).
+## Pul
 
-Bank nega to'laydi: unga hujjati to'liq, oldindan tekshirilgan mijoz keladi. Kredit xodimi chala arizaga vaqt sarflamaydi.
+Tadbirkor uchun bepul. Bank faqat natija uchun to'laydi: Yetak orqali kelgan mijozga kredit berilganda.
 
-Bu hali taxmin. Hech bir bankdan tasdiq olinmagan. `OCHIQ-SAVOLLAR.md` ga qarang.
+Bu reja. Hech bir bank hali tasdiqlamagan. Taqdimotda shunday aytiladi.
 
-## Bizning farqimiz
+Chet el misoli: AQShdagi Lendio tadbirkor uchun bepul, kredit berilganda kreditor haq to'laydi.
 
-Davlat platformasi arizani qabul qiladi. Biz odamni arizagacha olib boramiz.
+## Farqimiz
 
-- Agent gaplashadi, forma to'ldirtirmaydi.
-- Yetishmayotgan narsani aytadi va tuzatishga yordam beradi.
-- Odamni undaydi: nima qolganini ko'rsatadi, oxirigacha yetaklaydi.
+| | TadbirCore | Yetak |
+|---|---|---|
+| Qachon | Ariza paytida | Arizadan oldin va rad javobidan keyin |
+| Kimga | Tayyor, elektron imzosi bor tadbirkorga | Hali tayyor bo'lmaganlarga ham |
+| Nima beradi | Ariza qabul qiladi, rad sababini aytadi | Rejani beradi va bajarilguncha yetaklaydi |
+| Qancha vaqt | Bir marta | Haftalar davomida |
+| Kim tomonida | Bank va davlat | Tadbirkor |
 
-Batafsil: `RAQOBAT.md`.
+Yetak TadbirCore'ga raqib emas. Undan o'tgan odam TadbirCore'ga tayyor holda boradi.
 
-## Hali tanlanmagan
+## Agent hech qachon qilmaydigan narsalar
 
-- Nom.
-- Shakl: Telegram bot yoki veb-platforma.
-- Bankka qanday yuboramiz: to'g'ridan-to'g'ri bank bilan kelishib yoki TadbirCore orqali.
+- Raqamni o'zgartirmaydi yoki «chiroyli» qilmaydi.
+- Hujjat yaratmaydi, imzo qo'ymaydi.
+- «Kredit olasiz» deb va'da bermaydi.
+- Tadbirkor roziligisiz ma'lumotni hech kimga yubormaydi.
+
+## Mahsulot qismlari
+
+1. Tadbirkor chati (veb).
+2. Tekshiruv qoidalari: davlat dasturlari va bank talablari, manbasi bilan, kodda.
+3. Bank oynasi: bank xodimi tayyor mijozni ko'radi.
 
 ## Texnik qoida
 
-Hisob-kitobni oddiy kod qiladi. Sun'iy intellekt faqat gaplashadi, tushuntiradi va hujjatni o'qiydi. Aks holda raqamlarda xato ketadi.
+Hisob-kitob va qoidalarni oddiy kod bajaradi. Sun'iy intellekt gaplashadi, tushuntiradi va hujjatni o'qiydi.

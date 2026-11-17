@@ -8,7 +8,7 @@ Markaziy bank yaratgan yagona kredit platformasi. Sinov bosqichida.
 - Ma'lumot davlat tizimlaridan avtomatik olinadi.
 - Ariza ulangan banklarga yuboriladi, takliflarni solishtirsa bo'ladi.
 - 23 ta bank ulangan.
-- Bir oyda 1 500 ga yaqin ariza, 415 ta kredit. Kredit olganlarning 46 foizi mikrobiznes, 21 foizi yakka tartibdagi tadbirkor.
+- 01.06–17.09.2026: 3 262 ariza, 1 005 kredit (31 foiz). Birinchi oyda: 1 500 ga yaqin ariza, 415 kredit. Kredit olganlarning 46 foizi mikrobiznes, 21 foizi yakka tartibdagi tadbirkor.
 - Sun'iy intellektli skoring bor. Keyinchalik xususiylashtirish rejalashtirilgan.
 
 Manbalar: [UzA](https://uza.uz/ar/posts/bitta-ariza-bir-nechta-bank-tadbirkorga-kredit-tanlash-osonlashdi_912075), [Spot](https://www.spot.uz/oz/2026/08/25/credit-marketplace/), [UzA](https://uza.uz/ar/posts/tadbircoreuz-turli-banklarning-takliflarini-bir-joyda-jamlagan-platforma_885812)
@@ -29,7 +29,7 @@ Bu yaxshi platforma. Uni takrorlamaymiz.
 
 «Tekshirilmagan» degan joylarni platformani o'zimiz ochib ko'rib to'ldirishimiz kerak.
 
-Asosiy dalilimiz: 1 500 arizadan 415 tasi kredit oldi. Qolganlar nega olmagani manbada yozilmagan.
+Asosiy dalilimiz: 3 262 arizadan 1 005 tasi kredit oldi. Qolganlar ichida o'zi voz kechganlar ham bor. Yangilangan farq jadvali: VISION.md.
 
 ## Boshqalar
 

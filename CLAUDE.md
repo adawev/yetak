@@ -4,7 +4,7 @@ Yetak — Umummilliy AI Xakaton loyihasi.
 
 ## Mahsulot bir gapda
 
-Sun'iy intellektli agent tadbirkorning kredit hujjatlarini u bilan birga tayyorlaydi va tayyor holda bankka yetkazadi.
+Sun'iy intellektli agent tadbirkorning holatini aniqlaydi, kredit yo'l xaritasini beradi va TadbirCore yoki bankkacha yetaklaydi.
 
 ## Avval o'qi
 

@@ -15,6 +15,10 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-17 | Belgi: nuqtadan nuqtaga yo'l; ranglar to'q ko'k va to'q sariq | Yashil va binafsha band; `DIZAYN.md` |
 | 2026-11-17 | Shakl: veb chat (asosiy). Telegram keyinroq ko'riladi | Telegram bot juda oddiy ko'rinadi; vebda jarayon va hujjatlar ro'yxatini ko'rsatsa bo'ladi |
 | 2026-11-17 | Mahsulot uch qism: tadbirkor chati, hujjat tekshiruvchi, bank oynasi | 5 kishilik jamoa parallel ishlashi uchun; `VAZIFALAR.md` |
+| 2026-11-17 | Yo'nalish o'tkirlandi: «kredit yo'l xaritasi». Shior: TadbirCore — bankning eshigi, Yetak — o'sha eshikkacha yo'l | Mustaqil tanqid: TadbirCore rad sababini o'zi aytadi; rad sababi ko'pincha hujjat emas, garov va tarix |
+| 2026-11-17 | Kimga: har tomonlama — rad olganlar, kira olmaydiganlar va TadbirCore'ni umuman bilmaydiganlar | Sardor qarori |
+| 2026-11-17 | Birinchi foydalanuvchi: tadbirkorning o'zi | Demo va taqdimot uchun eng tushunarli |
+| 2026-11-17 | Pul: bank faqat berilgan kredit uchun to'laydi. Taqdimotda «reja» deb aytiladi | Hali bank tasdiqlamagan; halol aytish kerak |
 
 ## Hali hal qilinmagan
 

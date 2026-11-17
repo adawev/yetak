@@ -1,34 +1,36 @@
-<title>Kreditga tayyorlovchi agent</title>
+<title>Yetak g'oyasi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Onest:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Golos+Text:wght@400;500;600&display=swap">
 <style>
-/* Layout: one short column, four questions in order: muammo, biz nima qilamiz, farqimiz, pul. */
+/* Layout: one short column, four questions in order: muammo, Yetak nima qiladi, farqimiz, pul. */
 :root{
-  --bg:#f5f7fa; --surface:#ffffff; --ink:#152033; --muted:#5a6679; --line:#dde3ec;
-  --accent:#2f5bd8; --accent-soft:#e6ecfb;
-  --good:#12805c; --good-soft:#dff3ea; --warn:#9a6a00; --warn-soft:#fbf0d3;
-  --display:"Onest",system-ui,sans-serif; --body:"Golos Text",system-ui,sans-serif;
+  --bg:#f7f5f2; --surface:#ffffff; --ink:#14213d; --muted:#5d667a; --line:#e2ddd5;
+  --accent:#f26a1b; --accent-soft:#fde9dc; --on-accent:#ffffff;
+  --good:#12805c; --good-soft:#dff3ea; --warn:#9a6a00; --warn-soft:#fbf0d3; --bad:#b93a32; --bad-soft:#fae6e3;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:"Golos Text",system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0f141c; --surface:#18202c; --ink:#e8edf5; --muted:#9aa7ba; --line:#2a3545;
-  --accent:#86a6ff; --accent-soft:#1f2c4d;
-  --good:#5fd0a4; --good-soft:#143328; --warn:#f0c15a; --warn-soft:#3a2e10;
+  --bg:#0f131c; --surface:#181e2b; --ink:#eef1f7; --muted:#9ba6b9; --line:#2a3344;
+  --accent:#ff8a45; --accent-soft:#3a2416; --on-accent:#14213d;
+  --good:#5fd0a4; --good-soft:#143328; --warn:#f0c15a; --warn-soft:#3a2e10; --bad:#ff8f86; --bad-soft:#3d1d1b;
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0f141c; --surface:#18202c; --ink:#e8edf5; --muted:#9aa7ba; --line:#2a3545;
-  --accent:#86a6ff; --accent-soft:#1f2c4d;
-  --good:#5fd0a4; --good-soft:#143328; --warn:#f0c15a; --warn-soft:#3a2e10;
+  --bg:#0f131c; --surface:#181e2b; --ink:#eef1f7; --muted:#9ba6b9; --line:#2a3344;
+  --accent:#ff8a45; --accent-soft:#3a2416; --on-accent:#14213d;
+  --good:#5fd0a4; --good-soft:#143328; --warn:#f0c15a; --warn-soft:#3a2e10; --bad:#ff8f86; --bad-soft:#3d1d1b;
   color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
 .wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
-h1,h2{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.2}
-h1{font-size:clamp(28px,6.5vw,40px);font-weight:700}
-h2{font-size:clamp(20px,4.5vw,24px);font-weight:600}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,6.5vw,40px)}
+h2{font-size:clamp(20px,4.5vw,24px)}
 p{margin:0}
 a{color:var(--accent)}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:24px;margin-bottom:18px}
+.brand svg{width:34px;height:34px}
 .lead{font-size:19px;margin-top:14px}
 section{display:flex;flex-direction:column;gap:14px}
 .q{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
@@ -37,110 +39,124 @@ section{display:flex;flex-direction:column;gap:14px}
 .meter{height:40px;background:var(--bg);border-radius:6px;overflow:hidden;display:flex}
 .meter div{background:var(--good);color:var(--surface);font-weight:600;display:flex;align-items:center;padding-left:10px;font-size:14px}
 .meter span{display:flex;align-items:center;padding-left:10px;font-size:14px;color:var(--muted)}
+ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
 .steps{list-style:none;padding:0;margin:0;counter-reset:s;display:flex;flex-direction:column;gap:8px}
 .steps li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
 .steps li::before{content:counter(s);font-family:var(--display);font-weight:700;color:var(--accent);font-size:18px}
 .steps b{display:block}
 .steps span{color:var(--muted);font-size:15px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.three div{border-radius:8px;padding:10px;font-size:14px;font-weight:500;min-width:0}
+.t1{background:var(--good-soft);color:var(--good)} .t2{background:var(--warn-soft);color:var(--warn)} .t3{background:var(--bad-soft);color:var(--bad)}
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .vs > div{border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .vs .them{background:var(--surface);border:1px solid var(--line)}
 .vs .us{background:var(--accent-soft)}
 .vs h3{margin:0;font-family:var(--display);font-size:16px}
-.vs ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.vs ul{font-size:15px}
 .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center}
 .node{background:var(--bg);border-radius:8px;padding:12px 8px;text-align:center;font-weight:600;font-family:var(--display);min-width:0}
 .node small{display:block;font-family:var(--body);font-weight:400;color:var(--muted);font-size:13px}
-.node.me{background:var(--accent);color:var(--surface)} .node.me small{color:var(--surface);opacity:.85}
+.node.me{background:var(--accent);color:var(--on-accent)} .node.me small{color:var(--on-accent);opacity:.85}
 .arrow{font-size:20px;color:var(--muted);text-align:center}
 .money{background:var(--good-soft);color:var(--good);border-radius:8px;padding:10px 14px;font-weight:600;text-align:center}
 .open{background:var(--warn-soft);border-radius:10px;padding:16px}
-.open ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.open ul{margin-top:8px;font-size:15px}
 .open strong{color:var(--warn)}
-@media (max-width:540px){.vs{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+@media (max-width:540px){.vs,.three{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
 </style>
 
 <div class="wrap">
 
 <header>
-  <h1>Tadbirkorni kreditga tayyorlaydigan agent</h1>
-  <p class="lead">Tadbirkor kredit olmoqchi, lekin qaysi hujjat kerakligini bilmaydi va yarim yo'lda tashlab ketadi. Bizning agent u bilan gaplashadi, hammasini birga tayyorlaydi va tayyor holda bankka yuboradi.</p>
+  <div class="brand">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="10" cy="38" r="4" fill="var(--ink)"/><path d="M10 32C10 20 20 12 29 12" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="12" r="6.5" fill="var(--accent)"/></svg>
+    Yetak
+  </div>
+  <h1>Tadbirkorni kreditgacha yetaklaydigan agent</h1>
+  <p class="lead">Davlat platformasi TadbirCore — bankning eshigi. Yetak — o'sha eshikkacha bo'lgan yo'l.</p>
 </header>
 
 <section>
   <div class="q">Muammo nima</div>
-  <h2>Ariza beriladi, lekin kredit berilmaydi</h2>
+  <h2>Tadbirkor kredit yo'lini bilmaydi</h2>
+  <ul>
+    <li>Qaysi kredit yoki davlat dasturi unga mos — bilmaydi.</li>
+    <li>Nega rad etilishi mumkin va nimani tuzatish kerak — bilmaydi.</li>
+    <li>Garovi yoki kredit tarixi bo'lmasa, yo'l yopiqdek ko'rinadi.</li>
+  </ul>
   <div class="fig">
-    <p>Davlat kredit platformasida bir oyda taxminan 1 500 ta ariza tushdi. Kredit olganlar:</p>
-    <div class="meter" role="img" aria-label="1500 arizadan 415 tasi kredit oldi">
-      <div style="width:27.7%">415</div><span>qolganlari olmadi</span>
+    <p>Davlat kredit platformasiga 3 262 ta ariza tushdi. Kredit olganlar:</p>
+    <div class="meter" role="img" aria-label="3262 arizadan 1005 tasi kredit oldi">
+      <div style="width:30.8%">1 005</div><span>qolganlari olmadi</span>
     </div>
-    <p class="src">Qolganlar nega olmagani manbada yozilmagan. Manba: <a href="https://www.spot.uz/oz/2026/08/25/credit-marketplace/">Spot</a>, <a href="https://uza.uz/ar/posts/bitta-ariza-bir-nechta-bank-tadbirkorga-kredit-tanlash-osonlashdi_912075">UzA</a>.</p>
+    <p class="src">2026-yil 1-iyun – 17-sentabr. Qolganlar ichida o'zi voz kechganlar ham bor. Manba: <a href="https://cbu.uz/upload/medialibrary/1fb/d00qwx33c00uz2rznt80vi5mkzlkekf6/TadbirCore-dlya-Tadbirkor_18.09.2026-_2_.pdf">Markaziy bank taqdimoti</a>.</p>
   </div>
-  <p>Bank kredit uchun 102 ta hujjat so'raydi. Tadbirkorga nima yetishmasligini va nimani tuzatish kerakligini hech kim tushuntirmaydi. <a href="https://www.spot.uz/oz/2026/10/22/loans-redundancy/">Spot</a></p>
+  <p>Davlat banklari bir yilda 35 000 mijozni garov yoki kafil yo'qligi uchun rad etgan. <a href="https://www.spot.uz/oz/2026/10/22/loans-redundancy/">Spot</a></p>
 </section>
 
 <section>
-  <div class="q">Biz nima qilamiz</div>
-  <h2>Agent tadbirkorni qo'lidan ushlab olib boradi</h2>
+  <div class="q">Yetak nima qiladi</div>
+  <h2>Gaplashadi, reja beradi va oxirigacha olib boradi</h2>
   <ol class="steps">
-    <li><div><b>Tinglaydi</b><span>Tadbirkor holatini o'z so'zi bilan aytadi.</span></div></li>
-    <li><div><b>Nima yetishmasligini aytadi</b><span>«Sizda mana bu shartnoma yo'q, mana bu ma'lumot kerak.»</span></div></li>
-    <li><div><b>Birga tayyorlaydi</b><span>Tadbirkor hujjatni yuboradi, agent tekshiradi va tushunmagan joyini tushuntiradi.</span></div></li>
-    <li><div><b>Oxirigacha yetaklaydi</b><span>«Bitta hujjat qoldi, shuni to'ldirsangiz bo'ldi.»</span></div></li>
-    <li><div><b>Bankka yuboradi</b><span>Tayyor to'plam bilan. Tadbirkor bankda hammasini qaytadan topshirmaydi.</span></div></li>
+    <li><div><b>Holatni aniqlaydi</b><span>Nima ish, qancha tushum, garov bormi, pul nimaga kerak. Oddiy tilda, suhbat orqali.</span></div></li>
+    <li><div><b>Halol javob beradi</b><span>Uch javobdan biri:</span>
+      <div class="three"><div class="t1">Hozir mana bu dasturga mos kelasiz</div><div class="t2">Mana bu 3 ishni qiling, keyin olasiz</div><div class="t3">Hozir qarz olmang</div></div></div></li>
+    <li><div><b>Reja beradi</b><span>Qadam-baqadam: qaysi hujjat, qaysi dastur, qachon.</span></div></li>
+    <li><div><b>Yetaklaydi</b><span>Qancha qolganini ko'rsatadi, eslatadi, tushunmagan joyini tushuntiradi.</span></div></li>
+    <li><div><b>Eshikkacha olib boradi</b><span>Tayyor bo'lganda TadbirCore yoki bankka yo'naltiradi.</span></div></li>
   </ol>
 </section>
 
 <section>
   <div class="q">Farqimiz nima</div>
-  <h2>Davlat platformasi arizani qabul qiladi. Biz odamni arizagacha olib boramiz.</h2>
+  <h2>Ular arizani qabul qiladi. Biz odamni arizagacha olib boramiz.</h2>
   <div class="vs">
     <div class="them">
-      <h3>Davlat platformasi (TadbirCore)</h3>
+      <h3>TadbirCore</h3>
       <ul>
-        <li>Tayyor arizani oladi</li>
-        <li>Banklarga tarqatadi</li>
-        <li>Forma to'ldiriladi</li>
+        <li>Tayyor tadbirkor uchun</li>
+        <li>Ariza paytida ishlaydi</li>
+        <li>Rad sababini aytadi</li>
+        <li>Bank va davlat tomonida</li>
       </ul>
     </div>
     <div class="us">
-      <h3>Biz</h3>
+      <h3>Yetak</h3>
       <ul>
-        <li>Arizadan oldin ishlaymiz</li>
-        <li>Gaplashamiz, oddiy tilda</li>
-        <li>Yetishmayotganini aytamiz va tuzatamiz</li>
-        <li>Tashlab ketmasligi uchun undaymiz</li>
+        <li>Hali tayyor bo'lmaganlar uchun ham</li>
+        <li>Arizadan oldin va rad javobidan keyin</li>
+        <li>Sababni yopguncha yetaklaydi</li>
+        <li>Tadbirkor tomonida</li>
       </ul>
     </div>
   </div>
-  <p>Biz unga raqib emasmiz. Bizdan o'tgan odam u yerga tayyor holda boradi.</p>
+  <p>Raqib emasmiz. Yetakdan o'tgan odam TadbirCore'ga tayyor holda boradi.</p>
 </section>
 
 <section>
   <div class="q">Qanday pul topamiz</div>
-  <h2>Tadbirkor uchun bepul. Bank to'laydi.</h2>
+  <h2>Tadbirkor uchun bepul. Bank faqat natija uchun to'laydi.</h2>
   <div class="fig">
     <div class="flow">
       <div class="node">Tadbirkor<small>bepul</small></div>
       <div class="arrow">→</div>
-      <div class="node me">Agent<small>tayyorlaydi</small></div>
+      <div class="node me">Yetak<small>tayyorlaydi</small></div>
       <div class="arrow">→</div>
       <div class="node">Bank<small>kredit beradi</small></div>
     </div>
-    <div class="money">Bank bizga har bir berilgan kredit uchun haq to'laydi</div>
+    <div class="money">Kredit berilganda bank Yetakka haq to'laydi</div>
   </div>
-  <p>Bank nega to'laydi: unga hujjati to'liq, oldindan tekshirilgan mijoz keladi. Xodimi chala arizaga vaqt sarflamaydi. Reja: 3–5 bank bilan shartnoma.</p>
+  <p>Bank hech narsa yo'qotmaydi: kredit berilmasa, to'lamaydi. Chet elda shunday ishlaydi: AQShdagi Lendio tadbirkor uchun bepul, haqni kreditor to'laydi.</p>
 </section>
 
 <section>
   <div class="open">
     <strong>Hali aniqlanmagan</strong>
     <ul>
-      <li>Bank buning uchun to'laydimi va qancha. Hech bir bankdan so'ramadik.</li>
-      <li>Garovi yo'q tadbirkorga nima taklif qilamiz.</li>
-      <li>Shaxsiy ma'lumot: tadbirkorning roziligi qanday olinadi.</li>
-      <li>Shakli: Telegram bot yoki veb-platforma. Nomi ham yo'q.</li>
+      <li>Bank buning uchun to'laydimi va qancha. Bu hozircha reja.</li>
+      <li>Vositachilik uchun ruxsat kerakmi. Qoida topilmadi.</li>
+      <li>Tadbirkorlar Yetakni qanday topadi.</li>
     </ul>
   </div>
 </section>
