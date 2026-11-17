@@ -2,6 +2,7 @@ import type { Natija } from '@shared/types'
 import { AlertCircle, ArrowUp, RotateCcw, X } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { BlokKorsat } from '@/components/bloklar'
+import { ManbaChiplari } from '@/components/Manbalar'
 import { Matn } from '@/components/Matn'
 import type { BoyXabar } from '@/lib/bloklar'
 
@@ -11,7 +12,7 @@ export function XabarPufak({
   onBelgila,
   holati,
 }: {
-  xabar: Pick<BoyXabar, 'kim' | 'matn' | 'bloklar'>
+  xabar: Pick<BoyXabar, 'kim' | 'matn' | 'bloklar' | 'manbalar'>
   natija: Natija | null
   onBelgila?: (kalit: string, bajarildi: boolean) => void
   holati?: 'yuborilmoqda' | 'yuborilmadi'
@@ -38,6 +39,7 @@ export function XabarPufak({
       {xabar.bloklar?.map((b, i) => (
         <BlokKorsat key={i} blok={b} natija={natija} onBelgila={onBelgila} />
       ))}
+      {xabar.manbalar && <ManbaChiplari manbalar={xabar.manbalar} />}
     </div>
   )
 }

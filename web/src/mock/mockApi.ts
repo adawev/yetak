@@ -1,7 +1,7 @@
 // Soxta API: haqiqiy API bilan bir xil ko'rinish. VITE_MOCK=1 bo'lganda ishlaydi.
 // Profil qiymatlari tadbirkorning javobidan emas, tanlangan ssenariydan olinadi.
 import { PROFIL_MAYDONLARI, type BankArizasi, type Profil } from '@shared/types'
-import type { Blok, BoySessiya } from '@/lib/bloklar'
+import type { Blok, BoySessiya, Iqtibos } from '@/lib/bloklar'
 import { qisqaSom } from '@/lib/format'
 import { SSENARIYLAR, type SsenariyNomi } from './ssenariylar'
 
@@ -10,6 +10,20 @@ interface Savol {
   matn: string
   tugmalar: (p: Required<Profil>) => string[]
   bloklar?: Blok[]
+  manbalar?: Iqtibos[]
+}
+
+// Namuna manbalar: parchalar repodagi docs/QOIDALAR.md jadvalidan olingan.
+const QOIDALAR_URL = 'https://github.com/adawev/yetak/blob/main/docs/QOIDALAR.md'
+const MANBA_GAROV: Iqtibos = {
+  nom: 'QOIDALAR.md · Bank talablari',
+  url: QOIDALAR_URL,
+  parcha: 'Garov — kredit summasining kamida 125 foizi (matbuot, bank bilan tasdiqlanmagan)',
+}
+const MANBA_KAFOLAT: Iqtibos = {
+  nom: 'QOIDALAR.md · Davlat dasturlari',
+  url: QOIDALAR_URL,
+  parcha: 'Kafolat — garovi yetmaydiganlarga, kredit summasining 75 foizigacha',
 }
 
 const SAVOLLAR: Savol[] = [
@@ -31,6 +45,7 @@ const SAVOLLAR: Savol[] = [
     matn: 'Garovga qo‘ya oladigan mol-mulkingiz bormi? Bo‘lsa, taxminan qancha turadi?',
     tugmalar: (p) => (p.garov_qiymati ? [qisqaSom(p.garov_qiymati)] : ["Yo'q"]),
     bloklar: [{ tur: 'atama', atama: 'Garov', izoh: 'Qarzni qaytarmasangiz bank oladigan mol-mulk: uy, mashina, uskuna.' }],
+    manbalar: [MANBA_GAROV],
   },
   { maydon: 'kredit_tarixi', matn: 'Ilgari kredit olganmisiz? Vaqtida to‘laganmisiz?', tugmalar: () => ['Yaxshi', 'Kechiktirganman', "Kredit olmaganman"] },
   { maydon: 'avval_mikrokredit', matn: 'Ilgari mikrokredit olib, vaqtida qaytarganmisiz?', tugmalar: () => ['Ha', "Yo'q"] },
@@ -104,6 +119,7 @@ function savolBer(y: Yozuv, oldingi: Blok[] = [], kirish = '') {
     matn: `${kirish}${savol.matn}`,
     vaqt: hozir(),
     bloklar: savol.bloklar,
+    manbalar: savol.manbalar,
   })
   y.holat.tugmalar = savol.tugmalar(s.profil)
 }
@@ -144,6 +160,19 @@ export const mockApi = {
     await kut(1200 + Math.random() * 1500)
     const s = SSENARIYLAR[y.ssenariy]
     y.holat.xabarlar.push({ id: crypto.randomUUID(), kim: 'tadbirkor', matn, vaqt: hozir() })
+
+    if (y.savol >= SAVOLLAR.length && /nega/i.test(matn)) {
+      y.holat.xabarlar.push({
+        id: crypto.randomUUID(),
+        kim: 'agent',
+        matn:
+          'Namuna javob. Bank odatda garovni kredit summasidan **ko‘proq** so‘raydi [1]. Garovingiz yetmasa, davlat **kafolat** dasturi kredit summasining bir qismini kafolatlashi mumkin [2].\n\nRaqamlar bank bilan tasdiqlanmagan — manbani bosib tekshiring.',
+        vaqt: hozir(),
+        manbalar: [MANBA_GAROV, MANBA_KAFOLAT],
+      })
+      y.holat.tugmalar = ['Birinchi qadam nima?']
+      return yangila(y)
+    }
 
     if (y.savol >= SAVOLLAR.length) {
       y.holat.xabarlar.push({

@@ -13,6 +13,16 @@ export type Blok =
   | { tur: 'yol_xaritasi' }
   | { tur: 'atama'; atama: string; izoh: string }
 
-export type BoyXabar = Xabar & { id?: string; bloklar?: Blok[] }
+/**
+ * TAKLIF — agent javobi tayangan manba (Claude citations'dan).
+ * `parcha` — manbadan aynan keltirilgan matn (`cited_text`).
+ */
+export interface Iqtibos {
+  nom: string
+  url: string
+  parcha?: string
+}
+
+export type BoyXabar = Xabar & { id?: string; bloklar?: Blok[]; manbalar?: Iqtibos[] }
 
 export type BoySessiya = Omit<SessiyaHolati, 'xabarlar'> & { xabarlar: BoyXabar[] }
