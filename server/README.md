@@ -38,6 +38,6 @@ Qo'lda, sardor kompyuteridan: `server/deploy/joylash.sh` — sinov, yig'ish, «k
 
 Server tomoni (`deploy/`): `sozlash.sh` — bir martalik o'rnatish; `qabul.sh` — yangi versiyani qabul qiladi (deploy kaliti faqat shu skriptni ishga tushira oladi); `yetak-api.service` — xizmat, xotira chegarasi 300 MB. HTTPS sertifikatini certbot o'zi qo'shgan va yangilaydi.
 
-Claude kaliti serverda: `/opt/apps/yetak/yetak.env` (`ANTHROPIC_API_KEY=...`), keyin `sudo systemctl restart yetak-api`.
+Claude kalitini qo'yish: `server/deploy/kalit.sh` (oddiy terminalda; kalitni yashirin so'raydi, serverga yozadi, agentni sinaydi). Kalit `/opt/apps/yetak/yetak.env` da turadi.
 
-Manzil: `https://yetak-api.63-177-216-224.sslip.io` (domen tanlangach almashtiriladi).
+Manzil: `https://yetak-api.diyorjon.com` (zaxira: `https://yetak-api.63-177-216-224.sslip.io`). DNS: diyorjon.com Cloudflare, A yozuv, proxy o'chiq.
