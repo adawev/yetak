@@ -1,9 +1,7 @@
 import type { BankArizasi, XatoJavobi } from '@shared/types'
 import type { BoySessiya } from '@/lib/bloklar'
-import { mockApi } from '@/mock/mockApi'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8787'
-export const MOCK = import.meta.env.VITE_MOCK === '1'
 
 export class ApiXato extends Error {
   status?: number
@@ -42,7 +40,7 @@ const post = (body?: unknown): RequestInit => ({
   body: body === undefined ? undefined : JSON.stringify(body),
 })
 
-const haqiqiyApi = {
+export const api = {
   yangiSessiya: () => sorov<BoySessiya>('/api/sessions', post()),
   sessiya: (id: string) => sorov<BoySessiya>(`/api/sessions/${id}`),
   xabar: (id: string, matn: string) =>
@@ -54,7 +52,3 @@ const haqiqiyApi = {
   arizalar: () => sorov<BankArizasi[]>('/api/bank/arizalar'),
   ariza: (id: string) => sorov<BankArizasi>(`/api/bank/arizalar/${id}`),
 }
-
-export type Api = typeof haqiqiyApi
-
-export const api: Api = MOCK ? mockApi : haqiqiyApi

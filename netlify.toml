@@ -1,0 +1,9 @@
+# Web (Netlify). Butun repo klonlanadi, build web/ ichida ishlaydi; ../shared ham mavjud.
+[build]
+  base = "web"
+  command = "yarn build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+  VITE_API_URL = "https://yetak-api.63-177-216-224.sslip.io"

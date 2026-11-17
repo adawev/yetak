@@ -3,15 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Kiritish, Kutish, Tugmalar, XabarPufak, XatoBanner } from '@/components/chat'
 import { Jarayon, Panel } from '@/components/Panel'
 import { useSessiya } from '@/hooks/useSessiya'
-import { MOCK } from '@/lib/api'
 
 type Yorliq = 'suhbat' | 'reja'
-
-const SSENARIYLAR = [
-  ['tayyor', 'Tayyor'],
-  ['hali_emas', 'Hali emas'],
-  ['olmang', 'Olmang'],
-] as const
 
 export default function Chat() {
   const s = useSessiya()
@@ -48,11 +41,6 @@ export default function Chat() {
     )
   }
 
-  const ssenariyTanla = (nom: string) => {
-    history.replaceState(null, '', `?ssenariy=${nom}`)
-    setYorliq('suhbat')
-    void s.yangiSuhbat()
-  }
 
   return (
     <div className="mx-auto flex h-full max-w-6xl flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_380px]">
@@ -80,7 +68,7 @@ export default function Chat() {
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4" aria-live="polite">
           {h.xabarlar.map((x, i) => (
             <XabarPufak
-              key={x.id ?? `${x.vaqt}-${i}`}
+              key={`${x.vaqt}-${i}`}
               xabar={x}
               natija={h.natija}
               onBelgila={s.qadamBelgila}
@@ -123,21 +111,6 @@ export default function Chat() {
           >
             <RotateCcw size={14} /> Yangi suhbat
           </button>
-          {MOCK && (
-            <>
-              <span className="ml-auto">Namuna rejimi:</span>
-              {SSENARIYLAR.map(([nom, yozuv]) => (
-                <button
-                  key={nom}
-                  type="button"
-                  onClick={() => ssenariyTanla(nom)}
-                  className="min-h-9 rounded-md border border-border px-2 hover:bg-foreground/5"
-                >
-                  {yozuv}
-                </button>
-              ))}
-            </>
-          )}
         </div>
       </aside>
     </div>
