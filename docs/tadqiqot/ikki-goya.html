@@ -1,0 +1,342 @@
+<title>Xakaton: ikki g'oya</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Onest:wght@500;600;700&display=swap">
+<style>
+/* Layout: one reading column; two chapters built from the same blocks (nima, pul, hisob, kuchli/zaif, ochiq savollar), then a side-by-side verdict. */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --ink:#152033; --muted:#5a6679; --line:#dde3ec;
+  --accent:#2f5bd8; --accent-soft:#e6ecfb;
+  --good:#12805c; --good-soft:#dff3ea; --bad:#b93a32; --bad-soft:#fae6e3; --warn:#9a6a00; --warn-soft:#fbf0d3;
+  --display:"Onest",system-ui,sans-serif; --body:"Golos Text",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141c; --surface:#18202c; --ink:#e8edf5; --muted:#9aa7ba; --line:#2a3545;
+  --accent:#86a6ff; --accent-soft:#1f2c4d;
+  --good:#5fd0a4; --good-soft:#143328; --bad:#ff8f86; --bad-soft:#3d1d1b; --warn:#f0c15a; --warn-soft:#3a2e10;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --surface:#18202c; --ink:#e8edf5; --muted:#9aa7ba; --line:#2a3545;
+  --accent:#86a6ff; --accent-soft:#1f2c4d;
+  --good:#5fd0a4; --good-soft:#143328; --bad:#ff8f86; --bad-soft:#3d1d1b; --warn:#f0c15a; --warn-soft:#3a2e10;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,6vw,40px);font-weight:700}
+h2{font-size:clamp(22px,4.5vw,28px);font-weight:600}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lead{color:var(--muted);font-size:17px;margin-top:12px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.nav a{text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:14px;font-weight:500}
+.chapter{display:flex;flex-direction:column;gap:22px;border-top:2px solid var(--ink);padding-top:24px}
+.rank{font-family:var(--display);font-size:14px;font-weight:600;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+.oneline{font-size:18px;font-weight:500}
+.block{display:flex;flex-direction:column;gap:10px}
+.label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.src{font-size:13px;color:var(--muted)}
+.note{font-size:14px;color:var(--muted)}
+ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;font-size:15px}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center}
+.node{background:var(--bg);border-radius:8px;padding:12px;text-align:center;font-weight:600;font-family:var(--display);min-width:0}
+.node small{display:block;font-family:var(--body);font-weight:400;color:var(--muted);font-size:13px}
+.node.us{background:var(--accent);color:var(--surface)} .node.us small{color:var(--surface);opacity:.85}
+.arrow{font-size:13px;color:var(--muted);text-align:center;line-height:1.3}
+.arrow b{display:block;font-size:18px;color:var(--ink)}
+.money{background:var(--good-soft);color:var(--good);border-radius:8px;padding:10px 14px;font-weight:600;text-align:center}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.opt .tag{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.tag.main{color:var(--good)} .tag.alt{color:var(--warn)} .tag.no{color:var(--bad)}
+.formula{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--display);font-weight:600}
+.formula span{background:var(--bg);border-radius:6px;padding:8px 12px}
+.formula span.q{background:var(--warn-soft);color:var(--warn)}
+.formula i{font-style:normal;color:var(--muted)}
+.pm{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pm > div{min-width:0;display:flex;flex-direction:column;gap:8px;border-radius:10px;padding:14px 16px}
+.pm .p{background:var(--good-soft)} .pm .m{background:var(--bad-soft)}
+.plus{color:var(--good);font-weight:600} .minus{color:var(--bad);font-weight:600}
+.gaps{display:flex;flex-direction:column;gap:8px}
+.gapq{display:grid;grid-template-columns:1fr 150px;gap:12px;background:var(--warn-soft);border-radius:8px;padding:12px 14px;font-size:15px}
+.gapq em{font-style:normal;font-size:13px;color:var(--warn);font-weight:600}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+.pick{background:var(--accent-soft);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px}
+@media (max-width:560px){.pm{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.kv{grid-template-columns:1fr;gap:2px 0}.kv dd{margin-bottom:8px}.gapq{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <h1>Ikki g'oya: biznes reja</h1>
+  <p class="lead">Faqat ikkita g'oya qoldi. Har biri uchun: kim to'laydi, pul qanday keladi, kuchli va zaif tomonlari, va hali javobi yo'q savollar. Sariq rangdagi narsalar aniqlanmagan, ularni o'ylab topmadim.</p>
+  <nav class="nav">
+    <a href="#kredit">1. Kredit boti</a>
+    <a href="#direktor">2. Moliyaviy direktor</a>
+    <a href="#mezon">Baholash mezonlari</a>
+    <a href="#tanlov">Solishtirish</a>
+  </nav>
+</header>
+
+<!-- ============ 1 ============ -->
+<section class="chapter" id="kredit">
+  <div>
+    <div class="rank">1-g'oya</div>
+    <h2>Kredit boti: tadbirkorni bankka tayyor holda olib boradi</h2>
+  </div>
+  <p class="oneline">Tadbirkor botdan bepul foydalanadi. Bot uni kreditga tayyorlaydi va bankka yuboradi. Pulni bank to'laydi.</p>
+
+  <dl class="kv">
+    <dt>Foydalanuvchi</dt><dd>Kichik tadbirkor (bepul)</dd>
+    <dt>To'lovchi</dt><dd>Bank</dd>
+    <dt>Bank nima oladi</dt><dd>Hujjati tayyor, oldindan tekshirilgan mijoz</dd>
+    <dt>Tadbirkor nima oladi</dt><dd>Nega rad etilishi mumkinligi, tayyor hujjatlar, mos bank yoki dastur</dd>
+  </dl>
+
+  <div class="block">
+    <div class="label">Pul qanday aylanadi</div>
+    <div class="fig">
+      <div class="flow">
+        <div class="node">Tadbirkor<small>bepul foydalanadi</small></div>
+        <div class="arrow"><b>→</b>savollarga javob</div>
+        <div class="node us">Bot<small>tekshiradi, tayyorlaydi</small></div>
+        <div class="arrow"><b>→</b>tayyor mijoz</div>
+        <div class="node">Bank<small>kredit beradi</small></div>
+      </div>
+      <div class="money">Bank ← bizga har bir mijoz yoki berilgan kredit uchun to'laydi</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Daromad yo'llari</div>
+    <div class="opts">
+      <div class="opt"><span class="tag main">Asosiy</span><strong>Bank har bir berilgan kredit uchun haq to'laydi.</strong><span>Bank faqat natija uchun to'laydi, shuning uchun rozi bo'lishi osonroq. Biz uchun pul kech keladi.</span></div>
+      <div class="opt"><span class="tag alt">Ikkinchi yo'l</span><strong>Botni bankning o'ziga sotamiz.</strong><span>Bank uni o'z sayti yoki Telegramiga qo'yadi. Kredit xodimlari tayyor bo'lmagan arizalarga vaqt sarflamaydi. To'lov oylik yoki yillik.</span></div>
+      <div class="opt"><span class="tag no">Tanlanmadi</span><strong>Tadbirkordan pul olish.</strong><span>Kichik tadbirkor dasturga pul to'lashga tayyorligi haqida dalil yo'q.</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Banklar bunga pul to'laydimi: bor dalillar</div>
+    <div class="fig">
+      <ul>
+        <li>TBC banki do'konlar dasturi BILLZning nazorat ulushini 12 mln dollargacha sotib oldi. Sabab: kichik biznes mijozlariga yo'l. <a href="https://spot.uz/ru/2025/06/27/tbc-billz/">Spot</a></li>
+        <li>BILLZ orqali do'kon egalari Asia Alliance Bankdan garovsiz onlayn kredit oladi, 1,6 mlrd so'mgacha. <a href="https://uz.kursiv.media/?p=1722488">Kursiv</a></li>
+        <li>TBC oddiy mijoz olib kelgan odamga 50 000 so'm to'laydi. Bu jismoniy shaxslar uchun, biznes krediti uchun emas. <a href="https://minio.tbcbank.uz/prod-tbcbankuz-new/uploads/tbc_friends_referral_terms_ru_13_03_088a6ff5a3.pdf">TBC shartlari</a></li>
+        <li>Kichik korxonalarning faqat 10 foizi kredit ishlatadi. Demak, banklar uchun ochilmagan bozor katta. <a href="https://cbu.uz/upload/medialibrary/da4/m9ykdpqi4s865hq2hhf26iw3kphzgtjp/Qisqa-tavsif-SME.pdf">Markaziy bank</a></li>
+      </ul>
+      <p class="src">Xulosa: banklar kichik biznes mijozlari uchun pul sarflaydi. Lekin biznes krediti uchun olib kelingan mijozga aynan qancha to'lashi topilmadi.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Daromad hisobi</div>
+    <div class="fig">
+      <div class="formula">
+        <span class="q">Bankka yuborilgan tadbirkorlar</span><i>×</i>
+        <span class="q">Kredit olganlar ulushi</span><i>×</i>
+        <span class="q">Bir kredit uchun haq</span><i>=</i>
+        <span>Daromad</span>
+      </div>
+      <p class="src">Uchala son ham hozircha noma'lum. Birinchisini xakatonda o'zimiz o'lchay olamiz: necha kishi botdan o'tdi. Qolgan ikkitasini faqat bank aytadi.</p>
+    </div>
+  </div>
+
+  <div class="pm">
+    <div class="p"><span class="plus">Kuchli tomonlari</span><ul>
+      <li>Muammo dalili kuchli: tadbirkorlar murojaatining 33 foizi moliya haqida.</li>
+      <li>Tadbirkor uchun bepul, demak tez tarqaladi.</li>
+      <li>Telegramda ishlaydi, o'rnatish kerak emas.</li>
+      <li>Bank faqat natija uchun to'laydi, unga xavf yo'q.</li>
+      <li>Haqiqiy odamlar bilan sinab ko'rsa bo'ladi, ma'lumot to'qima emas.</li>
+    </ul></div>
+    <div class="m"><span class="minus">Zaif tomonlari</span><ul>
+      <li><strong>Garov muammosini hal qilmaydi.</strong> 35 000 kishi garov yo'qligi uchun rad etilgan. Bot hujjatni tayyorlaydi, garovni yarata olmaydi.</li>
+      <li><strong>Bot kimning tomonida?</strong> Pulni bank to'lasa, tadbirkor «meni shu bankka itaryapti» deb o'ylashi mumkin.</li>
+      <li><strong>Davlat raqobati.</strong> 1-dekabrdan davlatning ko'p bankli kredit platformasi ochiladi. U mijozni banklarga bepul yetkazsa, bizga to'lashga sabab kamayadi.</li>
+      <li>Pul kech keladi: kredit berilgandan keyin.</li>
+      <li>Bank qoidalarini bilmasak, bot noto'g'ri maslahat beradi.</li>
+    </ul></div>
+  </div>
+
+  <div class="block">
+    <div class="label">Hali javobi yo'q savollar</div>
+    <div class="gaps">
+      <div class="gapq"><span>Bank biznes krediti uchun olib kelingan mijozga pul to'laydimi? Qancha?</span><em>Bank xodimidan</em></div>
+      <div class="gapq"><span>Kredit bo'yicha vositachilik qilish uchun ruxsat yoki litsenziya kerakmi?</span><em>Yuristdan, Markaziy bankdan</em></div>
+      <div class="gapq"><span>Bank eng ko'p qaysi sabablar bilan rad etadi? Bot aynan shuni tekshirishi kerak.</span><em>Kredit xodimidan</em></div>
+      <div class="gapq"><span>Davlat platformasi tadbirkorni tayyorlaydimi yoki faqat arizani qabul qiladimi?</span><em>Mentorlardan</em></div>
+      <div class="gapq"><span>Garovi yo'q tadbirkorga bot nima taklif qiladi? Kafolat jamg'armasi, garovsiz dasturlar shartlari.</span><em>Ochiq manbalardan, bankdan</em></div>
+      <div class="gapq"><span>Tadbirkor botga daromadini aytishga tayyormi?</span><em>5–10 tadbirkordan</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="chapter" id="direktor">
+  <div>
+    <div class="rank">2-g'oya</div>
+    <h2>AI Moliyaviy direktor: bank filiallari xarajatini kuzatadi</h2>
+  </div>
+  <p class="oneline">Bank bosh ofisi uchun tizim. Limit oshishini oldindan aytadi va shubhali xarajatni topadi. Pulni bank to'laydi.</p>
+
+  <dl class="kv">
+    <dt>Foydalanuvchi</dt><dd>Bank moliya bo'limi, filial rahbari, ichki audit</dd>
+    <dt>To'lovchi</dt><dd>Bank bosh ofisi</dd>
+    <dt>Bank nima oladi</dt><dd>Tejalgan pul va tezroq tuzilgan byudjet</dd>
+    <dt>Qamrov</dt><dd>Rasmiy ro'yxatdagi 23, 24, 25, 26-muammolar</dd>
+  </dl>
+
+  <div class="block">
+    <div class="label">Pul qanday aylanadi</div>
+    <div class="fig">
+      <div class="flow">
+        <div class="node">Filiallar<small>xarajat ma'lumoti</small></div>
+        <div class="arrow"><b>→</b>ma'lumot</div>
+        <div class="node us">Tizim<small>hisoblaydi, ogohlantiradi</small></div>
+        <div class="arrow"><b>→</b>tavsiya</div>
+        <div class="node">Bosh ofis<small>qaror qiladi</small></div>
+      </div>
+      <div class="money">Bank ← bizga tizimdan foydalangani uchun to'laydi</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Daromad yo'llari</div>
+    <div class="opts">
+      <div class="opt"><span class="tag main">Asosiy</span><strong>Yillik to'lov, filiallar soniga qarab.</strong><span>Bank qancha katta bo'lsa, shuncha ko'p to'laydi. Daromad oldindan ma'lum.</span></div>
+      <div class="opt"><span class="tag alt">Boshlash uchun</span><strong>Bitta bankda bepul yoki arzon sinov.</strong><span>Haqiqiy ma'lumotda ishlashini isbotlamasak, hech kim sotib olmaydi. Birinchi bank eng qiyini.</span></div>
+      <div class="opt"><span class="tag alt">Keyinchalik</span><strong>Boshqa tarmoqlarga sotish.</strong><span>Ko'p filialli har qanday tashkilot: dorixona, do'kon tarmoqlari. Bu taxmin, tekshirilmagan.</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Bank nega to'laydi: bor dalillar</div>
+    <div class="fig">
+      <ul>
+        <li>8 ta rasmiy muammodan 4 tasi shu haqda. Bir bank buni o'zi so'ragan.</li>
+        <li>McKinsey: banklar xodimlarga bog'liq bo'lmagan xarajatni 10–15 foiz qisqartira olgan (chet el tajribasi). <a href="https://www.mckinsey.com/industries/financial-services/our-insights/a-new-frontier-for-transforming-nonpersonnel-cost-management-in-banking">McKinsey</a></li>
+        <li>Elektr narxi 1-iyundan oshdi, limitdan 20 foiz oshsa yana 20 foiz qo'shimcha to'lanadi. Ogohlantirish uchun tayyor qoida. <a href="https://www.spot.uz/oz/2026/06/01/new-tariffs/">Spot</a></li>
+        <li>O'zbekistonda 36 ta bank bor. Bozor kichik, har bir mijoz katta. <a href="https://cbu.uz/upload/medialibrary/b0d/4h8ufsm1pbs5e7dl336ygil61lalyws1/Annual-report-2025.pdf">Markaziy bank</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Daromad hisobi</div>
+    <div class="fig">
+      <div class="formula">
+        <span class="q">Mijoz banklar soni</span><i>×</i>
+        <span class="q">Filiallar soni</span><i>×</i>
+        <span class="q">Bir filial uchun yillik narx</span><i>=</i>
+        <span>Daromad</span>
+      </div>
+      <p class="src">Narxni asoslash yo'li: tizim bir yilda qancha ortiqcha xarajat topsa, narx uning bir qismi bo'ladi. Haqiqiy ma'lumotsiz bu sonni ayta olmaymiz.</p>
+    </div>
+  </div>
+
+  <div class="pm">
+    <div class="p"><span class="plus">Kuchli tomonlari</span><ul>
+      <li>Bitta tizim to'rtta muammoni yopadi.</li>
+      <li>Mahalliy raqobatchi topilmadi.</li>
+      <li>Mijoz aniq va puli bor.</li>
+      <li>Demo ko'zga tashlanadi: ogohlantirish telefonga jonli keladi.</li>
+      <li>Narxni boshqa filiallar bilan solishtiradi, tashqi bozor narxi kerak emas.</li>
+    </ul></div>
+    <div class="m"><span class="minus">Zaif tomonlari</span><ul>
+      <li><strong>Ma'lumot to'qima.</strong> Xakatonda aniqlikni isbotlab bo'lmaydi.</li>
+      <li><strong>Muammo egasi noma'lum.</strong> Qaysi bank so'ragani yozilmagan. Hakamlar bankir bo'lmasligi mumkin.</li>
+      <li><strong>Bozor tor.</strong> 36 ta bank. Bittasi rad etsa, katta yo'qotish.</li>
+      <li>Bankka sotish uzoq davom etadi: xavfsizlik tekshiruvi, tender. Bu taxmin, lekin odatda shunday.</li>
+      <li>Bank ichki ma'lumotini tashqi jamoaga berishi qiyin.</li>
+      <li>Ko'lam katta: 4 modulni 2 kunda sifatli qilib bo'lmaydi.</li>
+    </ul></div>
+  </div>
+
+  <div class="block">
+    <div class="label">Hali javobi yo'q savollar</div>
+    <div class="gaps">
+      <div class="gapq"><span>23–26-muammolarni qaysi bank bergan? Vakili hakam yoki mentormi?</span><em>Tashkilotchidan</em></div>
+      <div class="gapq"><span>Bank hozir byudjetni nimada tuzadi va nazorat qiladi?</span><em>Bank vakilidan</em></div>
+      <div class="gapq"><span>Xarajat ma'lumoti qanday ko'rinishda: qaysi ustunlar, qaysi xarajat turlari?</span><em>Bank vakilidan</em></div>
+      <div class="gapq"><span>Limit va to'lovni tasdiqlash qoidalari qanday? «Bo'lib to'lash» misoli shunga tayanadi.</span><em>Bank vakilidan</em></div>
+      <div class="gapq"><span>Bank bunday tizimni kimdan va qanday tartibda sotib oladi?</span><em>Bank vakilidan</em></div>
+      <div class="gapq"><span>Ma'lumot bankdan tashqariga chiqishi mumkinmi yoki tizim bank ichida turishi shartmi?</span><em>Bank vakilidan</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ mezon ============ -->
+<section class="chapter" id="mezon">
+  <h2>Baholash mezonlari bo'yicha</h2>
+  <p>Uch xil mentor baholaydi: texnik, biznes va soha. Har biri 5 ta mezon bo'yicha 1 dan 10 gacha ball qo'yadi, keyin o'rtachasi olinadi. Uchala ball qanday qo'shilishi slaydda ko'rsatilmagan.</p>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>Mezon</th><th>1. Kredit boti</th><th>2. Moliyaviy direktor</th></tr></thead>
+      <tbody>
+        <tr><th colspan="3">Texnik mentor</th></tr>
+        <tr><td>T1. Texnik amalga oshirilish</td><td>Sodda: savol, hisob, hujjat</td><td>Murakkabroq, ko'rinishi kuchli</td></tr>
+        <tr><td>T2. Kod tayyorligi</td><td><strong>2 kunda to'liq ishlaydi</strong></td><td>4 modul ko'p, qisqartirish kerak</td></tr>
+        <tr><td>T3. Innovatsionlik</td><td>«Yana bir chatbot» xavfi</td><td><strong>Yangiroq ko'rinadi</strong></td></tr>
+        <tr><td>T4. Jamoa bilimi</td><td colspan="2">Teng. Savollarga qanday javob berishimizga bog'liq.</td></tr>
+        <tr><td>T5. Texnologiyalar</td><td colspan="2">Teng.</td></tr>
+        <tr><th colspan="3">Biznes mentor</th></tr>
+        <tr><td>B1. G'oya va dolzarblik</td><td><strong>Dalil kuchli</strong></td><td>Bank o'zi so'ragan</td></tr>
+        <tr><td>B2. Biznes modeli</td><td>Bank to'laydi, lekin miqdori noma'lum</td><td><strong>Yillik to'lov, tushunarli</strong></td></tr>
+        <tr><td>B3. Raqobatdagi ustunlik</td><td>Maydon gavjum</td><td><strong>Raqobatchi topilmadi</strong></td></tr>
+        <tr><td>B4. Moliyaviy barqarorlik</td><td>Pul kech keladi</td><td>Mijoz kam, sotish uzoq</td></tr>
+        <tr><td>B5. O'sish imkoniyati</td><td><strong>Minglab tadbirkor, ko'p bank</strong></td><td>36 bank, keyin boshqa tarmoqlar</td></tr>
+        <tr><th colspan="3">Soha mentori</th></tr>
+        <tr><td>S1. Muammo dolzarbligi</td><td><strong>Tadbirkorlar o'zi aytadi</strong></td><td>Faqat bank matni</td></tr>
+        <tr><td>S2. Sohani tushunish</td><td colspan="2">Ikkalasida ham bank odami bilan gaplashmasak past bo'ladi.</td></tr>
+        <tr><td>S3. Amaliy qo'llanilishi</td><td><strong>Haqiqiy odamda sinaladi</strong></td><td>To'qima ma'lumot</td></tr>
+        <tr><td>S4. Qonunchilikka muvofiqlik</td><td>Vositachilikka ruxsat kerakmi, noma'lum</td><td>Bank siri: ma'lumot tashqariga chiqmasligi kerak</td></tr>
+        <tr><td>S5. Ta'sir ko'lami</td><td><strong>Keng</strong></td><td>Tor</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Qalin yozilgani shu mezonda oldinda degani. Bu mening bahoyim. 1-g'oya soha mentori oldida kuchli, 2-g'oya biznes mentori oldida. S4 ikkalasida ham ochiq savol: taqdimotda javobi tayyor bo'lishi kerak.</p>
+</section>
+
+<!-- ============ tanlov ============ -->
+<section class="chapter" id="tanlov">
+  <h2>Yonma-yon</h2>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th></th><th>1. Kredit boti</th><th>2. Moliyaviy direktor</th></tr></thead>
+      <tbody>
+        <tr><td>Kim to'laydi</td><td>Bank (kredit bo'limi)</td><td>Bank (moliya bo'limi)</td></tr>
+        <tr><td>Nima uchun to'laydi</td><td>Yangi mijoz uchun</td><td>Tejalgan xarajat uchun</td></tr>
+        <tr><td>Kim foydalanadi</td><td>Minglab tadbirkor</td><td>Bir necha bank xodimi</td></tr>
+        <tr><td>Muammo dalili</td><td>Kuchli</td><td>O'rtacha</td></tr>
+        <tr><td>Raqobat</td><td>Gavjum, davlat ham bor</td><td>Bo'sh</td></tr>
+        <tr><td>Xakatonda sinash</td><td>Haqiqiy odamlar bilan</td><td>To'qima ma'lumot bilan</td></tr>
+        <tr><td>Birinchi pul</td><td>Bank bilan shartnomadan keyin</td><td>Sinov muvaffaqiyatli bo'lgandan keyin</td></tr>
+        <tr><td>Eng katta xavf</td><td>Bank to'lamasligi, garov muammosi</td><td>Bankka kira olmaslik</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pick">
+    <h3>Ikkalasida ham bitta umumiy narsa</h3>
+    <p>Ikkala g'oyada ham pulni bank to'laydi. Demak, bugun eng muhim ish bitta: <strong>bank odami bilan gaplashish.</strong> Usiz ikkala rejaning ham daromad qismi taxmin bo'lib qoladi.</p>
+    <ul>
+      <li><strong>Bank kredit xodimi topilsa</strong> → 1-g'oya savollari yopiladi.</li>
+      <li><strong>23–26-muammoni bergan bank vakili topilsa</strong> → 2-g'oya savollari yopiladi.</li>
+      <li><strong>Hech kim topilmasa</strong> → 1-g'oya xavfsizroq: uni tadbirkorlar bilan gaplashib ham isbotlasa bo'ladi.</li>
+    </ul>
+    <p class="note">Jadval: 18-noyabr soat 15:00 da oraliq tekshiruv, 19-noyabr 10:00 da taqdimot. <a href="https://eventflow.uz/en/events/national-ai-hackathon-tashkent">Eventflow</a></p>
+  </div>
+</section>
+
+</div>
