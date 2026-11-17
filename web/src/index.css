@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/* Tokenlar: docs/DIZAYN.md */
+:root {
+  --background: #f7f5f2;
+  --card: #ffffff;
+  --foreground: #14213d;
+  --muted-foreground: #5d667a;
+  --border: #e2ddd5;
+  --primary: #f26a1b;
+  --primary-soft: #fde9dc;
+  --success: #12805c;
+  --warning: #9a6a00;
+  --destructive: #b93a32;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f131c;
+    --card: #181e2b;
+    --foreground: #eef1f7;
+    --muted-foreground: #9ba6b9;
+    --border: #2a3344;
+    --primary: #ff8a45;
+    --primary-soft: #3a2416;
+    --success: #5fd0a4;
+    --warning: #f0c15a;
+    --destructive: #ff8f86;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-destructive: var(--destructive);
+  --font-sans: "Golos Text", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: 8px;
+  --radius-lg: 12px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
