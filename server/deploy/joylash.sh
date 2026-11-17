@@ -9,4 +9,4 @@ yarn -s test
 yarn -s build
 SHA="$(git rev-parse HEAD)"
 ssh -i "$KALIT" -o BatchMode=yes yetak-deploy@63.177.216.224 "$SHA" < dist/index.js
-curl -sf -m 10 https://yetak-api.63-177-216-224.sslip.io/api/health && echo
+curl -sf -m 10 https://yetak-api.diyorjon.com/api/health && echo
