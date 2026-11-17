@@ -34,6 +34,10 @@ Kalitsiz ham ishlaydi: sessiya, qadam, rozilik, bank oynasi ishlaydi; xabar yubo
 
 ## Joylash
 
-`main` ga birlashgan har o'zgarish GitHub Actions orqali «kichik» serverga chiqadi (`.github/workflows/server.yml`). Server tomoni: `deploy/`. Yangi versiya ishlamasa, avvalgisiga o'zi qaytadi.
+Qo'lda, sardor kompyuteridan: `server/deploy/joylash.sh` — sinov, yig'ish, «kichik» serverga yuborish. Yangi versiya 20 soniyada javob bermasa, avvalgisiga o'zi qaytadi. GitHub Actions faqat sinovni ishlatadi.
+
+Server tomoni (`deploy/`): `sozlash.sh` — bir martalik o'rnatish; `qabul.sh` — yangi versiyani qabul qiladi (deploy kaliti faqat shu skriptni ishga tushira oladi); `yetak-api.service` — xizmat, xotira chegarasi 300 MB. HTTPS sertifikatini certbot o'zi qo'shgan va yangilaydi.
+
+Claude kaliti serverda: `/opt/apps/yetak/yetak.env` (`ANTHROPIC_API_KEY=...`), keyin `sudo systemctl restart yetak-api`.
 
 Manzil: `https://yetak-api.63-177-216-224.sslip.io` (domen tanlangach almashtiriladi).

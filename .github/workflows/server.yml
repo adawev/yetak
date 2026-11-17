@@ -1,16 +1,12 @@
 name: server
 
+# Faqat tekshiruv. Serverga joylash qo'lda: server/deploy/joylash.sh (jamoa qarori, 2026-11-17).
 on:
   push:
     branches: [main]
     paths: ["server/**", "shared/**", ".github/workflows/server.yml"]
   pull_request:
     paths: ["server/**", "shared/**", ".github/workflows/server.yml"]
-  workflow_dispatch:
-
-concurrency:
-  group: server-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
   tekshiruv:
@@ -28,29 +24,3 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn test
       - run: yarn build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: server-dist
-          path: server/dist/index.js
-          retention-days: 7
-
-  joylash:
-    needs: tekshiruv
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: server-dist
-      - name: Serverga yuborish
-        env:
-          KALIT: ${{ secrets.YETAK_DEPLOY_KEY }}
-          HOST_KEY: ${{ secrets.YETAK_DEPLOY_KNOWN_HOSTS }}
-          HOST: ${{ secrets.YETAK_DEPLOY_HOST }}
-        run: |
-          mkdir -p ~/.ssh
-          printf '%s\n' "$KALIT" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
-          printf '%s\n' "$HOST_KEY" > ~/.ssh/known_hosts
-          ssh -i ~/.ssh/deploy -o BatchMode=yes "yetak-deploy@$HOST" "${GITHUB_SHA}" < index.js
-      - name: Tashqaridan tekshirish
-        run: curl -sf -m 10 https://yetak-api.63-177-216-224.sslip.io/api/health
