@@ -10,17 +10,18 @@ Ma'nosi: kichik nuqta — tadbirkor. Yo'l — biz. Katta to'q sariq nuqta — ma
 
 - Belgi atrofida kamida belgi balandligining chorak qismicha bo'sh joy.
 - Rangini o'zgartirmang, cho'zmang, soya qo'shmang.
-- So'z belgisi: «Yetak», Bricolage Grotesque 700, harflar orasi −0.02em.
+- So'z belgisi: «Yetak», Golos Text 700, harflar orasi −0.02em.
 
 ## Ranglar
 
 | Token | Yorug' | Qora | Qayerda |
 |---|---|---|---|
-| `--background` | `#f7f5f2` | `#0f131c` | Sahifa foni |
-| `--card` | `#ffffff` | `#181e2b` | Kartalar, agent xabari |
+| `--background` | `#ffffff` | `#0e1320` | Sahifa foni |
+| `--card` | `#ffffff` | `#161c2b` | Kartalar, agent xabari |
+| `--surface` | `#f5f6f8` | `#121827` | Ajratilgan bo'lim foni, kiritish maydoni |
 | `--foreground` | `#14213d` | `#eef1f7` | Matn, belgi |
-| `--muted-foreground` | `#5d667a` | `#9ba6b9` | Ikkinchi darajali matn |
-| `--border` | `#e2ddd5` | `#2a3344` | Chiziqlar |
+| `--muted-foreground` | `#5b6475` | `#9aa4b8` | Ikkinchi darajali matn |
+| `--border` | `#e3e6eb` | `#252e42` | Chiziqlar |
 | `--primary` | `#f26a1b` | `#ff8a45` | Asosiy tugma, jarayon, belgidagi nuqta |
 | `--primary-soft` | `#fde9dc` | `#3a2416` | Foydalanuvchi xabari foni |
 | `--success` | `#12805c` | `#5fd0a4` | Tayyor hujjat |
@@ -33,16 +34,27 @@ To'q sariq faqat bitta narsaga: keyingi qadam. Sahifada bir vaqtda bitta to'q sa
 
 ## Shrift
 
-- Sarlavha va so'z belgisi: **Bricolage Grotesque** 600–700
-- Matn: **Golos Text** 400–600 (o'zbek lotin va kirill harflarini to'liq qo'llaydi)
-- Raqamlar: `tabular-nums`
-- O'lchamlar: 14 / 16 / 18 / 24 / 32 / 40
+- Bitta oila: **Golos Text** 400–700 (o'zbek lotin va kirill harflarini to'liq qo'llaydi). Sarlavha 600–700, harflar orasi −0.02em
+- Raqamlar: `tabular-nums`, jadvalda o'ngga tekislangan
+- O'lchamlar: 13 / 14 / 16 / 18 / 24 / 32 / 48 / 60
 
 ## Shakl
 
 - Burchak: 8px (kichik), 12px (karta), to'liq dumaloq (tugmacha-teglar)
 - Soya ishlatilmaydi, chiziq ishlatiladi
 - Oraliqlar: 4 ning karralari
+
+## Sahifa qoidalari (2026-11-18)
+
+Yo'nalish: **klassik, minimal, tiniq.** Bank hujjatidek aniq, ortiqcha bezaksiz.
+
+1. **Bitta urg'u.** Har sahifada bitta esda qoladigan element (bosh sahifada — «tayyorgarlik varaqasi»). Qolgani jim.
+2. **Holat = nuqta + so'z.** Rangli fonli yorliqlar yo'q: `● Tayyor`, `● Rad etildi`.
+3. **Chiziq, karta emas.** Bo'limlar ingichka chiziq bilan ajraladi. Karta faqat ma'lumot guruhi uchun. Soya yo'q.
+4. **Asosiy tugma — siyoh rang** (`--foreground`). To'q sariq — belgi va sahifadagi bitta asosiy chaqiriq.
+5. **Matn chapga tekislangan**, qator 70 belgidan qisqa. KATTA HARFLI ustki yozuv, bitta so'zni rangga bo'yash, «A · B · C» zanjirlar — ishlatilmaydi.
+6. **Harakat faqat javob sifatida** (ochish, saqlash). O'z-o'zidan suzuvchi bezak yo'q.
+7. Telefonda 16px yon chekka, gorizontal aylantirish yo'q, klaviatura fokusi ko'rinadi.
 
 ## Chat ekrani qoidalari
 

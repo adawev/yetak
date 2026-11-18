@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 /** Dumaloq ikonka tugmasi uchun klass: faol — to'q sariq, aks holda yumshoq. */
 export const ikonKlass = (faol: boolean) =>
   `flex h-9 w-9 items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${
-    faol ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
+    faol ? 'bg-foreground text-background' : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
   }`
 
 /**

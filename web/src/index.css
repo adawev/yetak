@@ -2,11 +2,12 @@
 
 /* Tokenlar: docs/DIZAYN.md */
 :root {
-  --background: #f7f5f2;
+  --background: #ffffff;
   --card: #ffffff;
+  --surface: #f5f6f8;
   --foreground: #14213d;
-  --muted-foreground: #5d667a;
-  --border: #e2ddd5;
+  --muted-foreground: #5b6475;
+  --border: #e3e6eb;
   --primary: #f26a1b;
   --primary-soft: #fde9dc;
   --success: #12805c;
@@ -16,11 +17,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f131c;
-    --card: #181e2b;
+    --background: #0e1320;
+    --card: #161c2b;
+    --surface: #121827;
     --foreground: #eef1f7;
-    --muted-foreground: #9ba6b9;
-    --border: #2a3344;
+    --muted-foreground: #9aa4b8;
+    --border: #252e42;
     --primary: #ff8a45;
     --primary-soft: #3a2416;
     --success: #5fd0a4;
@@ -32,6 +34,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-card: var(--card);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
@@ -41,7 +44,7 @@
   --color-warning: var(--warning);
   --color-destructive: var(--destructive);
   --font-sans: "Golos Text", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Golos Text", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: 8px;
   --radius-lg: 12px;
 }
@@ -52,24 +55,11 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Bosh sahifa: nuqtali fon, sekin suzish, yo'l chizig'i */
-.nuqtali {
-  background-image: radial-gradient(color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px);
-  background-size: 22px 22px;
+h1, h2, h3, .font-display {
+  letter-spacing: -0.02em;
 }
 
-@keyframes suz {
-  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-  50% { transform: translateY(-6px) rotate(var(--r, 0deg)); }
-}
-.suzadi { animation: suz 7s ease-in-out infinite; }
-.suzadi-2 { animation: suz 8s ease-in-out -2.5s infinite; }
-.suzadi-3 { animation: suz 9s ease-in-out -5s infinite; }
-
-@keyframes chiz { to { stroke-dashoffset: 0; } }
-.chiziladi { stroke-dasharray: 400; stroke-dashoffset: 400; animation: chiz 1.4s .4s ease-out forwards; }
-
-@media (prefers-reduced-motion: reduce) {
-  .suzadi, .suzadi-2, .suzadi-3 { animation: none; }
-  .chiziladi { animation: none; stroke-dashoffset: 0; }
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
