@@ -18,6 +18,7 @@ if (!agent) console.warn("ANTHROPIC_API_KEY yo'q: xabar yuborish 503 qaytaradi, 
 
 const hisoblar = new Hisoblar(config.dataDir);
 hisoblar.adminTayyorla(config.adminTelefon, config.adminParol);
+hisoblar.demoTayyorla();
 
 const app = appYaratish({ store, agent, corsOrigin: config.corsOrigin, hisoblar, fayllar, tekshiruvchi });
 
