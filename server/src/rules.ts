@@ -169,7 +169,14 @@ export function baholash(
 
   // --- Hisob (hammasi kodda) ---
   const oylik_foyda = p.oylik_tushum - p.oylik_xarajat;
-  const { yillik_stavka, oylik_tolov } = kreditTolovi(p.kredit_summa, p.kredit_muddat_oy);
+  // To'lov — eng mos bank taklifidan (kartadagi va PDF dagi bilan bir xil), summa va muddat o'zgarmagan bo'lsa.
+  // Taklif yo'q bo'lsa — Markaziy bankning o'rtacha stavkasi.
+  const engMos = mahsulotlar.find(
+    (m) => m.mos !== "mos_emas" && m.taklif && m.taklif.summa === p.kredit_summa && m.taklif.muddat_oy === p.kredit_muddat_oy,
+  )?.taklif;
+  const { yillik_stavka, oylik_tolov } = engMos
+    ? { yillik_stavka: engMos.foiz_max, oylik_tolov: engMos.oylik_tolov }
+    : kreditTolovi(p.kredit_summa, p.kredit_muddat_oy);
   const kerakli_garov = Math.round(p.kredit_summa * QOIDA.garovUlushi);
   const hisob: Hisob = { oylik_foyda, oylik_tolov, yillik_stavka, kerakli_garov };
 

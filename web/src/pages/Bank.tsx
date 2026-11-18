@@ -40,6 +40,34 @@ function qoplash(a: BankArizasiHolat): number | null {
 }
 const qoplashRang = (k: number) => (k < 1 ? 'text-destructive' : k < 1.2 ? 'text-warning' : 'text-success')
 
+/** Ro'yxat va sarlavha uchun nom: korxona nomi yoki ism, bo'lmasa faoliyat. */
+const nomi = (a: BankArizasiHolat) =>
+  (a.profil.shakl === 'mchj' && a.profil.korxona_nomi ? `«${a.profil.korxona_nomi}» MChJ` : a.profil.ism) ?? a.profil.faoliyat ?? 'Tadbirkor'
+
+/** Tagsatr: faoliyat, shakl, muddat, rahbar. */
+const tagsatr = (a: BankArizasiHolat) =>
+  [
+    a.profil.faoliyat && (a.profil.korxona_nomi || a.profil.ism) ? a.profil.faoliyat : null,
+    a.profil.shakl ? SHAKL[a.profil.shakl] : null,
+    a.profil.faoliyat_oy != null ? `${a.profil.faoliyat_oy} oy` : null,
+    a.profil.shakl === 'mchj' && a.profil.korxona_nomi && a.profil.ism ? a.profil.ism : null,
+  ]
+    .filter(Boolean)
+    .join(', ')
+
+/** Tanlangan bank mahsuloti va hujjatlar holati. */
+function Mahsulot({ a }: { a: BankArizasiHolat }) {
+  if (!a.papka) return <span className="text-muted-foreground">—</span>
+  return (
+    <span className="block min-w-0">
+      <span className="block truncate font-medium">{a.papka.mahsulot.bank}</span>
+      <span className="block text-xs text-muted-foreground tabular-nums">
+        Hujjatlar {a.papka.tayyor}/{a.papka.jami}
+      </span>
+    </span>
+  )
+}
+
 /** Garov kerakli garovning necha foizi. Garov kerak bo'lmasa null. */
 function garovFoiz(a: BankArizasiHolat): number | null {
   const kerak = a.natija.hisob.kerakli_garov
@@ -169,7 +197,7 @@ export default function Bank() {
                       <th className="px-3 font-normal" title="Oylik foyda oylik to'lovni necha marta qoplaydi">
                         Qoplash
                       </th>
-                      <th className="px-3 font-normal">Garov</th>
+                      <th className="px-3 font-normal">Mahsulot</th>
                       <th className="px-3 font-normal">Yetak bahosi</th>
                       <th className="px-3 font-normal">Holat</th>
                       <th className="px-3 font-normal">Sana</th>
@@ -181,12 +209,9 @@ export default function Bank() {
                       <tr key={a.id} className="group">
                         <td className="py-4 pr-3">
                           <Link to={`/bank/${a.id}`} className="block font-medium hover:underline">
-                            {a.profil.faoliyat ?? 'Tadbirkor'}
+                            {nomi(a)}
                           </Link>
-                          <span className="text-xs text-muted-foreground">
-                            {a.profil.shakl ? SHAKL[a.profil.shakl] : '—'}
-                            {a.profil.faoliyat_oy != null && `, ${a.profil.faoliyat_oy} oy`}
-                          </span>
+                          <span className="text-xs text-muted-foreground">{tagsatr(a) || '—'}</span>
                         </td>
                         <td className="px-3 tabular-nums">
                           <span className="font-semibold">{a.profil.kredit_summa != null ? qisqaSom(a.profil.kredit_summa) : '—'}</span>
@@ -197,8 +222,8 @@ export default function Bank() {
                         <td className="px-3">
                           <Qoplash a={a} />
                         </td>
-                        <td className="px-3">
-                          <Garov a={a} />
+                        <td className="max-w-40 px-3">
+                          <Mahsulot a={a} />
                         </td>
                         <td className="px-3">
                           <HukmYorliq hukm={a.natija.hukm} />
@@ -224,7 +249,8 @@ export default function Bank() {
                       <Link to={`/bank/${a.id}`} className="block py-4">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <p className="truncate font-medium">{a.profil.faoliyat ?? 'Tadbirkor'}</p>
+                            <p className="truncate font-medium">{nomi(a)}</p>
+                            <p className="truncate text-xs text-muted-foreground">{tagsatr(a)}</p>
                             <p className="text-sm text-muted-foreground tabular-nums">
                               {a.profil.kredit_summa != null ? `${qisqaSom(a.profil.kredit_summa)} so'm` : '—'}
                               {a.profil.kredit_muddat_oy != null && `, ${a.profil.kredit_muddat_oy} oy`}
@@ -237,9 +263,11 @@ export default function Bank() {
                           <span className="flex items-center gap-1">
                             Qoplash <Qoplash a={a} />
                           </span>
-                          <span className="flex items-center gap-1">
-                            Garov <Garov a={a} />
-                          </span>
+                          {a.papka && (
+                            <span className="tabular-nums">
+                              {a.papka.mahsulot.bank} · hujjatlar {a.papka.tayyor}/{a.papka.jami}
+                            </span>
+                          )}
                         </div>
                       </Link>
                     </li>
@@ -250,7 +278,7 @@ export default function Bank() {
           </div>
         )}
         <p className="mt-4 max-w-3xl text-sm text-muted-foreground">
-          «Qoplash» — oylik foyda taxminiy oylik to'lovni necha marta qoplaydi. «Garov» — kerakli garovning necha foizi bor. Hisob
+          «Qoplash» — oylik foyda taxminiy oylik to'lovni necha marta qoplaydi. «Mahsulot» — tadbirkor tanlagan bank mahsuloti va papkadagi tayyor hujjatlar. Hisob
           Yetak qoidalari bo'yicha, bank o'z baholashini qiladi.
         </p>
       </div>
@@ -358,7 +386,7 @@ export function BankAriza() {
           <>
             <div className="mb-8 flex flex-wrap items-end justify-between gap-6">
               <div className="min-w-0">
-                <h1 className="text-3xl font-semibold">{a.profil.faoliyat ?? 'Tadbirkor'}</h1>
+                <h1 className="text-3xl font-semibold">{nomi(a)}</h1>
                 <p className="mt-1 text-muted-foreground">
                   {a.profil.shakl ? SHAKL[a.profil.shakl] : '—'}
                   {a.profil.faoliyat_oy != null && `, ${a.profil.faoliyat_oy} oy faoliyat`}
@@ -415,8 +443,11 @@ export function BankAriza() {
                     <Malumot nom="Oylik xarajat" qiymat={pul(a.profil.oylik_xarajat)} />
                     <Malumot nom="Garov qiymati" qiymat={pul(a.profil.garov_qiymati)} />
                     <Malumot nom="Kredit tarixi" qiymat={a.profil.kredit_tarixi ? TARIX[a.profil.kredit_tarixi] : '—'} />
-                    <Malumot nom="Avval mikrokredit" qiymat={haYoq(a.profil.avval_mikrokredit)} />
-                    <Malumot nom="Elektron imzo" qiymat={haYoq(a.profil.eri_bor)} />
+                    {a.profil.ism && <Malumot nom="Rahbar / egasi" qiymat={a.profil.ism} />}
+                    {a.profil.korxona_nomi && <Malumot nom="Korxona" qiymat={a.profil.korxona_nomi} />}
+                    {a.profil.stir && <Malumot nom="STIR" qiymat={a.profil.stir} />}
+                    {a.papka && <Malumot nom="Tanlangan mahsulot" qiymat={`${a.papka.mahsulot.bank} — ${a.papka.mahsulot.nom}`} />}
+                    {a.profil.eri_bor != null && <Malumot nom="Elektron imzo" qiymat={haYoq(a.profil.eri_bor)} />}
                   </dl>
                 </section>
               </div>

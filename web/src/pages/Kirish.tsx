@@ -1,4 +1,4 @@
-import { Check, Loader2 } from 'lucide-react'
+import { Check, ChevronRight, Landmark, LayoutDashboard, Loader2, MessageSquare } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { maydon as M, tugma } from '@/components/ui'
@@ -51,6 +51,78 @@ export default function Kirish({ royxat = false }: { royxat?: boolean }) {
   const afzalliklar = royxat
     ? ["Suhbat va yo'l xaritangiz har qurilmada", 'Bajarilgan qadamlar belgilanib boradi', "Tadbirkor uchun 0 so'm"]
     : ["Tadbirkor — o'z suhbati va yo'l xaritasi", 'Bank xodimi — tekshirilgan, rozilik bergan arizalar', 'Admin — hamkor banklar va hisobot']
+
+  // Demo: kirish — uchta katta tugma. Telefon va parol bilan kirish yashirin bo'limda.
+  if (!royxat) {
+    const rollar = [
+      { nom: 'Tadbirkor', izoh: "Bankni topish va hujjatlarni tayyorlash. Ro'yxatsiz.", belgi: <MessageSquare size={22} />, bos: () => nav('/chat') },
+      { nom: 'Bank xodimi', izoh: 'Rozilik bergan tadbirkorlarning tayyor papkalari', belgi: <Landmark size={22} />, bos: () => kir(DEMO_BANK) },
+      { nom: 'Admin', izoh: 'Hamkor banklar, voronka va hisobot', belgi: <LayoutDashboard size={22} />, bos: () => kir(DEMO_ADMIN) },
+    ]
+    return (
+      <main className="h-full overflow-y-auto">
+        <div className="mx-auto w-full max-w-md px-4 py-10 sm:py-16">
+          <h1 className="text-3xl font-semibold">Kim sifatida kirasiz?</h1>
+          <p className="mt-1 text-muted-foreground">Demo: parolsiz, bir bosishda.</p>
+          <ul className="mt-8 space-y-3">
+            {rollar.map((r) => (
+              <li key={r.nom}>
+                <button
+                  type="button"
+                  disabled={band}
+                  onClick={() => void r.bos()}
+                  className="flex min-h-20 w-full items-center gap-4 rounded-2xl border border-border bg-card px-4 text-left transition-colors hover:border-primary disabled:opacity-60"
+                >
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">{r.belgi}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold">{r.nom}</span>
+                    <span className="block text-sm text-muted-foreground">{r.izoh}</span>
+                  </span>
+                  {band ? <Loader2 size={18} className="animate-spin text-muted-foreground" /> : <ChevronRight size={18} className="text-muted-foreground" />}
+                </button>
+              </li>
+            ))}
+          </ul>
+          {xato && <p className="mt-4 border-l-2 border-destructive pl-3 text-sm text-destructive">{xato}</p>}
+
+          <details className="mt-8 border-t border-border pt-5">
+            <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Telefon va parol bilan kirish</summary>
+            <form onSubmit={yubor} className="mt-4 space-y-4">
+              <label className="block text-sm font-medium">
+                Telefon raqam
+                <span className="relative block">
+                  <span className="pointer-events-none absolute top-1/2 left-3 mt-[3px] -translate-y-1/2 text-base text-muted-foreground">+998</span>
+                  <input
+                    className={`${maydon} pl-14`}
+                    value={telefon}
+                    onChange={(e) => setTelefon(e.target.value)}
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="90 123 45 67"
+                    required
+                  />
+                </span>
+              </label>
+              <label className="block text-sm font-medium">
+                Parol
+                <input className={maydon} type="password" value={parol} onChange={(e) => setParol(e.target.value)} autoComplete="current-password" minLength={6} required />
+              </label>
+              <button type="submit" disabled={band} className={`${tugma.asosiy} min-h-12 w-full`}>
+                Kirish
+              </button>
+              <p className="text-center text-sm text-muted-foreground">
+                Tadbirkormisiz?{' '}
+                <Link to="/register" className="font-medium text-foreground underline underline-offset-4">
+                  Ro'yxatdan o'ting
+                </Link>{' '}
+                — suhbatingiz har qurilmada saqlanadi.
+              </p>
+            </form>
+          </details>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="grid h-full overflow-y-auto lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
