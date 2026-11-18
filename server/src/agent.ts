@@ -2,17 +2,25 @@
 // Hech narsa hisoblamaydi: hisob va hukm rules.ts dan keladi.
 
 import Anthropic from "@anthropic-ai/sdk";
-import type { Blok, Iqtibos, Natija, Profil, Xabar } from "../../shared/types";
+import type { Blok, Iqtibos, Natija, Papka, Profil, Xabar, YuklanganFayl } from "../../shared/types";
 import { config } from "./config";
+import { papkaYasash } from "./hujjatlar";
 import { KORPUS } from "./korpus.generated";
-import { mahsulotlarniMoslash } from "./mahsulotlar";
+import { MAHSULOTLAR, mahsulotlarniMoslash } from "./mahsulotlar";
 import { profilniTozalash } from "./profil";
-import { baholash, yetishmayotgan } from "./rules";
+import { natijaHisobla } from "./natija";
+import { biznesToifasi, yetishmayotgan } from "./rules";
 
 export interface AgentKirish {
   xabarlar: Xabar[]; // oxirgisi — tadbirkorning yangi xabari
   profil: Profil;
   bajarilgan: string[];
+  /** Tadbirkor tanlagan bank mahsuloti (papka shu bank uchun). */
+  mahsulot?: string;
+  /** Yuklangan hujjatlar — papka holati uchun. */
+  fayllar?: Record<string, YuklanganFayl>;
+  /** Oxirgi xabarga ilova qilingan skrinshot (saqlanmaydi). */
+  rasm?: { tur: "image/jpeg" | "image/png" | "image/webp"; data: string };
 }
 
 export interface AgentJavob {
@@ -23,6 +31,8 @@ export interface AgentJavob {
   bloklar?: Blok[];
   /** Javob tayangan manbalar (Claude citations). */
   manbalar?: Iqtibos[];
+  /** Tadbirkor suhbatda boshqa bankni tanlasa — yangi mahsulot kaliti (papka shunga o'tadi). */
+  mahsulot?: string;
 }
 
 export interface Agent {
@@ -47,19 +57,38 @@ export const SALOM: { matn: string; tugmalar: string[] } = {
   tugmalar: [],
 };
 
-const SYSTEM = `Sen — Yetak, kichik tadbirkorga kredit yo'lida yordam beradigan yordamchisan. Tadbirkor bilan o'zbek tilida (lotin yozuvi), oddiy so'zlar bilan, qisqa gaplashasan. Tadbirkorga "siz" deb murojaat qilasan.
+const SYSTEM = `Sen — Yetak, kichik tadbirkorga kredit yo'lida yordam beradigan yordamchisan. Oddiy so'zlar bilan, qisqa gaplashasan. Tadbirkorga "siz" deb murojaat qilasan.
+
+Til: tadbirkor qaysi tilda va yozuvda yozsa — butun suhbat davomida o'shanda javob ber. O'zbekcha lotin → lotin; o'zbekcha kirill (Салом, керак) → kirill; ruscha → ruscha. Tugmalar ham shu tilda. Faqat profilni_saqlash maydonlari (qiymatlar) o'zgarmaydi.
 
 Vazifang:
 1. Avval tadbirkorni eshit: u o'z holatini o'z so'zi bilan aytadi. Uning xabaridan hamma ma'lum maydonni ajratib, birdaniga saqla. Keyin faqat <holat> dagi «yetishmayotgan» ro'yxatidagilarni so'ra — bir xabarda 2–3 tasini birga, qisqa ro'yxat qilib. Tadbirkor aytganini qayta so'rama. Bank rad etgan bo'lsa — sababini eshit va unga e'tibor qarat.
 2. Tadbirkor biror maydon haqida aytishi bilan profilni_saqlash asbobi bilan saqla. Bir nechta maydonni birdan saqlash mumkin. Tadbirkor oldingi javobini tuzatsa — yangisini saqla.
-3. Hamma maydon to'lganda tizim natijani o'zi hisoblaydi (hukm, topilmalar, yo'l xaritasi) va profilni_saqlash javobida qaytaradi. Sen uni oddiy tilda tushuntirasan: hukm, eng muhim 1 sabab, birinchi qadam.
-3a. <holat> dagi «mahsulotlar» — tekshirilgan bank mahsulotlari, tadbirkorga mosligi bo'yicha tartiblangan (har shart: ha / yoq / nomalum). Natija chiqqanda korsatish bilan "mahsulotlar" blokini ko'rsat va eng mos mahsulotni bank va nomi bilan ayt: unga nima yetishmayapti (yoq shartlar) va birinchi aniq qadam. "Kafolat so'rang", "ERI oling", "bankka boring" kabi umumiy gap aytma — har maslahat aniq mahsulot va aniq shartga bog'langan bo'lsin. Hech biri mos kelmasa — shuni ochiq ayt va eng yaqinini nima yetishmasligi bilan ko'rsat.
-4. Keyin tadbirkorga yo'l xaritasini bajarishda yordam berasan: savollariga javob berasan, qadamni tushuntirasan.
+2a. Erta to'xtash: tadbirkor biznesi ro'yxatdan o'tmagan (norasmiy) desa — boshqa savollarni berishdan oldin darhol ayt: "Bank kreditni faqat ro'yxatdan o'tgan tadbirkorga beradi. Avval o'zini o'zi band yoki YaTT bo'lib ro'yxatdan o'tish kerak." Keyin qolgan savollarni qisqa davom ettir.
+3. Hamma maydon to'lganda tizim natijani o'zi hisoblaydi va profilni_saqlash javobida qaytaradi. Natija xabari aynan 3 qismdan iborat, har biri bir qator:
+   (1) hukm — bir gap: «natija.xulosa» dagi ma'noda;
+   (2) bank — <holat> «papka.bank» dagi mahsulot (faqat shu bank, boshqasini aytma);
+   (3) bugun nima qilasiz — papkadagi birinchi hujjat va uni qayerdan olish.
+   korsatish bilan "hukm" va "hujjatlar" bloklarini ko'rsat. Hukm va bank bir-biriga zid bo'lmasin: natijadagi so'z bilan gapir.
+   Hukm "olmang" bo'lsa — bank va hujjat haqida GAPIRMA, "mahsulotlar"/"hujjatlar" blokini ko'rsatma. O'rniga: sabab bir gapda (aybsiz, yumshoq) va avval nimani tuzatish kerakligi 2–3 qisqa qadam bilan; "keyin qaytib keling, qayta tekshiramiz".
+3a. <holat> dagi «mahsulotlar» — boshqa banklar ham. Tadbirkor "boshqa bank bormi?" desa yoki papkadagi mahsulot mos kelmasa — "mahsulotlar" blokini ko'rsat va nima yetishmasligini ayt. "Kafolat so'rang", "bankka boring" kabi umumiy gap aytma.
+4. Hujjatlar — eng muhim yordaming. <holat> dagi «papka» — tanlangan bank uchun kerakli hujjatlar, har birini qayerdan olish (qayerda, qidiruv, vaqt, narx), holati va «qoralama» (Yetak o'zi tayyorlagan qoralama). Hujjat sonini o'zing sanama — kartada ko'rinadi. Masalan: "Kredit tarixini my.gov.uz da «Kredit tarixini olish» deb qidirib, bir necha daqiqada olasiz, bepul." Oxirida: "Har birini rasmga olib «Hujjatlar» bo'limiga yuklang — tekshirib, bitta papka qilib beramiz."
+5. Tadbirkor hujjatni qanday olishni so'rasa — faqat papkadagi qayerda / qidiruv / vaqt / narx dan ayt, 2–3 qisqa qadam bilan. Bir nechta hujjat so'rasa — har biriga bitta qator. Qoralamasi bor hujjat uchun: "Buni Yetak sizning raqamlaringizdan tayyorladi — papkada bor." «qayerda» bor bo'lsa — shuni ishonch bilan ayt ("Arizani bankning o'zida to'ldirasiz"), "aniqlay olmadik" dema. Vaqt yoki narx noma'lum bo'lsa — umuman tilga olma. Faqat «qayerda» ham yo'q bo'lsa: "Buni bankdan so'rang: «… uchun nima kerak?»" — tadbirkor bankda aynan nima deb so'rashini bitta savol qilib ber. Sayt menyusini, narxni yoki muddatni o'zingdan to'qima.
+5a. Tadbirkor boshqa bankni tanlasa ("TBC bo'lsin", "boshqasini ko'rsat") — bank_tanlash asbobini chaqir, keyin yangi papka bo'yicha gapir. Papkadagi bankdan boshqa bankning hujjatlarini aytma.
+5b. <holat> da «ogohlantirish» bo'lsa — shuni birinchi o'ringa qo'y.
+6. Keyin yo'l xaritasini bajarishda yordam berasan: savollariga javob berasan, qadamni tushuntirasan.
+
+Savodi past, tez tushunmaydigan odam bilan:
+- Tadbirkor qisqa, xato bilan yoki chalkash yozsa — bitta xabarda faqat BITTA savol ber va mos tugmalar qo'y. Ro'yxat bilan so'rama.
+- So'zlar kundalik bo'lsin: "tushum" o'rniga "oyiga qancha pul tushadi", "xarajat" o'rniga "oyiga qancha sarflaysiz". Atama ishlatma; ishlatsang — "atama" bloki bilan bir gapli izoh.
+- "Tushunmadim", "nima?" desa — avvalgisini qaytarma: oddiyroq qilib, hayotiy misol bilan, bitta gapda qayta ayt.
+- Raqamni aniq bilmasa ("bilmayman", "aniq emas") — o'sha savolni QAYTA BERMA. Bo'laklab yordam ber: "Un, gaz, ish haqi — har biriga taxminan qancha?" yoki tugmalarda 3–4 ta taxminiy aniq qiymat ber ("10 mln", "15 mln", "20 mln"). Tadbirkor bitta tanlasa — shuni saqla.
+- Bir narsani ikki marta so'rama. Tadbirkor oldin aytgan bo'lsa (hatto boshqa so'z bilan) — saqla va o'tib ket.
 
 Javob shakli:
 - Tadbirkorga javobni oddiy matn qilib yoz. Agar profilni_saqlash chaqirsang, avval uning natijasini ol, keyin javob yoz.
 - tugmalar va korsatish asboblarini javob matnidan OLDIN chaqir.
-- korsatish: raqam yoki natijani tushuntirayotganda mos blokni ko'rsat — tadbirkor rasm va diagrammani matndan yaxshiroq tushunadi. Summa aytilganda tasdiqlash uchun "kredit_summa" yoki "oylik_tushum"; natija chiqqanda "hukm" va "yol_xaritasi"; pul oqimi yoki garov haqida gapirganda "pul_oqimi", "garov". Bank atamasi birinchi marta chiqqanda "atama" bilan qisqa izoh ber. Har javobda shart emas — faqat foydali bo'lsa.
+- korsatish: raqam yoki natijani tushuntirayotganda mos blokni ko'rsat — tadbirkor rasm va diagrammani matndan yaxshiroq tushunadi. Summa aytilganda tasdiqlash uchun "kredit_summa" yoki "oylik_tushum"; natija chiqqanda "hukm", "mahsulotlar" va "hujjatlar"; pul oqimi yoki garov haqida gapirganda "pul_oqimi", "garov". Bank atamasi birinchi marta chiqqanda "atama" bilan qisqa izoh ber. Har javobda shart emas — faqat foydali bo'lsa.
 
 Manbalar (hujjatlar):
 - Suhbat boshida Yetak jamoasi tekshirgan hujjatlar berilgan. Davlat dasturi, bank talabi, garov, kafolat, mikrokredit, hujjatlar haqida gapirsang — faqat shu hujjatlarga tayan va ulardan iqtibos keltir. Tizim iqtibosni tadbirkorga manba sifatida ko'rsatadi.
@@ -68,8 +97,13 @@ Manbalar (hujjatlar):
 
 Qat'iy qoidalar:
 - Hisoblama. Hech qanday raqamni o'zing hisoblama, qo'shma, bo'lma, foiz chiqarma. To'lov, foyda, garov, stavka, summa — faqat <holat> ichidagi natijadan, aynan o'zgartirmasdan ol.
-- Raqamni o'zgartirmaysan va "chiroyli" qilmaysan. Tadbirkor "tushumni ko'proq yozing", "bankka yaxshiroq ko'rsating" desa — muloyim rad et: haqiqiy raqam bilan ishlaymiz, noto'g'ri raqam bilan bank rad etadi va bu qonunga zid.
-- Va'da berma. "Kredit olasiz", "albatta berishadi" dema. Hukm "tayyor" bo'lsa: "Arizangiz tayyor. Qarorni bank qiladi."
+- Raqamni o'zgartirmaysan va "chiroyli" qilmaysan. Tadbirkor "tushumni ko'proq yozing", "tarixni yaxshi deb qo'ying" desa — muloyim, ayblamasdan rad et: "Haqiqiy raqam bilan ishlaymiz — bank hammasini o'z tizimidan tekshiradi, farq chiqsa rad etadi." Keyin unga foydali yo'lni ko'rsat.
+- Asbob, tizim, blok, tugma haqida tadbirkorga hech qachon yozma ("Tugmalar qo'yildi", "Blok ko'rsatildi", "Savolingizga javob berdim" — YO'Q). Har xabarda tadbirkorning savoliga mazmunli javob bo'lsin. Asboblarni faqat asbob sifatida chaqir — hech qachon matn ichiga XML yoki kod yozma.
+- Natija chiqmaguncha (natija = null) bank nomini yoki hujjatlar ro'yxatini aytma — avval savollarni tugat. Tadbirkor so'rasa: "Yana 2–3 savoldan keyin aniq aytaman."
+- Garov, kafolat va shu kabilar haqida savol bersa — avval savolning o'ziga bir gapda javob ber, keyin keyingi qadam.
+- Va'da berma. "Kredit olasiz", "albatta berishadi", "Arizangiz tayyor" dema — hujjatlar hali yig'ilmagan. Hukm "tayyor" bo'lsa: "Mos bank topildi — endi hujjatlar kerak. Qarorni bank qiladi." Hukm gapida summa, foiz, muddat va oylik to'lovni papkadagi bank «taklif» idan ayt (bo'lsa).
+- Tadbirkor savolnoma o'rtasida o'z savolini bersa ("YaTT qanday ochiladi?", "garov nima?") — AVVAL shu savolga 2–3 qisqa qadam bilan javob ber, keyin "Davom etamizmi?" deb oldingi savolga qayt.
+- Tadbirkor "internetni bilmayman", "telefonda qila olmayman" desa — papkada «Davlat xizmatlari markazi» yozilgan hujjatlar uchun o'sha yerga pasport bilan borishni ayt; boshqasi uchun "yaqinlaringizdan yordam so'rang yoki ekranni rasmga olib yuboring — qaysi tugmani bosishni aytaman".
 - Natijada yo'q dastur, bank, foiz, shart, muddat yoki hujjatni o'ylab topma. Bilmasang: "Buni hali aniqlay olmadik."
 - Topilmada taxmin: true bo'lsa — bu bizning hisob yoki bank bilan tasdiqlanmagan ma'lumot ekanini ayt.
 - Bank atamasini ishlatsang, darhol oddiy so'z bilan tushuntir. Masalan: "garov — qarz qaytmasa bank oladigan mol-mulk".
@@ -152,7 +186,7 @@ const TOOLS: Anthropic.Beta.BetaTool[] = [
           type: "array",
           items: {
             type: "string",
-            enum: ["kredit_summa", "oylik_tushum", "pul_oqimi", "garov", "hukm", "yol_xaritasi", "mahsulotlar"],
+            enum: ["kredit_summa", "oylik_tushum", "pul_oqimi", "garov", "hukm", "yol_xaritasi", "mahsulotlar", "hujjatlar"],
           },
         },
         atama: nullable({
@@ -166,6 +200,20 @@ const TOOLS: Anthropic.Beta.BetaTool[] = [
         }),
       },
       required: ["bloklar", "atama"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "bank_tanlash",
+    description:
+      "Hujjatlar papkasini boshqa bank mahsulotiga o'tkazadi. Faqat tadbirkor o'zi boshqa bankni tanlasa yoki so'rasa chaqiring. Javobda yangi holat (papka) qaytadi.",
+    strict: true,
+    input_schema: {
+      type: "object",
+      properties: {
+        kalit: { type: "string", enum: MAHSULOTLAR.map((m) => m.kalit) },
+      },
+      required: ["kalit"],
       additionalProperties: false,
     },
   },
@@ -208,6 +256,7 @@ export function bloklarniYasash(
     else if (t === "garov" && natija && profil.garov_qiymati != null)
       bloklar.push({ tur: "garov", bor: profil.garov_qiymati, kerak: natija.hisob.kerakli_garov });
     else if ((t === "hukm" || t === "yol_xaritasi") && natija) bloklar.push({ tur: t });
+    else if (t === "hujjatlar" && mahsulotlarniMoslash(profil).length > 0) bloklar.push({ tur: "hujjatlar" });
     else if (t === "mahsulotlar" && mahsulotlarniMoslash(profil).length > 0)
       bloklar.push({ tur: "mahsulotlar", mahsulotlar: mahsulotlarniMoslash(profil) });
     else yoq.push(String(t));
@@ -219,7 +268,20 @@ export function bloklarniYasash(
 }
 
 /** Javob matni va citations'dan manbalarni yig'adi. */
-export function matnVaManbalar(content: Anthropic.Beta.BetaContentBlock[]): { matn: string; manbalar: Iqtibos[] } {
+/** Model ba'zan asbob chaqiruvini matn ichiga yozadi — bu tadbirkorga ko'rinmasligi kerak. */
+export function markupTozala(s: string): { matn: string; markup: boolean } {
+  const toza = s
+    .replace(/<(antml:)?function_calls>[\s\S]*?(<\/(antml:)?function_calls>|$)/g, "")
+    .replace(/<(antml:)?invoke\b[\s\S]*?(<\/(antml:)?invoke>|$)/g, "")
+    .replace(/<\/?(antml:)?(parameter|invoke|function_calls)\b[^>]*>/g, "");
+  return { matn: toza.replace(/\n{3,}/g, "\n\n").trim(), markup: toza !== s };
+}
+
+export function matnVaManbalar(content: Anthropic.Beta.BetaContentBlock[]): {
+  matn: string;
+  manbalar: Iqtibos[];
+  markup: boolean;
+} {
   let matn = "";
   const manbalar: Iqtibos[] = [];
   for (const b of content) {
@@ -233,7 +295,8 @@ export function matnVaManbalar(content: Anthropic.Beta.BetaContentBlock[]): { ma
       if (!manbalar.some((m) => m.parcha === parcha)) manbalar.push({ nom: h.nom, url: h.url, parcha });
     }
   }
-  return { matn: matn.trim(), manbalar: manbalar.slice(0, 4) };
+  const t = markupTozala(matn);
+  return { matn: t.matn, manbalar: manbalar.slice(0, 4), markup: t.markup };
 }
 
 function natijaQisqa(n: Natija | null) {
@@ -255,18 +318,56 @@ function natijaQisqa(n: Natija | null) {
   };
 }
 
-function holatMatni(profil: Profil, bajarilgan: string[]) {
+function papkaQisqa(p: Papka | null | undefined) {
+  if (!p) return null;
+  return {
+    bank: `${p.mahsulot.bank} — ${p.mahsulot.nom}`,
+    tayyor: `${p.tayyor}/${p.jami}`,
+    hujjatlar: p.hujjatlar.map((h) => ({
+      nom: h.nom,
+      ...(h.olish ? { qayerda: h.olish.qayerda, qidiruv: h.olish.qidiruv, vaqt: h.olish.vaqt, narx: h.olish.narx } : {}),
+      ...(h.qoralama ? { qoralama: h.qoralama } : {}),
+      holat: h.bank_ozi_oladi ? "bank o'zi oladi" : !h.fayl ? "yuklanmagan" : h.fayl.tekshiruv?.holat === "mos" ? "tayyor" : "muammo bor",
+      ...(h.olish ? { qayerda: h.olish.qayerda, qidiruv: h.olish.qidiruv, vaqt: h.olish.vaqt, narx: h.olish.narx } : {}),
+    })),
+    ogohlantirishlar: p.ogohlantirishlar,
+  };
+}
+
+interface HolatKirish {
+  profil: Profil;
+  bajarilgan: string[];
+  mahsulot?: string;
+  fayllar?: Record<string, YuklanganFayl>;
+}
+
+/** Erta ogohlantirish — kod hisoblaydi (AI taqqoslamaydi). */
+function ertaOgohlantirish(p: Profil): string | null {
+  if (p.oylik_tushum != null && p.oylik_xarajat != null && p.oylik_xarajat >= p.oylik_tushum) {
+    return "Xarajat tushumdan kam emas — biznes hozir zarar bilan ishlayapti. Bank va hujjat haqida GAPIRMA. Buni hozir yumshoq, raqamlar bilan bir gapda ayt (\"oyiga X kiradi, Y chiqadi\"), keyin qolgan savollarni davom ettir.";
+  }
+  return null;
+}
+
+function holatMatni({ profil, bajarilgan, mahsulot, fayllar }: HolatKirish) {
+  const mahsulotlar = mahsulotlarniMoslash(profil);
+  const papka = papkaYasash(profil, mahsulotlar, mahsulot, fayllar ?? {});
   return JSON.stringify({
     profil,
     yetishmayotgan: yetishmayotgan(profil),
-    natija: natijaQisqa(baholash(profil, bajarilgan)),
-    mahsulotlar: mahsulotlarniMoslash(profil).map((m) => ({
+    biznes_toifasi: biznesToifasi(profil),
+    ogohlantirish: ertaOgohlantirish(profil),
+    natija: natijaQisqa(natijaHisobla(profil, bajarilgan)),
+    mahsulotlar: mahsulotlar.map((m) => ({
+      kalit: m.kalit,
       bank: m.bank,
       nom: m.nom,
       qisqa: m.qisqa,
       mos: m.mos,
       shartlar: m.shartlar.map((s) => `${s.holat}: ${s.matn}`),
+      ...(m.taklif ? { taklif: m.taklif } : {}),
     })),
+    papka: papkaQisqa(papka),
   });
 }
 
@@ -278,12 +379,15 @@ function suhbatniTuzish(k: AgentKirish): Anthropic.Beta.BetaMessageParam[] {
   k.xabarlar.forEach((x, i) => {
     const role = x.kim === "agent" ? "assistant" : "user";
     const oxirgi = i === k.xabarlar.length - 1;
-    const content: Anthropic.Beta.BetaTextBlockParam[] = oxirgi
+    const rasmBlok: Anthropic.Beta.BetaContentBlockParam[] =
+      oxirgi && k.rasm ? [{ type: "image", source: { type: "base64", media_type: k.rasm.tur, data: k.rasm.data } }] : [];
+    const content: Anthropic.Beta.BetaContentBlockParam[] = oxirgi
       ? [
-          { type: "text", text: `<holat>${holatMatni(k.profil, k.bajarilgan)}</holat>` },
-          { type: "text", text: x.matn },
+          { type: "text", text: `<holat>${holatMatni(k)}</holat>` },
+          ...rasmBlok,
+          { type: "text", text: k.rasm ? `(Tadbirkor ekran rasmini yubordi.) ${x.matn}` : x.matn },
         ]
-      : [{ type: "text", text: x.matn }];
+      : [{ type: "text", text: x.rasm ? `(rasm yuborgan edi) ${x.matn}` : x.matn }];
     const avvalgi = msgs[msgs.length - 1];
     if (avvalgi.role === role) {
       // Ketma-ket bir xil rol — bitta xabarga birlashtiriladi.
@@ -326,11 +430,20 @@ export class ClaudeAgent implements Agent {
     const bloklar: Blok[] = [];
     const matnlar: string[] = [];
     const manbalar: Iqtibos[] = [];
+    let tanlov = k.mahsulot;
+    let markupQaytarildi = false;
 
     const yakun = (): AgentJavob => {
       const matn = matnlar.join("\n\n").trim().slice(0, 4000);
       if (!matn) throw new AgentXatosi("Agent javob tayyorlay olmadi. Xabaringizni qayta yuboring.", 502);
-      return { matn, tugmalar, profil, bloklar, manbalar: manbalar.slice(0, 4) };
+      return {
+        matn,
+        tugmalar,
+        profil,
+        bloklar,
+        manbalar: manbalar.slice(0, 4),
+        ...(tanlov && tanlov !== k.mahsulot ? { mahsulot: tanlov } : {}),
+      };
     };
 
     for (let qadam = 0; qadam < MAX_QADAM; qadam++) {
@@ -347,13 +460,30 @@ export class ClaudeAgent implements Agent {
         (b): b is Anthropic.Beta.BetaToolUseBlock => b.type === "tool_use",
       );
       // Profil saqlanayotgan qadamdagi matn — natijani ko'rmasdan yozilgan, olinmaydi.
+      let markupBor = false;
       if (!toollar.some((t) => t.name === "profilni_saqlash")) {
         const m = matnVaManbalar(javob.content);
+        markupBor = m.markup;
         // Faqat oxirgi matnli javob olinadi: model asbobdan keyin matnni qayta yozsa, takror chiqmasin.
         if (m.matn) {
           matnlar.splice(0, matnlar.length, m.matn);
           manbalar.splice(0, manbalar.length, ...m.manbalar);
         }
+      }
+      // Model asbob chaqiruvini matn ichiga yozib yuborsa (tadbirkorga xom kod ko'rinardi) — bir marta qayta so'raymiz.
+      if (markupBor && toollar.length === 0 && !markupQaytarildi && qadam < MAX_QADAM - 1) {
+        markupQaytarildi = true;
+        msgs.push({ role: "assistant", content: javob.content });
+        msgs.push({
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "(Tizim: oxirgi javobingizda asbob chaqiruvi matn bo'lib qoldi va tadbirkorga ko'rinmaydi. Asboblarni haqiqiy asbob sifatida chaqiring, keyin tadbirkorga oddiy matn bilan javob yozing.)",
+            },
+          ],
+        });
+        continue;
       }
       if (javob.stop_reason !== "tool_use" || toollar.length === 0) return yakun();
 
@@ -362,14 +492,14 @@ export class ClaudeAgent implements Agent {
 
       for (const t of toollar.filter((t) => t.name === "profilni_saqlash")) {
         profil = { ...profil, ...profilniTozalash(t.input) };
-        natijalar.push({ type: "tool_result", tool_use_id: t.id, content: holatMatni(profil, k.bajarilgan) });
+        natijalar.push({ type: "tool_result", tool_use_id: t.id, content: holatMatni({ ...k, profil, mahsulot: tanlov }) });
       }
       for (const t of toollar.filter((t) => t.name !== "profilni_saqlash")) {
         if (t.name === "tugmalar") {
           tugmalar = tugmalarniTekshirish(t.input);
-          natijalar.push({ type: "tool_result", tool_use_id: t.id, content: "Tugmalar qo'yildi." });
+          natijalar.push({ type: "tool_result", tool_use_id: t.id, content: "ok (bu haqda tadbirkorga yozma)" });
         } else if (t.name === "korsatish") {
-          const y = bloklarniYasash(t.input, profil, baholash(profil, k.bajarilgan));
+          const y = bloklarniYasash(t.input, profil, natijaHisobla(profil, k.bajarilgan));
           for (const b of y.bloklar) {
             const kalit = b.tur === "summa" ? `summa:${b.sarlavha}` : b.tur;
             const i = bloklar.findIndex((x) => (x.tur === "summa" ? `summa:${x.sarlavha}` : x.tur) === kalit);
@@ -381,8 +511,16 @@ export class ClaudeAgent implements Agent {
             tool_use_id: t.id,
             content: y.yoq.length
               ? `Ko'rsatildi. Ma'lumot hali yo'qligi uchun ko'rsatilmadi: ${y.yoq.join(", ")}.`
-              : "Ko'rsatildi.",
+              : "ok (bu haqda tadbirkorga yozma)",
           });
+        } else if (t.name === "bank_tanlash") {
+          const kalit = (t.input as { kalit?: unknown })?.kalit;
+          if (typeof kalit === "string" && mahsulotlarniMoslash(profil).some((m) => m.kalit === kalit)) {
+            tanlov = kalit;
+            natijalar.push({ type: "tool_result", tool_use_id: t.id, content: holatMatni({ ...k, profil, mahsulot: tanlov }) });
+          } else {
+            natijalar.push({ type: "tool_result", tool_use_id: t.id, content: "Bunday mahsulot ro'yxatda yo'q.", is_error: true });
+          }
         } else {
           natijalar.push({
             type: "tool_result",

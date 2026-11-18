@@ -50,17 +50,18 @@ export function KreditTarixiBlok({ tarix, mikrokredit }: { tarix: KreditTarixi; 
       <p className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground">
         <FileSearch size={16} />
         Kredit tarixi
+        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-warning">Namuna</span>
       </p>
 
       {holat === 'boshida' && (
         <>
-          <p className="text-sm">Bank kredit tarixingizni kredit byurosidan tekshiradi. Oldindan ko'rib qo'yamizmi?</p>
+          <p className="text-sm">Bank kredit tarixingizni kredit byurosidan tekshiradi. Javob qanday ko'rinishini namunada ko'rasizmi? (Haqiqiy so'rov yuborilmaydi.)</p>
           <button
             type="button"
             onClick={tekshir}
             className="mt-2 min-h-11 rounded-lg bg-primary px-3 text-sm font-medium text-white hover:opacity-90"
           >
-            Roziman — tekshiring
+            Namunani ko'rish
           </button>
         </>
       )}
@@ -68,7 +69,7 @@ export function KreditTarixiBlok({ tarix, mikrokredit }: { tarix: KreditTarixi; 
       {holat === 'sorov' && (
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 size={16} className="animate-spin" />
-          Kredit byurosiga so'rov yuborilmoqda…
+          Namuna: kredit byurosi javobi shunday ko'rinadi…
         </p>
       )}
 
@@ -83,7 +84,7 @@ export function KreditTarixiBlok({ tarix, mikrokredit }: { tarix: KreditTarixi; 
               <li key={q}>• {q}</li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-muted-foreground">Kredit byurosi · roziligingiz bilan · {soat}</p>
+          <p className="mt-2 text-xs text-muted-foreground">Namuna (haqiqiy so'rov emas) · aytganlaringiz asosida · {soat}</p>
         </>
       )}
     </Karta>

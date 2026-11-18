@@ -1,5 +1,5 @@
-import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Profil } from '@shared/types'
-import { ArrowLeft, ChevronRight, Inbox, Loader2, RotateCcw } from 'lucide-react'
+import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Papka, Profil } from '@shared/types'
+import { ArrowLeft, Check, ChevronRight, Circle, Download, FolderOpen, Inbox, Loader2, RotateCcw, TriangleAlert } from 'lucide-react'
 import { QAROR, QarorPanel, QarorYorliq } from '@/components/Qaror'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -178,6 +178,63 @@ function profilQatorlari(p: Profil): [string, string][] {
   ]
 }
 
+function HujjatlarBolimi({ id, papka }: { id: string; papka: Papka }) {
+  const [pdfXato, setPdfXato] = useState<string | null>(null)
+  const olib = papka.hujjatlar.filter((h) => !h.bank_ozi_oladi)
+  return (
+    <Karta>
+      <p className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <FolderOpen size={16} />
+        Hujjatlar · {papka.mahsulot.bank}, {papka.mahsulot.nom}
+      </p>
+      <p className="mb-2 text-sm tabular-nums">
+        Tayyor: {papka.tayyor} / {papka.jami}
+      </p>
+      {papka.ogohlantirishlar.length > 0 && (
+        <ul className="mb-2 list-disc space-y-0.5 rounded-md bg-warning/10 py-2 pr-2 pl-6 text-sm text-warning">
+          {papka.ogohlantirishlar.map((o) => (
+            <li key={o}>{o}</li>
+          ))}
+        </ul>
+      )}
+      <ul className="space-y-1.5 text-sm">
+        {olib.map((h) => {
+          const t = h.fayl?.tekshiruv
+          return (
+            <li key={h.kalit} className="flex items-start gap-1.5">
+              {!h.fayl ? (
+                <Circle size={16} className="mt-0.5 shrink-0 text-muted-foreground" />
+              ) : t?.holat === 'muammo' ? (
+                <TriangleAlert size={16} className="mt-0.5 shrink-0 text-warning" />
+              ) : (
+                <Check size={16} className={`mt-0.5 shrink-0 ${t ? 'text-success' : 'text-muted-foreground'}`} />
+              )}
+              <span className="min-w-0">
+                {h.nom}
+                <span className="block text-xs text-muted-foreground">
+                  {!h.fayl ? (h.qoralama ? 'Qoralama papkada' : 'Yuklanmagan') : t ? (t.holat === 'mos' ? 'Yuklangan, tekshirilgan' : t.muammolar.join(' ') || 'Muammo bor') : 'Yuklangan, tekshirilmagan'}
+                </span>
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+      <button
+        type="button"
+        onClick={() => {
+          setPdfXato(null)
+          api.bankPapkaOch(id).catch((e: Error) => setPdfXato(e.message))
+        }}
+        className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium hover:bg-foreground/5"
+      >
+        <Download size={16} />
+        Papkani ochish (PDF)
+      </button>
+      {pdfXato && <p className="mt-2 text-sm text-destructive">{pdfXato}</p>}
+    </Karta>
+  )
+}
+
 export function BankAriza() {
   const { id = '' } = useParams()
   const yukla = useCallback(() => api.ariza(id), [id])
@@ -226,6 +283,7 @@ export function BankAriza() {
             {a.profil.garov_qiymati != null && (
               <GarovBlok bor={a.profil.garov_qiymati} kerak={a.natija.hisob.kerakli_garov} />
             )}
+            {a.papka && <HujjatlarBolimi id={a.id} papka={a.papka} />}
             <YolXaritasiBlok qadamlar={a.natija.qadamlar} />
           </div>
         </div>

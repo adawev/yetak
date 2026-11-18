@@ -6,70 +6,196 @@
       "nom": "Kredit arizasi",
       "qayerdan": "bank (shakl yoki ilova)",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "bankning o'zida — ariza shaklini bank beradi (onlayn kreditda — bank ilovasida)",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "pasport": {
       "nom": "Pasport yoki ID-karta",
       "qayerdan": "tadbirkorda",
       "onlayn": false,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "o'zingizda (ID-karta yoki pasport)",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "tasis": {
       "nom": "Ta'sis hujjatlari (barcha tahrirlari)",
       "qayerdan": "korxonada",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "korxonangizda (ustav va uning o'zgarishlari)",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": "https://lex.uz/uz/docs/-3080570",
+        "manba": null
+      }
     },
     "tasischi_qarori": {
       "nom": "Ta'sischilar / boshqaruv organining kredit olish haqida qarori (roziligi)",
       "qayerdan": "korxona tuzadi",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "korxona o'zi yozadi (ta'sischilar yig'ilishi qarori)",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "litsenziya": {
       "nom": "Litsenziya yoki ruxsatnoma (faoliyat talab qilsa)",
       "qayerdan": "license.gov.uz, my.gov.uz",
       "onlayn": true,
       "bank_ozi_oladi": false,
-      "manba": "https://buxgalter.uz/ru/publish/doc/text175602_kakie_licenzii_mojno_poluchit_cherez_epigu"
+      "manba": "https://buxgalter.uz/ru/publish/doc/text175602_kakie_licenzii_mojno_poluchit_cherez_epigu",
+      "olish": {
+        "qayerda": "license.gov.uz yoki my.gov.uz",
+        "qidiruv": null,
+        "qadamlar": [
+          "Faoliyatingizga litsenziya kerakligini tekshiring",
+          "Kerak bo'lsa — license.gov.uz da ariza bering va to'lang",
+          "Tayyor litsenziyani shu saytdan yuklab oling"
+        ],
+        "vaqt": null,
+        "narx": "faoliyatga qarab",
+        "eri_kerak": null,
+        "havola": "https://license.gov.uz",
+        "manba": "https://buxgalter.uz/ru/publish/doc/text175602_kakie_licenzii_mojno_poluchit_cherez_epigu"
+      }
     },
     "faoliyat_joyi": {
       "nom": "Faoliyat joyi hujjati (ijara guvohnomasi yoki mulk hujjati)",
       "qayerdan": "ijara.soliq.uz (ijara) / my.gov.uz yoki DXM (mulk)",
       "onlayn": true,
       "bank_ozi_oladi": false,
-      "manba": "https://buxgalter.uz/oz/publish/doc/text175350_yuriqnoma_ijara_shartnomasi_e-ijara_da_qanday_ruyhatdan_utkaziladi"
+      "manba": "https://buxgalter.uz/oz/publish/doc/text175350_yuriqnoma_ijara_shartnomasi_e-ijara_da_qanday_ruyhatdan_utkaziladi",
+      "olish": {
+        "qayerda": "my.gov.uz",
+        "qidiruv": "Soliq organidan ro'yxatdan o'tkazilgan amaldagi ijara shartnomani olish",
+        "qadamlar": [
+          "my.gov.uz ga kiring va shu xizmatni qidiring",
+          "Ijara shartnomasi raqamini kiriting va so'rov yuboring",
+          "Ro'yxatdan o'tgan ijara shartnomasini yuklab oling",
+          "Joy o'zingizniki bo'lsa — mulk hujjati (kadastr) ni olib boring"
+        ],
+        "vaqt": null,
+        "narx": "bepul",
+        "eri_kerak": false,
+        "havola": "https://my.gov.uz",
+        "manba": "https://oldmy.gov.uz/oz/service/972"
+      }
     },
     "moliyaviy_hisobot": {
       "nom": "Balans (1-shakl) va moliyaviy natijalar (2-shakl)",
       "qayerdan": "soliq shaxsiy kabineti (ERI)",
       "onlayn": true,
       "bank_ozi_oladi": "ba'zan (SQB elektron oladi)",
-      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti"
+      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti",
+      "olish": {
+        "qayerda": "my.soliq.uz (korxona shaxsiy kabineti)",
+        "qidiruv": "Moliyaviy hisobot",
+        "qadamlar": [
+          "my.soliq.uz ga elektron imzo bilan kiring",
+          "«Moliyaviy hisobot» bo'limini oching",
+          "Topshirilgan 1-shakl (balans) va 2-shakl (moliyaviy natijalar) ni yuklab oling"
+        ],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": true,
+        "havola": "https://my.soliq.uz",
+        "manba": "https://buxgalter.uz/oz/publish/doc/text207132_mhhs_buyicha_tasdiqlangan_hisobot_shakllarini_qayerdan_topish_mumkin"
+      }
     },
     "boshqa_bank_aylanma": {
       "nom": "Boshqa banklardagi aylanma haqida ma'lumotnoma",
       "qayerdan": "har bir bankdan",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "hisobingiz ochilgan bankning o'zi",
+        "qidiruv": null,
+        "qadamlar": [
+          "Hisob ochilgan bankning ilovasi yoki ofisiga murojaat qiling",
+          "«Hisob aylanmasi haqida ma'lumotnoma» so'rang"
+        ],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "daromad_manbalari": {
       "nom": "Daromad manbalari haqida ma'lumot (YaTT)",
       "qayerdan": "tadbirkor",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "o'zingiz yozasiz (qayerdan qancha tushum keladi)",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "pul_oqimi": {
       "nom": "Pul oqimi prognozi",
       "qayerdan": "tadbirkor o'zi tuzadi",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "o'zingiz tuzasiz — bankda shakli bo'lsa, shuni so'rang",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "oldi_sotdi": {
       "nom": "Oldi-sotdi shartnomasi yoki invoys",
       "qayerdan": "sotuvchi",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "sotuvchidan — nima sotib olsangiz, o'sha shartnoma yoki invoys",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "ozini_ozi_band": {
       "nom": "O'zini o'zi band qilganlik ma'lumotnomasi (QR)",
@@ -77,13 +203,40 @@
       "onlayn": true,
       "narx": 0,
       "bank_ozi_oladi": false,
-      "manba": "https://gov.uz/oz/soliq/news/view/36075"
+      "manba": "https://gov.uz/oz/soliq/news/view/36075",
+      "olish": {
+        "qayerda": "«Soliq» mobil ilovasi",
+        "qidiruv": "O'zini o'zi band qilish",
+        "qadamlar": [
+          "«Soliq» ilovasini oching",
+          "«O'zini o'zi band qilish» bo'limiga kiring",
+          "QR-kodli guvohnoma oynasida «Yuklab olish» ni bosing"
+        ],
+        "vaqt": null,
+        "narx": "bepul",
+        "eri_kerak": false,
+        "havola": null,
+        "manba": "https://www.advice.uz/oz/document/2477"
+      }
     },
     "ijtimoiy_soliq": {
       "nom": "Ijtimoiy soliq to'langanligi",
       "qayerdan": "my3.soliq.uz yoki SoliqUZ ilovasi",
       "onlayn": true,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "my3.soliq.uz yoki «Soliq» ilovasi",
+        "qidiruv": null,
+        "qadamlar": [
+          "my3.soliq.uz ga elektron imzo bilan kiring",
+          "«Soliq majburiyatlari» bo'limida to'lovlaringizni ko'ring"
+        ],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": true,
+        "havola": "https://my3.soliq.uz",
+        "manba": "https://buxgalter.uz/oz/publish/doc/text203409_uzini_uzi_band_qilgan_shahs_uchun_aylanmadan_soliq_tulashni_boshlash_buyicha_qullanma"
+      }
     },
     "faoliyat_turlari_skrinshot": {
       "nom": "«Soliq» ilovasi: «Mening faoliyat turlarim» skrinshoti",
@@ -91,27 +244,74 @@
       "onlayn": true,
       "narx": 0,
       "bank_ozi_oladi": false,
-      "manba": "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf"
+      "manba": "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf",
+      "olish": {
+        "qayerda": "«Soliq» ilovasi",
+        "qidiruv": "Mening faoliyat turlarim",
+        "qadamlar": [
+          "«Soliq» ilovasida «Umumiy xizmatlar» ni oching",
+          "«O'zini o'zi band qilish» → «Mening faoliyat turlarim»",
+          "Ekranni rasmga oling (skrinshot)"
+        ],
+        "vaqt": null,
+        "narx": "bepul",
+        "eri_kerak": false,
+        "havola": null,
+        "manba": "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf"
+      }
     },
     "garov": {
       "nom": "Garov / ta'minot hujjatlari",
       "qayerdan": "mulk egasida",
       "onlayn": null,
-      "bank_ozi_oladi": false
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "o'zingizda (mulk hujjatlari) + my.gov.uz",
+        "qidiruv": "Avtotransport vositalarining taqiqini tekshirish",
+        "qadamlar": [
+          "Mulk hujjatining asl nusxasini tayyorlang (uy — kadastr, mashina — texpasport)",
+          "my.gov.uz da mulkingizda taqiq yo'qligini tekshiring"
+        ],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": "https://my.gov.uz",
+        "manba": "https://uzum.uz/media/uz/qonuniy-tozalik-uchun-sotib-olishdan-oldin-mashinani-qanday-tekshirish-mumkin/"
+      }
     },
     "baholovchi": {
       "nom": "Mustaqil baholovchi hisoboti",
       "qayerdan": "baholash tashkiloti (pullik)",
       "onlayn": false,
       "bank_ozi_oladi": false,
-      "manba": "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/"
+      "manba": "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/",
+      "olish": {
+        "qayerda": "baholash tashkiloti (pullik, o'zingiz tanlaysiz)",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": "pullik",
+        "eri_kerak": null,
+        "havola": null,
+        "manba": "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/"
+      }
     },
     "kafil_hujjatlari": {
       "nom": "Kafil korxona: ta'sischilar roziligi, balans, ta'sis hujjatlari, aylanma",
       "qayerdan": "kafil korxona",
       "onlayn": null,
       "bank_ozi_oladi": false,
-      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti"
+      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti",
+      "olish": {
+        "qayerda": "kafil bo'ladigan korxonadan",
+        "qidiruv": null,
+        "qadamlar": [],
+        "vaqt": null,
+        "narx": null,
+        "eri_kerak": null,
+        "havola": null,
+        "manba": null
+      }
     },
     "kredit_tarixi": {
       "nom": "Kredit tarixi",
@@ -119,7 +319,43 @@
       "onlayn": true,
       "narx_izoh": "yiliga 1 marta bepul",
       "bank_ozi_oladi": true,
-      "manba": "https://buxgalter.uz/oz/publish/doc/text171228_qanday_qilib_uydan_kredit_tarihini_tekshirish_mumkin_qadamma-qadam_yuriqnoma"
+      "manba": "https://buxgalter.uz/oz/publish/doc/text171228_qanday_qilib_uydan_kredit_tarihini_tekshirish_mumkin_qadamma-qadam_yuriqnoma",
+      "olish": {
+        "qayerda": "my.gov.uz",
+        "qidiruv": "Kredit tarixini olish",
+        "qadamlar": [
+          "OneID orqali kiring",
+          "«Moliya va bank» bo'limida «Kredit tarixini olish» ni tanlang",
+          "Anketani to'ldiring, telefoningizni SMS bilan tasdiqlang",
+          "Tayyor fayl shaxsiy kabinetingizga keladi — yuklab oling"
+        ],
+        "vaqt": "bir necha daqiqa",
+        "narx": "yiliga 1 marta bepul",
+        "eri_kerak": false,
+        "havola": "https://my.gov.uz",
+        "manba": "https://buxgalter.uz/oz/publish/doc/text171228_qanday_qilib_uydan_kredit_tarihini_tekshirish_mumkin_qadamma-qadam_yuriqnoma"
+      }
+    },
+    "eri": {
+      "nom": "Elektron imzo (ERI)",
+      "qayerdan": "my.gov.uz, e-imzo.soliq.uz yoki Davlat xizmatlari markazi",
+      "onlayn": null,
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "my.gov.uz, e-imzo.soliq.uz yoki Davlat xizmatlari markazi",
+        "qidiruv": "Elektron raqamli imzo",
+        "qadamlar": [
+          "Telefoningizga MyID yoki «Soliq» ilovasini o'rnating",
+          "Ariza bering: shaxsiy raqamingiz (JShShIR) va telefon bilan tasdiqlang",
+          "Xizmat haqini to'lang",
+          "Kalitga parol qo'ying — parol tiklanmaydi, yozib qo'ying"
+        ],
+        "vaqt": null,
+        "narx": "taxminan 26–29 ming so'm (narx biroz o'zgargan bo'lishi mumkin)",
+        "eri_kerak": false,
+        "havola": "https://e-imzo.soliq.uz",
+        "manba": "https://kun.uz/news/2026/09/07/elektron-raqamli-imzo-qanday-olinadi"
+      }
     }
   },
   "mahsulotlar": [
@@ -447,6 +683,36 @@
         "12 oylik aylanma (avtomatik)",
         "kredit_tarixi"
       ]
+    },
+    {
+      "id": "tbc_onlayn",
+      "bank": "TBC Bank",
+      "nom": "TBC Business onlayn kredit",
+      "manba": "https://www.spot.uz/ru/2026/05/01/tbc/",
+      "manba_holati": "matbuot (reklama)",
+      "summa_som": [
+        10000000,
+        600000000
+      ],
+      "muddat_oy": [
+        3,
+        36
+      ],
+      "foiz": [
+        33,
+        38
+      ],
+      "garov_foiz_min": 0,
+      "hujjatlar": [
+        {
+          "hujjat": "ariza",
+          "shart": "ilovada"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "kredit_tarixi"
+      ]
     }
-  ]
+  ],
+  "_izoh_olish": "«olish» — hujjatni qanday olish (2026-11-18, manbali; manba null = yo'l umumiy, aniq tartib topilmadi)."
 }
