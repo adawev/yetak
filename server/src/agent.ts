@@ -90,7 +90,7 @@ B. Banklar. Oxirgi javob saqlangach tizim natija va banklarni hisoblaydi (<holat
 C. Hujjatlar — Yetak tayyorlaydi, tadbirkor faqat o'zida bor narsani yuklaydi; hujjat yig'ib bankka qatnamaydi. Kredit shartnomasini bankda (yoki bank ilovasida) imzolaydi — buni yashirma. Tadbirkor bankni tanlasa (bank nomini yozsa: "Hamkorbank", "TBC bo'lsin") — avval bank_tanlash asbobini chaqir, keyin yangi papka bo'yicha. Hukm "olmang" bo'lsa bank tanlanmaydi — sababini aytib, avval tuzatishni taklif qil:
    - korsatish: "hujjatlar".
    - Matn, 2–3 qisqa gap: "<Bank> uchun N ta hujjat kerak. M tasini — <qoralamalar nomi> — javoblaringizdan o'zim tayyorladim. Sizdan kerak: <qolganlari>." N — papka «kerak_soni», M va nomlar — «yetak_tayyorladi», qolganlari — «sizdan_kerak». O'zing sanama.
-   - <holat> «qoralama_uchun_kerak» bo'sh bo'lmasa — shu xabar oxirida BITTA savol: qoralamani to'liq qilish uchun shu maydonlarni so'ra ("Arizaga ismingiz (F.I.Sh.) va korxona nomi kerak. Ishtirokchi bittami yoki bir nechta?"). STIR ni ixtiyoriy deb ayt. Javobni profilni_saqlash bilan saqla, keyin "Qoralamalarga yozdim — tekshirib, imzolaysiz" de.
+   - <holat> «qoralama_uchun_kerak» bo'sh bo'lmasa — shu xabar oxirida BITTA savol: qoralamani to'liq qilish uchun shu maydonlarni so'ra ("Arizaga ismingiz (F.I.Sh.) va korxona nomi kerak. Ishtirokchi bittami yoki bir nechta?"). STIR so'rama — PDF da bo'sh joy qoladi. Javobni profilni_saqlash bilan saqla, keyin "Qoralamalarga yozdim — tekshirib, imzolaysiz" de.
    - profil.eri_bor ma'lum bo'lmasa, bir marta qo'sh: "Elektron imzo (ERI) bo'lsa, ishingiz tezroq bo'ladi."
    - Tugmalar: "Keyingi hujjat", "Qanday olaman?". "Bankka yuborish" tugmasini HECH QACHON berma — papkani yuborish kartadagi tugma bilan, tadbirkorning o'zi bosadi.
    - "Keyingi hujjat" desa — «sizdan_kerak» dagi navbatdagi hujjat: nomi + 2–3 qisqa qadam (papkadagi «qadamlar», qidiruv, havola). Hammasi tayyor bo'lsa: "Papkangiz tayyor. Kartadagi «Papkani yuborish» tugmasini bossangiz, papka bank xodimi oynasiga tushadi. Qarorni bank qiladi." Papka yuborildi yoki yuboraman deb O'ZING aytma — buni faqat tugma qiladi.
@@ -148,8 +148,8 @@ Maydonlar (profilni_saqlash):
 - maqsad: pul nimaga kerak, qisqa.
 - garov_qiymati: garovga qo'ysa bo'ladigan mol-mulk qiymati, so'mda. Yo'q bo'lsa 0.
 - kredit_tarixi: yaxshi — qarzlarni vaqtida to'lagan; yomon — kechikish yoki to'lanmagan qarz bor; yoq — hech qachon kredit olmagan.
-- avval_mikrokredit, eri_bor: SO'RAMA. Tadbirkor o'zi aytsa — saqla, aytmasa null.
-- ism: F.I.Sh. (YaTT egasi yoki MChJ rahbari). korxona_nomi: MChJ nomi. stir: 9 xonali STIR (bilsa). ishtirokchilar: "yagona" yoki "bir_nechta" (MChJ). Bular faqat C bosqichda, «qoralama_uchun_kerak» da bo'lsa so'raladi.
+- eri_bor: SO'RAMA. Tadbirkor o'zi aytsa — saqla, aytmasa null. Mikrokredit tarixi saqlanmaydi.
+- ism: F.I.Sh. (YaTT egasi yoki MChJ rahbari). korxona_nomi: MChJ nomi. ishtirokchilar: "yagona" yoki "bir_nechta" (MChJ). Bular faqat C bosqichda, «qoralama_uchun_kerak» da bo'lsa so'raladi.
 Javob noaniq bo'lsa, taxmin qilma — aniqlashtir. Lekin tadbirkor sen bergan tugmani bossa — bu aniq javob: qabul qil va qayta so'rama.
 
 Tugmalar: 0–4 ta, qisqa (1–4 so'z), tadbirkor nomidan yoziladi — u bosganda shu matn uning javobi bo'ladi va to'g'ridan-to'g'ri saqlanadi. Shuning uchun har bir tugma saqlasa bo'ladigan ANIQ qiymat bo'lsin, oraliq emas: "3 oy", "6 oy", "1 yil", "3 yil"; "20 mln", "50 mln", "100 mln"; "Ha", "Yo'q"; "Garov yo'q". "6–12 oy", "50–100 mln" kabi oraliq tugma berma. Banklar chiqqanda — tugma yo'q (kartada bor); hujjatlar bosqichida — "Keyingi hujjat", "Qanday olaman?".`;
@@ -167,11 +167,9 @@ const PROFIL_XUSUSIYATLARI = {
   maqsad: nullable({ type: "string" }),
   garov_qiymati: nullable({ type: "integer" }),
   kredit_tarixi: nullable({ type: "string", enum: ["yaxshi", "yomon", "yoq"] }),
-  avval_mikrokredit: nullable({ type: "boolean" }),
   eri_bor: nullable({ type: "boolean" }),
   ism: nullable({ type: "string" }),
   korxona_nomi: nullable({ type: "string" }),
-  stir: nullable({ type: "string" }),
   ishtirokchilar: nullable({ type: "string", enum: ["yagona", "bir_nechta"] }),
 };
 
