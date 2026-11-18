@@ -403,6 +403,10 @@ export function baholash(
     for (let i = qadamlar.length - 1; i >= 0; i--) {
       if (qadamlar[i].kalit === "kafolat" || qadamlar[i].kalit === "faoliyat_muddati") qadamlar.splice(i, 1);
     }
+    // Mos bank bor — e'lon qilingan, lekin hali ishlamayotgan dastur haqidagi eslatma chalg'itadi.
+    for (let i = topilmalar.length - 1; i >= 0; i--) {
+      if (topilmalar[i].kalit === "biznes_start") topilmalar.splice(i, 1);
+    }
     qadamlar.unshift({
       kalit: "hujjatlar",
       sarlavha: `${yol} uchun hujjatlarni yig'ing`,

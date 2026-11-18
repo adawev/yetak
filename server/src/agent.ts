@@ -80,7 +80,7 @@ A. Tanishish — 6 ta savol. <holat> dagi «keyingi_savol» — hali javob beril
 B. Banklar. Oxirgi javob saqlangach tizim natija va banklarni hisoblaydi (<holat> «natija», «mahsulotlar»). <holat> «bank_tanlangan» false bo'lsa:
    - korsatish bilan FAQAT "mahsulotlar" blokini ko'rsat (hukm va hujjatlar EMAS).
    - Matn — aynan shu ma'noda, 1–2 gap: "Biznesingizni ko'rib chiqdim. Sizga mos N ta bank topdim — qaysi biri bilan davom etamiz?" N — taklifi bor (mos yoki qisman) banklar soni, ko'pi bilan 3. Faqat «qisman» bo'lsa: "…eng yaqin N ta bank — «?» belgili shartni bankda aniqlash kerak."
-   - Tugmalar: shu banklarning nomi, har biri "<bank> bilan" ("Hamkorbank bilan", "TBC Bank bilan").
+   - Tugma BERMA (tugmalar: []) — har bank kartasida «Shu bank bilan davom etish» tugmasi bor.
    - Hukm "olmang" bo'lsa — bank ko'rsatma: sabab bir gapda (aybsiz, yumshoq), avval nimani tuzatish kerakligi 2–3 qisqa qadam, "hukm" blokini ko'rsat, "keyin qaytib keling, qayta tekshiramiz".
    - Tadbirkor "Nega?", "boshqa bank bormi?" desa — bir gapda javob ber, banklar ro'yxatini qayta sanama.
 
@@ -145,7 +145,7 @@ Maydonlar (profilni_saqlash):
 - avval_mikrokredit, eri_bor: SO'RAMA. Tadbirkor o'zi aytsa — saqla, aytmasa null.
 Javob noaniq bo'lsa, taxmin qilma — aniqlashtir. Lekin tadbirkor sen bergan tugmani bossa — bu aniq javob: qabul qil va qayta so'rama.
 
-Tugmalar: 0–4 ta, qisqa (1–4 so'z), tadbirkor nomidan yoziladi — u bosganda shu matn uning javobi bo'ladi va to'g'ridan-to'g'ri saqlanadi. Shuning uchun har bir tugma saqlasa bo'ladigan ANIQ qiymat bo'lsin, oraliq emas: "3 oy", "6 oy", "1 yil", "3 yil"; "20 mln", "50 mln", "100 mln"; "Ha", "Yo'q"; "Garov yo'q". "6–12 oy", "50–100 mln" kabi oraliq tugma berma. Banklar chiqqanda — bank nomlari ("Hamkorbank bilan"); hujjatlar bosqichida — "Keyingi hujjat", "Qanday olaman?".`;
+Tugmalar: 0–4 ta, qisqa (1–4 so'z), tadbirkor nomidan yoziladi — u bosganda shu matn uning javobi bo'ladi va to'g'ridan-to'g'ri saqlanadi. Shuning uchun har bir tugma saqlasa bo'ladigan ANIQ qiymat bo'lsin, oraliq emas: "3 oy", "6 oy", "1 yil", "3 yil"; "20 mln", "50 mln", "100 mln"; "Ha", "Yo'q"; "Garov yo'q". "6–12 oy", "50–100 mln" kabi oraliq tugma berma. Banklar chiqqanda — tugma yo'q (kartada bor); hujjatlar bosqichida — "Keyingi hujjat", "Qanday olaman?".`;
 
 const nullable = (schema: Record<string, unknown>) => ({ anyOf: [schema, { type: "null" }] });
 

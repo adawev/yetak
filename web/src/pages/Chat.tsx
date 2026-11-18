@@ -6,7 +6,7 @@ import { HujjatlarPapka, hujjatlarHodisasi, PAPKA_ID } from '@/components/Hujjat
 import { Panel } from '@/components/Panel'
 import { useSessiya } from '@/hooks/useSessiya'
 
-type Yorliq = 'suhbat' | 'batafsil' | 'hujjatlar'
+type Yorliq = 'suhbat' | 'batafsil'
 
 /** 6 ta savol jarayoni — nuqtalar bilan. Natija chiqqach yashiriladi. */
 function Savollar({ toldirilgan, jami }: { toldirilgan: number; jami: number }) {
@@ -65,7 +65,7 @@ export default function Chat() {
   // Chatdagi "Hujjatlarni ochish": telefonda yorliq, kompyuterda panelga o'tadi
   useEffect(() => {
     const och = () => {
-      setYorliq('hujjatlar')
+      setYorliq('batafsil')
       requestAnimationFrame(() => {
         const joy = [...document.querySelectorAll(`#${PAPKA_ID}`)].find((e) => (e as HTMLElement).offsetParent !== null)
         joy?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -113,21 +113,17 @@ export default function Chat() {
     oxirgiHujjatlar: i === oxirgiHujjatlar,
   })
   const papkaBor = !!h.papka && !!h.bank_tanlangan
-  const panelBor = !!h.natija
-  const yorliqlar: Yorliq[] = ['suhbat', ...(panelBor ? (['batafsil'] as const) : []), ...(papkaBor ? (['hujjatlar'] as const) : [])]
+  const yorliqlar: Yorliq[] = h.natija ? ['suhbat', 'batafsil'] : ['suhbat']
   const tahlil = s.yuborilmoqda && !h.natija && h.jarayon.toldirilgan >= h.jarayon.jami - 1
 
   return (
-    <div
-      className={`mx-auto flex h-full w-full flex-col ${panelBor ? 'max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_380px]' : 'max-w-3xl'}`}
-    >
-      {/* Tepada: savollar jarayoni yoki (telefonda) yorliqlar */}
-      {(!h.natija || yorliqlar.length > 1) && (
-        <div className={`space-y-2 border-b border-border px-4 py-2.5 ${h.natija ? 'lg:hidden' : ''} lg:col-span-2`}>
+    <div className="mx-auto flex h-full w-full max-w-3xl flex-col">
+      {/* Tepada: savollar jarayoni, natijadan keyin — Suhbat | Batafsil */}
+      <div className="space-y-2 border-b border-border px-4 py-2.5">
           {!h.natija && <Savollar {...h.jarayon} />}
           {yorliqlar.length > 1 && (
             <div
-              className="grid rounded-xl bg-foreground/5 p-1 text-sm font-medium lg:hidden"
+              className="grid rounded-xl bg-foreground/5 p-1 text-sm font-medium"
               role="tablist"
               style={{ gridTemplateColumns: `repeat(${yorliqlar.length}, minmax(0, 1fr))` }}
             >
@@ -140,16 +136,15 @@ export default function Chat() {
                   onClick={() => setYorliq(y)}
                   className={`min-h-9 rounded-lg ${yorliq === y ? 'bg-card shadow-sm' : 'text-muted-foreground'}`}
                 >
-                  {y === 'suhbat' ? 'Suhbat' : y === 'hujjatlar' ? `Hujjatlar ${h.papka?.tayyor ?? 0}/${h.papka?.jami ?? 0}` : 'Batafsil'}
+                  {y === 'suhbat' ? 'Suhbat' : papkaBor ? `Batafsil · hujjatlar ${h.papka?.tayyor ?? 0}/${h.papka?.jami ?? 0}` : 'Batafsil'}
                 </button>
               ))}
             </div>
           )}
-        </div>
-      )}
+      </div>
 
       {/* Suhbat */}
-      <section className={`${yorliq !== 'suhbat' ? 'hidden' : 'flex'} min-h-0 flex-1 flex-col lg:flex`}>
+      <section className={`${yorliq !== 'suhbat' ? 'hidden' : 'flex'} min-h-0 flex-1 flex-col`}>
         <div ref={ruyxat} className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5" aria-live="polite">
           {h.xabarlar.map((x, i) => (
             <div key={`${x.vaqt}-${i}`} data-xabar={i} className="scroll-mt-3">
@@ -198,24 +193,11 @@ export default function Chat() {
         </div>
       </section>
 
-      {/* Natija chiqqach: batafsil va hujjatlar paneli */}
-      {panelBor && (
-        <aside
-          className={`${yorliq === 'suhbat' ? 'hidden' : 'block'} min-h-0 flex-1 overflow-y-auto border-border p-4 lg:block lg:border-l`}
-        >
-          <div className={yorliq === 'hujjatlar' ? 'hidden lg:block' : ''}>
-            {papkaBor && (
-              <div className="mb-4 hidden lg:block">
-                <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />
-              </div>
-            )}
-            <Panel s={s} />
-          </div>
-          {yorliq === 'hujjatlar' && papkaBor && (
-            <div className="lg:hidden">
-              <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />
-            </div>
-          )}
+      {/* Batafsil: hujjatlar papkasi (bank tanlangach) va hisob-kitob tafsilotlari */}
+      {h.natija && yorliq === 'batafsil' && (
+        <aside className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
+          {papkaBor && <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />}
+          <Panel s={s} />
         </aside>
       )}
     </div>

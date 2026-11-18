@@ -126,26 +126,25 @@ function BankKarta({
         </div>
       )}
 
-      <div className="mt-3 flex items-center gap-2">
-        {onTanla && !tanlangan && (
-          <button
-            type="button"
-            onClick={() => onTanla(`${m.bank} bilan davom etamiz`)}
-            className="min-h-11 flex-1 rounded-xl bg-primary px-4 text-sm font-semibold text-white hover:opacity-90"
-          >
-            Shu bank bilan davom etish
-          </button>
-        )}
+      <button
+        type="button"
+        onClick={() => setOchiq(!ochiq)}
+        aria-expanded={ochiq}
+        className="mt-1 inline-flex min-h-9 items-center gap-1 text-sm font-medium text-muted-foreground underline-offset-2 hover:underline"
+      >
+        {ochiq ? 'Yopish' : 'Talablar va hujjatlar'}
+        <ChevronDown size={16} className={ochiq ? 'rotate-180' : ''} />
+      </button>
+
+      {onTanla && !tanlangan && (
         <button
           type="button"
-          onClick={() => setOchiq(!ochiq)}
-          aria-expanded={ochiq}
-          className="inline-flex min-h-11 items-center gap-1 rounded-xl px-3 text-sm font-medium text-muted-foreground hover:bg-foreground/5"
+          onClick={() => onTanla(`${m.bank} bilan davom etamiz`)}
+          className="mt-2 min-h-12 w-full rounded-xl bg-primary px-4 text-[15px] font-semibold text-white hover:opacity-90"
         >
-          {ochiq ? 'Yopish' : 'Batafsil'}
-          <ChevronDown size={16} className={ochiq ? 'rotate-180' : ''} />
+          Shu bank bilan davom etish
         </button>
-      </div>
+      )}
     </li>
   )
 }
