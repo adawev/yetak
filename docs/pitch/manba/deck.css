@@ -1,0 +1,57 @@
+:root {
+  --ink: #14213D;
+  --muted: #5D6577;
+  --paper: #F5F3EE;
+  --line: #D9D5CB;
+  --accent: #F26A1B;
+  --accent-ink: #B4480C;
+  --on-dark: #F2EFE8;
+  --on-dark-muted: #A9B2C6;
+  --peach: #F9C9A8;
+}
+
+body { font-family: 'Golos Text', Arial, sans-serif; color: var(--ink); }
+
+section {
+  padding: 128px 128px 160px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Golos Text', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  counter-increment: page;
+}
+section.dark { background: var(--ink); color: var(--on-dark); }
+
+.t { font-size: 72px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.05; margin: 0; color: var(--ink); }
+.dark .t { color: var(--on-dark); }
+.sub { font-size: 32px; line-height: 1.35; color: var(--muted); margin: 24px 0 0; }
+.dark .sub { color: var(--on-dark-muted); }
+
+.lab { font-size: 32px; font-weight: 700; line-height: 1.2; color: var(--ink); margin: 0; }
+.dark .lab { color: var(--on-dark); }
+.note { font-size: 24px; line-height: 1.35; color: var(--muted); margin: 0; }
+.dark .note { color: var(--on-dark-muted); }
+.val { font-size: 72px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--ink); margin: 0; font-variant-numeric: tabular-nums; }
+.dark .val { color: var(--on-dark); }
+.val.or { color: var(--accent); }
+.mid { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); margin: 0; }
+.dark .mid { color: var(--on-dark); }
+.date { font-size: 44px; font-weight: 700; color: #FF9A5C; margin: 0; letter-spacing: -0.02em; }
+.ctr { text-align: center; }
+
+.node { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px; background: #FFFFFF; border: 3px solid var(--ink); padding: 16px; }
+.node.navy { background: var(--ink); border-color: var(--ink); }
+.node.or { background: var(--accent); border-color: var(--accent); }
+.node.soft { background: #FFFFFF; border: 2px solid var(--line); }
+.node .lab { text-align: center; }
+.node.navy .lab { color: var(--on-dark); }
+.node .note { text-align: center; }
+.node.navy .note { color: var(--on-dark-muted); }
+
+.pin { position: absolute; margin: 0; }
+
+.foot { position: absolute; left: 128px; bottom: 64px; width: 1664px; display: flex; justify-content: space-between; gap: 48px; }
+.foot p { font-size: 24px; color: var(--muted); margin: 0; }
+.dark .foot p { color: var(--on-dark-muted); }
+.pg::after { content: counter(page); }

@@ -1,0 +1,250 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Yetak — pitch dek</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap">
+<style>
+@page { size: 1920px 1080px; margin: 0; }
+html,body { margin:0; padding:0; }
+body { counter-reset: page; }
+section { width:1920px; height:1080px; box-sizing:border-box; position:relative; overflow:hidden; break-after:page; }
+h1,h2,h3,p { margin:0; }
+:root {
+  --ink: #14213D;
+  --muted: #5D6577;
+  --paper: #F5F3EE;
+  --line: #D9D5CB;
+  --accent: #F26A1B;
+  --accent-ink: #B4480C;
+  --on-dark: #F2EFE8;
+  --on-dark-muted: #A9B2C6;
+  --peach: #F9C9A8;
+}
+
+body { font-family: 'Golos Text', Arial, sans-serif; color: var(--ink); }
+
+section {
+  padding: 128px 128px 160px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Golos Text', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  counter-increment: page;
+}
+section.dark { background: var(--ink); color: var(--on-dark); }
+
+.t { font-size: 72px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.05; margin: 0; color: var(--ink); }
+.dark .t { color: var(--on-dark); }
+.sub { font-size: 32px; line-height: 1.35; color: var(--muted); margin: 24px 0 0; }
+.dark .sub { color: var(--on-dark-muted); }
+
+.lab { font-size: 32px; font-weight: 700; line-height: 1.2; color: var(--ink); margin: 0; }
+.dark .lab { color: var(--on-dark); }
+.note { font-size: 24px; line-height: 1.35; color: var(--muted); margin: 0; }
+.dark .note { color: var(--on-dark-muted); }
+.val { font-size: 72px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--ink); margin: 0; font-variant-numeric: tabular-nums; }
+.dark .val { color: var(--on-dark); }
+.val.or { color: var(--accent); }
+.mid { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); margin: 0; }
+.dark .mid { color: var(--on-dark); }
+.date { font-size: 44px; font-weight: 700; color: #FF9A5C; margin: 0; letter-spacing: -0.02em; }
+.ctr { text-align: center; }
+
+.node { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px; background: #FFFFFF; border: 3px solid var(--ink); padding: 16px; }
+.node.navy { background: var(--ink); border-color: var(--ink); }
+.node.or { background: var(--accent); border-color: var(--accent); }
+.node.soft { background: #FFFFFF; border: 2px solid var(--line); }
+.node .lab { text-align: center; }
+.node.navy .lab { color: var(--on-dark); }
+.node .note { text-align: center; }
+.node.navy .note { color: var(--on-dark-muted); }
+
+.pin { position: absolute; margin: 0; }
+
+.foot { position: absolute; left: 128px; bottom: 64px; width: 1664px; display: flex; justify-content: space-between; gap: 48px; }
+.foot p { font-size: 24px; color: var(--muted); margin: 0; }
+.dark .foot p { color: var(--on-dark-muted); }
+.pg::after { content: counter(page); }
+
+</style></head><body>
+<section id="cover" class="dark" style="justify-content:center">
+<svg class="pin" aria-label="Yetak belgisi: nuqtadan maqsadga yo’l" style="left:1072px;top:160px" width="720" height="720" viewBox="0 0 720 720"><path d="M160 512C160 320 320 192 464 192" fill="none" stroke="#F2EFE8" stroke-width="56" stroke-linecap="round"/><circle cx="160" cy="608" r="64" fill="#F2EFE8"/><circle cx="592" cy="192" r="104" fill="#F26A1B"/></svg>
+<h1 style="font-size:200px;font-weight:700;letter-spacing:-0.04em;line-height:1;margin:0;color:#F2EFE8;width:880px">Yetak</h1>
+<p class="sub" style="font-size:44px;line-height:1.25;width:860px;color:#F2EFE8;margin-top:40px">Kichik biznesni bankka tayyor mijoz qilib olib boradi</p>
+<div class="foot"><p>Umummilliy AI Xakaton · Toshkent · 2026</p><p>yetak.diyorjon.com</p></div>
+
+</section>
+<section id="muammo">
+<h2 class="t">Ariza ko’p, kredit kam</h2>
+<div style="display:flex;flex-direction:column;gap:32px;margin-top:88px">
+<div style="display:flex;align-items:center;gap:32px"><p class="lab" style="width:220px">Ariza</p><div style="width:1100px;height:110px;background:#14213D;border-radius:8px"></div><p class="val">3 262</p></div>
+<div style="display:flex;align-items:center;gap:32px"><p class="lab" style="width:220px">Kredit</p><div style="width:339px;height:110px;background:#F26A1B;border-radius:8px"></div><p class="val">1 005</p></div>
+</div>
+<div style="display:flex;align-items:flex-end;gap:40px;margin-top:88px">
+<p style="font-size:160px;font-weight:700;letter-spacing:-0.04em;line-height:0.9;margin:0;color:#F26A1B">31%</p>
+<p class="sub" style="margin:0 0 12px;width:900px">Tadbirkor bankka tayyor bo’lmay boradi: qaysi bank mos, qaysi hujjat kerak — bilmaydi.</p>
+</div>
+<div class="foot"><p>TadbirCore, 01.06–17.09.2026 · Markaziy bank</p><p class="pg"></p></div>
+
+</section>
+<section id="yechim">
+<h2 class="t">Yetak tadbirkorni bankkacha yetaklaydi</h2>
+<p class="sub">Anketa yo’q. Hisobni kod qiladi. «Kredit olasiz» demaymiz.</p>
+<svg class="pin" aria-label="Tadbirkordan bankkacha yo’l: suhbat, mos bank, bitta papka" style="left:128px;top:330px" width="1664" height="520" viewBox="0 0 1664 520"><path d="M40 440C640 440 900 80 1560 80" fill="none" stroke="#14213D" stroke-width="10" stroke-linecap="round"/><circle cx="40" cy="440" r="22" fill="#14213D"/><circle cx="438" cy="384" r="30" fill="#F5F3EE" stroke="#14213D" stroke-width="6"/><circle cx="778" cy="260" r="30" fill="#F5F3EE" stroke="#14213D" stroke-width="6"/><circle cx="1128" cy="136" r="30" fill="#F5F3EE" stroke="#14213D" stroke-width="6"/><circle cx="1560" cy="80" r="64" fill="#F26A1B"/></svg>
+<p class="pin lab ctr" style="left:538px;top:695px;width:56px;font-size:28px">1</p>
+<p class="pin lab ctr" style="left:878px;top:571px;width:56px;font-size:28px">2</p>
+<p class="pin lab ctr" style="left:1228px;top:447px;width:56px;font-size:28px">3</p>
+<p class="pin lab" style="left:128px;top:820px;width:260px">Tadbirkor</p>
+<div class="pin" style="left:416px;top:768px;width:300px"><p class="lab ctr">Suhbat</p><p class="note ctr">o’z so’zi bilan</p></div>
+<div class="pin" style="left:756px;top:644px;width:300px"><p class="lab ctr">Mos bank</p><p class="note ctr">2–3 bank, oylik to’lov</p></div>
+<div class="pin" style="left:1106px;top:520px;width:300px"><p class="lab ctr">Bitta papka</p><p class="note ctr">hujjatlar, AI tekshiradi</p></div>
+<div class="pin" style="left:1532px;top:500px;width:260px"><p class="lab ctr">Bank yoki TadbirCore</p></div>
+<div class="foot"><p>TadbirCore — bankning eshigi. Yetak — o’sha eshikkacha yo’l.</p><p class="pg"></p></div>
+
+</section>
+<section id="hujjat-yollari">
+<h2 class="t">Hujjatni biz yig’amiz — ishonchnoma bilan</h2>
+<p class="sub">50–100 ming so’m. Tadbirkor navbatda turmaydi.</p>
+<svg class="pin" aria-label="Tadbirkor ishonchnoma beradi, vakil to’rt joydan hujjat oladi, hammasi bitta papkaga" style="left:128px;top:360px" width="1664" height="500" viewBox="0 0 1664 500"><path d="M300 240H520" stroke="#14213D" stroke-width="6"/><path d="M520 226L546 240L520 254Z" fill="#14213D"/><path d="M860 240C930 240 930 65 1000 65M860 240C930 240 930 175 1000 175M860 240C930 240 930 285 1000 285M860 240C930 240 930 395 1000 395" fill="none" stroke="#14213D" stroke-width="4"/><path d="M1340 65C1380 65 1380 240 1420 240M1340 175C1380 175 1380 240 1420 240M1340 285C1380 285 1380 240 1420 240M1340 395C1380 395 1380 240 1420 240" fill="none" stroke="#F26A1B" stroke-width="4"/></svg>
+<div class="node" style="left:128px;top:520px;width:300px;height:160px"><p class="lab">Tadbirkor</p><p class="note">ishonchnoma beradi</p></div>
+<p class="pin note ctr" style="left:428px;top:548px;width:250px">notarius</p>
+<div class="node navy" style="left:678px;top:520px;width:310px;height:160px"><p class="lab">Yetak vakili</p></div>
+<div class="node soft" style="left:1128px;top:380px;width:340px;height:90px"><p class="lab" style="font-size:28px">my.gov.uz</p></div>
+<div class="node soft" style="left:1128px;top:490px;width:340px;height:90px"><p class="lab" style="font-size:28px">Soliq</p></div>
+<div class="node soft" style="left:1128px;top:600px;width:340px;height:90px"><p class="lab" style="font-size:28px">Kadastr</p></div>
+<div class="node soft" style="left:1128px;top:710px;width:340px;height:90px"><p class="lab" style="font-size:28px">Bank</p></div>
+<div class="node or" style="left:1548px;top:520px;width:244px;height:160px"><p class="lab">Bitta papka</p></div>
+<div class="foot"><p>Tadbirkor oxirida o’zi imzo qo’yadi · ERI kaliti olinmaydi · doirasini yurist tasdiqlaydi</p><p class="pg"></p></div>
+
+</section>
+<section id="nega-hozir" class="dark">
+<h2 class="t">Nega hozir: eshik ochildi, yo’l yo’q</h2>
+<svg class="pin" aria-label="2026-yil vaqt chizig’i, to’rt voqea" style="left:128px;top:560px" width="1664" height="80" viewBox="0 0 1664 80"><path d="M0 40H1664" stroke="#3A4A6B" stroke-width="6"/><circle cx="212" cy="40" r="20" fill="#F2EFE8"/><circle cx="632" cy="40" r="20" fill="#F2EFE8"/><circle cx="1052" cy="40" r="20" fill="#F2EFE8"/><circle cx="1472" cy="40" r="30" fill="#F26A1B"/></svg>
+<p class="pin date ctr" style="left:150px;top:470px;width:380px">Yanvar</p>
+<p class="pin date ctr" style="left:570px;top:470px;width:380px">Iyun</p>
+<p class="pin date ctr" style="left:990px;top:470px;width:380px">Oktabr</p>
+<p class="pin date ctr" style="left:1410px;top:470px;width:380px">Hozir</p>
+<p class="pin sub ctr" style="left:150px;top:660px;width:380px;margin:0">Notarius videoaloqada ishlaydi</p>
+<p class="pin sub ctr" style="left:570px;top:660px;width:380px;margin:0">TadbirCore: bitta ariza — ko’p bank</p>
+<p class="pin sub ctr" style="left:990px;top:660px;width:380px;margin:0">Foiz kompensatsiyasi, kredit tarixi shart emas</p>
+<p class="pin sub ctr" style="left:1410px;top:660px;width:380px;margin:0;color:#F2EFE8">LLM o’zbekcha hujjat o’qiydi: 360 so’m / xabar</p>
+<div class="foot"><p>2026 · Anhor, Markaziy bank, Spot; LLM — Yetak server loglari</p><p class="pg"></p></div>
+
+</section>
+<section id="bozor">
+<h2 class="t">Bozor: 1,2 mln kichik biznes, 90% i kreditsiz</h2>
+<svg class="pin" aria-label="Uch doira: barcha kichik biznes, kredit ishlatmaydiganlar, bizning maqsad" style="left:128px;top:250px" width="760" height="680" viewBox="0 0 760 680"><circle cx="370" cy="340" r="330" fill="#E4DFD3"/><circle cx="370" cy="357" r="313" fill="#14213D"/><circle cx="370" cy="567" r="103" fill="#F26A1B"/></svg>
+<div class="pin" style="left:1000px;top:300px;width:792px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;gap:28px;align-items:flex-start"><x-shape kind="ellipse" style="background:#E4DFD3;width:36px;height:36px;margin-top:18px"></x-shape><div><p class="val">1 236 126</p><p class="note" style="font-size:28px;margin-top:8px">faol kichik biznes</p></div></div>
+<div style="display:flex;gap:28px;align-items:flex-start"><x-shape kind="ellipse" style="background:#14213D;width:36px;height:36px;margin-top:18px"></x-shape><div><p class="val">~90%</p><p class="note" style="font-size:28px;margin-top:8px">hali bank kreditini ishlatmaydi</p></div></div>
+<div style="display:flex;gap:28px;align-items:flex-start"><x-shape kind="ellipse" style="background:#F26A1B;width:36px;height:36px;margin-top:18px"></x-shape><div><p class="val or">120 000</p><p class="note" style="font-size:28px;margin-top:8px">3 yillik maqsadimiz</p></div></div>
+</div>
+<div class="foot"><p>stat.uz, 01.07.2026 · Markaziy bank SME konsepsiyasi</p><p class="pg"></p></div>
+
+</section>
+<section id="raqobat">
+<h2 class="t">Raqobat: bu burchak bo’sh</h2>
+<svg class="pin" aria-label="Ikki o’qli xarita: ariza paytida yoki undan oldin, bank yoki tadbirkor tomonida" style="left:440px;top:280px" width="1040" height="590" viewBox="0 0 1040 590"><rect x="520" y="0" width="520" height="295" fill="#FBE3D3"/><path d="M520 0V590M0 295H1040" stroke="#14213D" stroke-width="4"/><circle cx="160" cy="470" r="20" fill="#5D6577"/><circle cx="330" cy="390" r="20" fill="#5D6577"/><circle cx="680" cy="420" r="20" fill="#5D6577"/><circle cx="700" cy="170" r="20" fill="#5D6577"/><circle cx="900" cy="90" r="44" fill="#F26A1B"/></svg>
+<p class="pin note" style="left:128px;top:558px;width:290px;text-align:right;font-size:28px">Ariza paytida</p>
+<p class="pin note" style="left:1502px;top:558px;width:290px;font-size:28px">Arizadan oldin</p>
+<p class="pin note ctr" style="left:760px;top:236px;width:400px;font-size:28px">Tadbirkor tomonida</p>
+<p class="pin note ctr" style="left:760px;top:880px;width:400px;font-size:28px">Bank tomonida</p>
+<p class="pin lab" style="left:480px;top:790px;width:300px;font-size:28px">Bank ilovalari</p>
+<p class="pin lab" style="left:650px;top:710px;width:260px;font-size:28px">TadbirCore</p>
+<p class="pin lab" style="left:1000px;top:740px;width:260px;font-size:28px">Foiz saytlari</p>
+<p class="pin lab" style="left:1172px;top:430px;width:300px;font-size:28px">Maslahatchi <span style="color:#5D6577">(pullik)</span></p>
+<p class="pin mid" style="left:1060px;top:340px;width:220px;color:#F26A1B">Yetak</p>
+<div class="foot"><p>TadbirCore — raqib emas: bizdan o’tgan odam unga tayyor keladi</p><p class="pg"></p></div>
+
+</section>
+<section id="mahsulot">
+<div style="display:flex;gap:64px;align-items:flex-start">
+<div style="width:500px;display:flex;flex-direction:column">
+<h2 class="t">Ishlaydi. Hozir sinab ko’ring</h2>
+<p class="sub" style="margin-top:40px">Tadbirkor, bank xodimi, admin.</p>
+<p class="sub">6 bank shartlari tekshirilgan.</p>
+<p class="sub">Har javobda manba.</p>
+<p class="lab" style="color:#B4480C;margin-top:48px">yetak.diyorjon.com</p>
+</div>
+<img src="ilova.png" alt="Yetak ilovasi: mos bank kartalari, hujjatlar papkasi va eng mos 2 bank" style="width:1100px;height:693px;object-fit:contain;background:#FFFFFF;border-radius:20px;box-shadow:0 24px 64px rgba(20,33,61,0.16)">
+</div>
+<div class="foot"><p></p><p class="pg"></p></div>
+
+</section>
+<section id="biznes-model">
+<h2 class="t">Yo’l bepul. Pul — xizmat va natija uchun</h2>
+<svg class="pin" aria-label="Mijoz tadbirkordan Yetak orqali bankka boradi; pul tadbirkordan xizmat uchun va bankdan kredit uchun Yetakka keladi" style="left:128px;top:400px" width="1664" height="180" viewBox="0 0 1664 180"><path d="M360 50H632" stroke="#14213D" stroke-width="6"/><path d="M630 36L656 50L630 64Z" fill="#14213D"/><path d="M1012 50H1284" stroke="#14213D" stroke-width="6"/><path d="M1282 36L1308 50L1282 64Z" fill="#14213D"/><path d="M1304 130H1034" stroke="#F26A1B" stroke-width="6"/><path d="M1036 116L1010 130L1036 144Z" fill="#F26A1B"/><path d="M360 130H630" stroke="#F26A1B" stroke-width="6"/><path d="M628 116L654 130L628 144Z" fill="#F26A1B"/></svg>
+<div class="node" style="left:128px;top:400px;width:360px;height:180px"><p class="mid">Tadbirkor</p></div>
+<div class="node navy" style="left:780px;top:400px;width:360px;height:180px"><p class="mid" style="color:#F2EFE8">Yetak</p></div>
+<div class="node" style="left:1432px;top:400px;width:360px;height:180px"><p class="mid">Bank</p></div>
+<p class="pin note ctr" style="left:488px;top:396px;width:292px;font-size:28px">tayyor mijoz</p>
+<p class="pin note ctr" style="left:1140px;top:396px;width:292px;font-size:28px">tayyor ariza</p>
+<p class="pin lab ctr" style="left:488px;top:546px;width:292px;color:#B4480C">50–100 ming</p>
+<p class="pin lab ctr" style="left:1140px;top:546px;width:292px;color:#B4480C">1% kreditdan</p>
+<div class="pin" style="left:128px;top:650px;width:440px"><p class="val">0 so’m</p><p class="note" style="font-size:28px;margin-top:12px">Yo’l ko’rsatish, bank tanlash va boshqa hammasi</p></div>
+<div class="pin" style="left:700px;top:650px;width:520px"><p class="val or">50–100 ming</p><p class="note" style="font-size:28px;margin-top:12px">Hujjatlarni biz yig’amiz: ishonchnoma bilan my.gov.uz va soliqdan</p></div>
+<div class="pin" style="left:1432px;top:650px;width:360px"><p class="val or">1%</p><p class="note" style="font-size:28px;margin-top:12px">Bank faqat kredit berilganda to’laydi</p></div>
+<div class="foot"><p>Reja: bank shartnomasi hali yo’q · AQShda Lendio: 1–6%</p><p class="pg"></p></div>
+
+</section>
+<section id="unit-ekonomika">
+<h2 class="t">LTV / CAC ≈ 3,5</h2>
+<p class="sub">LTV 126 000 · CAC 36 000 so’m · LLM 360 so’m / xabar</p>
+<div style="display:flex;flex-direction:column;gap:28px;margin-top:64px;width:840px">
+<div style="display:flex;align-items:center;gap:24px"><div style="width:480px;height:80px;background:#14213D;border-radius:6px"></div><p class="mid" style="width:90px">100</p><p class="note" style="font-size:28px">keladi</p></div>
+<div style="display:flex;align-items:center;gap:24px"><div style="width:192px;height:80px;background:#14213D;border-radius:6px"></div><p class="mid" style="width:90px">40</p><p class="note" style="font-size:28px">papka to’ldiradi</p></div>
+<div style="display:flex;align-items:center;gap:24px"><div style="width:58px;height:80px;background:#14213D;border-radius:6px"></div><p class="mid" style="width:90px">12</p><p class="note" style="font-size:28px">hujjatni bizga yig’dirtiradi</p></div>
+<div style="display:flex;align-items:center;gap:24px"><div style="width:38px;height:80px;background:#F26A1B;border-radius:6px"></div><p class="mid" style="width:90px;color:#F26A1B">8</p><p class="note" style="font-size:28px">kredit oladi</p></div>
+</div>
+<svg class="pin" aria-label="100 tadbirkordan pul: daromad 8,9, CAC 3,6, LLM 0,47, natija 4,8 mln so’m" style="left:1080px;top:400px" width="712" height="420" viewBox="0 0 712 420"><rect x="20" y="0" width="120" height="420" rx="6" fill="#14213D"/><rect x="190" y="0" width="120" height="170" rx="6" fill="#F9C9A8"/><rect x="360" y="170" width="120" height="22" rx="4" fill="#F9C9A8"/><rect x="530" y="192" width="120" height="228" rx="6" fill="#F26A1B"/><path d="M140 1H190M310 170H360M480 192H530" stroke="#5D6577" stroke-width="2" stroke-dasharray="6 6"/></svg>
+<p class="pin lab ctr" style="left:1080px;top:350px;width:160px">8,9</p>
+<p class="pin lab ctr" style="left:1250px;top:350px;width:160px">−3,6</p>
+<p class="pin lab ctr" style="left:1420px;top:525px;width:160px">−0,47</p>
+<p class="pin lab ctr" style="left:1590px;top:547px;width:160px;color:#B4480C">+4,8</p>
+<p class="pin note ctr" style="left:1080px;top:836px;width:160px">Daromad</p>
+<p class="pin note ctr" style="left:1250px;top:836px;width:160px">CAC</p>
+<p class="pin note ctr" style="left:1420px;top:836px;width:160px">LLM</p>
+<p class="pin note ctr" style="left:1590px;top:836px;width:160px">Natija</p>
+<div class="foot"><p>100 tadbirkor, mln so’m · faraz, pilotda o’lchanadi · LLM narxi o’lchangan</p><p class="pg"></p></div>
+
+</section>
+<section id="jamoa">
+<h2 class="t">Jamoa: bugun 5, uch yilda 18</h2>
+<div style="display:flex;gap:40px;margin-top:64px">
+<div style="width:280px;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:136px;height:136px;border-radius:68px;background:#14213D;display:flex;align-items:center;justify-content:center"><p class="mid" style="color:#F2EFE8">DA</p></div><p class="lab ctr">Diyor Adashev</p><p class="note ctr">Texnik lead</p></div>
+<div style="width:280px;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:136px;height:136px;border-radius:68px;background:#F26A1B;display:flex;align-items:center;justify-content:center"><p class="mid">Sh</p></div><p class="lab ctr">Shoxjahon</p><p class="note ctr">Sotuv</p></div>
+<div style="width:280px;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:136px;height:136px;border-radius:68px;background:#14213D;display:flex;align-items:center;justify-content:center"><p class="mid" style="color:#F2EFE8">M</p></div><p class="lab ctr">Muhammadnur</p><p class="note ctr">Dasturchi</p></div>
+<div style="width:280px;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:136px;height:136px;border-radius:68px;background:#14213D;display:flex;align-items:center;justify-content:center"><p class="mid" style="color:#F2EFE8">I</p></div><p class="lab ctr">Ilyos</p><p class="note ctr">Dasturchi</p></div>
+<div style="width:280px;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:136px;height:136px;border-radius:68px;background:#F26A1B;display:flex;align-items:center;justify-content:center"><p class="mid">A</p></div><p class="lab ctr">Ali</p><p class="note ctr">Dizayner</p></div>
+</div>
+<div style="display:flex;gap:40px;align-items:flex-end;margin-top:72px;padding-top:32px;border-top:2px solid #D9D5CB">
+<div style="width:380px;display:flex;flex-direction:column;gap:12px"><p class="mid">5</p><div style="width:120px;height:50px;background:#14213D;border-radius:6px"></div><p class="note">Bugun</p></div>
+<div style="width:380px;display:flex;flex-direction:column;gap:12px"><p class="mid">7</p><div style="width:120px;height:70px;background:#14213D;border-radius:6px"></div><p class="note">6 oy: bank menejeri, yurist</p></div>
+<div style="width:380px;display:flex;flex-direction:column;gap:12px"><p class="mid">12</p><div style="width:120px;height:120px;background:#14213D;border-radius:6px"></div><p class="note">18 oy: hujjat operatorlari</p></div>
+<div style="width:380px;display:flex;flex-direction:column;gap:12px"><p class="mid" style="color:#F26A1B">18</p><div style="width:120px;height:180px;background:#F26A1B;border-radius:6px"></div><p class="note">36 oy: viloyat menejerlari</p></div>
+</div>
+<div class="foot"><p>Oddiy ishni LLM qiladi — bitta operator ko’p tadbirkorga yetadi</p><p class="pg"></p></div>
+
+</section>
+<section id="moliya" class="dark">
+<div style="display:flex;gap:120px;align-items:flex-end">
+<div style="width:760px;display:flex;flex-direction:column">
+<p class="note" style="font-size:28px">Daromad, mlrd so’m · ssenariy</p>
+<div style="display:flex;gap:56px;align-items:flex-end;margin-top:40px;border-bottom:3px solid #3A4A6B">
+<div style="width:180px;display:flex;flex-direction:column;align-items:center;gap:16px"><p class="mid">0,45</p><div style="width:180px;height:19px;background:#5B6B8C;border-radius:6px 6px 0 0"></div></div>
+<div style="width:180px;display:flex;flex-direction:column;align-items:center;gap:16px"><p class="mid">2,67</p><div style="width:180px;height:113px;background:#5B6B8C;border-radius:6px 6px 0 0"></div></div>
+<div style="width:180px;display:flex;flex-direction:column;align-items:center;gap:16px"><p class="mid" style="color:#FF9A5C">10,68</p><div style="width:180px;height:450px;background:#F26A1B;border-radius:6px 6px 0 0"></div></div>
+</div>
+<div style="display:flex;gap:56px;margin-top:16px">
+<p class="note ctr" style="width:180px;font-size:28px">1-yil</p><p class="note ctr" style="width:180px;font-size:28px">2-yil</p><p class="note ctr" style="width:180px;font-size:28px">3-yil</p>
+</div>
+</div>
+<div style="width:784px;display:flex;flex-direction:column">
+<h2 class="t" style="font-size:72px">5 yildan keyin har bir kichik biznes bankka tayyor boradi</h2>
+<p class="sub" style="margin-top:48px">Bizga kerak:</p>
+<p class="lab" style="margin-top:16px;line-height:1.5">3 bank bilan pilot<br>1 tuman hokimligi<br>Yurist maslahati</p>
+</div>
+</div>
+<div class="foot"><p>Faraz: 5 000 → 30 000 → 120 000 tadbirkor · yetak.diyorjon.com</p><p class="pg"></p></div>
+
+</section>
+
+</body></html>
