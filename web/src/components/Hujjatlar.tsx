@@ -419,7 +419,7 @@ export function HujjatlarPapka({ holat, amallar }: { holat: SessiyaHolati; amall
       <TayyorlashTaklifi />
 
       <div className="border-t border-border pt-3">
-        {yuklangan > 0 ? (
+        {yuklangan > 0 || p.hujjatlar.some((h) => h.qoralama) ? (
           <a
             href={papkaPdfUrl(holat.id)}
             target="_blank"
