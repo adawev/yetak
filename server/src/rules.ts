@@ -56,7 +56,7 @@ export const QOIDA = {
   kafolatUlushi: 0.75,
   /** Garovsiz mikrokredit: 200 mln so'mgacha — Anhor (matbuot). */
   mikrokreditMax: 200_000_000,
-  /** «Biznes start»: 200 mln so'mgacha garovsiz — gov.uz, to'liq shartlari topilmadi. */
+  /** «Biznes start»: 200 mln so'mgacha garovsiz, yangi boshlovchilar uchun — gov.uz, president.uz; qaysi bank orqali ishlashi topilmadi. */
   biznesStartMax: 200_000_000,
   /** Yuridik shaxslar, aylanma mablag': o'rtacha 23,1% (banklar bo'yicha 20,5–33,1%) — Markaziy bank, 21.09.2026. Har mijozga alohida. */
   yillikStavka: 23.1,
@@ -124,6 +124,12 @@ export function oylikTolov(summa: number, yillikFoiz: number, oylar: number): nu
 }
 
 /** Shu oylik to'lov bilan olsa bo'ladigan eng katta summa (annuitetning teskarisi). */
+/** Oylik to'lov va stavka — hukm ham, papka PDF dagi pul oqimi ham shu yerdan oladi. */
+export function kreditTolovi(summa: number, muddatOy: number): { yillik_stavka: number; oylik_tolov: number } {
+  const yillik_stavka = QOIDA.yillikStavka;
+  return { yillik_stavka, oylik_tolov: Math.round(oylikTolov(summa, yillik_stavka, muddatOy)) };
+}
+
 export function tolovgaMosSumma(tolov: number, yillikFoiz: number, oylar: number): number {
   if (tolov <= 0 || oylar <= 0) return 0;
   const r = yillikFoiz / 100 / 12;
@@ -155,8 +161,7 @@ export function baholash(
 
   // --- Hisob (hammasi kodda) ---
   const oylik_foyda = p.oylik_tushum - p.oylik_xarajat;
-  const yillik_stavka = QOIDA.yillikStavka;
-  const oylik_tolov = Math.round(oylikTolov(p.kredit_summa, yillik_stavka, p.kredit_muddat_oy));
+  const { yillik_stavka, oylik_tolov } = kreditTolovi(p.kredit_summa, p.kredit_muddat_oy);
   const kerakli_garov = Math.round(p.kredit_summa * QOIDA.garovUlushi);
   const hisob: Hisob = { oylik_foyda, oylik_tolov, yillik_stavka, kerakli_garov };
 
@@ -352,7 +357,7 @@ export function baholash(
       topilmalar.push({
         kalit: "biznes_start",
         daraja: "ogohlantirish",
-        matn: `«Biznes start» dasturida ${somda(QOIDA.biznesStartMax)} gacha garovsiz kredit bor. To'liq shartlarini hali aniqlay olmadik.`,
+        matn: `Davlat yangi boshlaganlar uchun «Biznes start» dasturini e'lon qilgan: ${somda(QOIDA.biznesStartMax)} gacha garovsiz kredit. Qaysi bankda va qachondan ishlashi hali e'lon qilinmagan — bankdan so'rang.`,
         manba: MANBALAR.biznesStart,
         taxmin: true,
       });

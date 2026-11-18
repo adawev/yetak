@@ -128,6 +128,17 @@ describe("papka.pdf", () => {
     expect((await app.request(`/api/sessions/yoq/papka.pdf`)).status).toBe(404);
   });
 
+  it("hukm hali yo'q, lekin papkada qoralama bor — PDF 200 (tugma faol bo'lsa ishlaydi)", async () => {
+    const { app, store, id } = await tayyorla();
+    const sess = store.olish(id)!;
+    const { avval_mikrokredit: _, garov_qiymati: __, ...qisman } = sess.profil;
+    sess.profil = qisman;
+    store.saqlash(sess);
+    const h = (await (await app.request(`/api/sessions/${id}`)).json()) as SessiyaHolati;
+    expect(h.papka?.hujjatlar.some((q) => q.qoralama)).toBe(true);
+    expect((await app.request(`/api/sessions/${id}/papka.pdf`)).status).toBe(200);
+  });
+
   it("profil to'liq emas (papka yo'q) — 409", async () => {
     const store = new XotiraStore();
     const app = appYaratish({ store, agent: null, corsOrigin: "*", fayllar: new XotiraFaylOmbor(), tekshiruvchi: null });

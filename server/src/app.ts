@@ -11,7 +11,7 @@ import { kabinetYollari } from "./kabinet";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { papkaPdf } from "./papka-pdf";
 import { natijaHisobla } from "./natija";
-import { kerakliMaydonlar, toldirilganSoni } from "./rules";
+import { kerakliMaydonlar, kreditTolovi, toldirilganSoni } from "./rules";
 import { XotiraFaylOmbor, type FaylOmbor, type Sessiya, type Store } from "./store";
 import { RUXSAT_TURLAR, type HujjatTekshiruvchi, type RuxsatTur } from "./tekshiruv";
 
@@ -361,15 +361,14 @@ export function appYaratish({
         return data ? [{ kalit: h.kalit, nom: h.nom, tur: h.fayl!.tur, data }] : [];
       });
     // Pul oqimi qoralamasi: raqamlarni kod hisoblaydi (natija.hisob), AI emas.
-    const n = natijaHisobla(s.profil, s.bajarilgan);
+    // Hukm hali chiqmagan bo'lsa ham (to'rt raqam yetarli) — papkadagi «qoralama» belgisi bilan bir xil shart.
     const p = s.profil;
     const pulOqimi =
-      n && p.oylik_tushum != null && p.oylik_xarajat != null && p.kredit_summa != null && p.kredit_muddat_oy != null
+      p.oylik_tushum != null && p.oylik_xarajat != null && p.kredit_summa != null && p.kredit_muddat_oy != null
         ? {
             oylik_tushum: p.oylik_tushum,
             oylik_xarajat: p.oylik_xarajat,
-            oylik_tolov: n.hisob.oylik_tolov,
-            yillik_stavka: n.hisob.yillik_stavka,
+            ...kreditTolovi(p.kredit_summa, p.kredit_muddat_oy),
             muddat_oy: p.kredit_muddat_oy,
             summa: p.kredit_summa,
           }
