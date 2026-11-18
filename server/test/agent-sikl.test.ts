@@ -77,6 +77,23 @@ describe("ClaudeAgent sikli", () => {
     expect(sorovlar).toHaveLength(3);
   });
 
+  it("asbobdan keyin matn qayta yozilsa — bir marta chiqadi", async () => {
+    const { mijoz } = soxtaMijoz([
+      {
+        stop_reason: "tool_use",
+        content: [{ type: "text", text: "Necha oy ishlagansiz?" }, tool("t1", "tugmalar", { tugmalar: ["6 oy", "1 yil"] })],
+      },
+      { stop_reason: "end_turn", content: [{ type: "text", text: "Necha oy ishlagansiz?" }] },
+    ]);
+    const j = await new ClaudeAgent(mijoz).javob({
+      xabarlar: [{ kim: "tadbirkor", matn: "MChJ", vaqt: "2026-11-18T00:00:00Z" }],
+      profil: {},
+      bajarilgan: [],
+    });
+    expect(j.matn).toBe("Necha oy ishlagansiz?");
+    expect(j.tugmalar).toEqual(["6 oy", "1 yil"]);
+  });
+
   it("matnsiz yakun — tushunarli xato", async () => {
     const { mijoz } = soxtaMijoz([{ stop_reason: "end_turn", content: [] }]);
     await expect(
