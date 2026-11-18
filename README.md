@@ -7,14 +7,14 @@ TadbirCore — bankning eshigi. Yetak — o'sha eshikkacha bo'lgan yo'l.</p>
 
 <p align="center">
   <a href="https://yetak.diyorjon.com"><b>▶ Ilovani ochish — yetak.diyorjon.com</b></a> ·
-  <a href="docs/Yetak-pitch-dek.pdf"><b>📄 Pitch dek (PDF)</b></a>
+  <a href="Yetak-pitch-dek.pdf"><b>📄 Pitch dek (PDF)</b></a>
 </p>
 
 Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026 · Tadbirkorlik yo'nalishi, 20-muammo (kichik biznes krediti).
 
 ## Pitch dek
 
-12 slayd, Sequoia tartibida. [PDF](docs/Yetak-pitch-dek.pdf) · [raqamlar va farazlar](docs/PITCH-RAQAMLAR.md) · [manba](docs/pitch/)
+12 slayd, Sequoia tartibida. [PDF](Yetak-pitch-dek.pdf) · [raqamlar va farazlar](docs/PITCH-RAQAMLAR.md) · [manba](docs/pitch/)
 
 | | |
 |---|---|
