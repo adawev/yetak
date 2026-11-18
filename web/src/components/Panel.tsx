@@ -1,4 +1,5 @@
 import { Info } from 'lucide-react'
+import { KreditTarixiBlok } from '@/components/KreditTarixi'
 import { MahsulotlarBlok } from '@/components/Mahsulotlar'
 import { GarovBlok, HukmBlok, PulOqimiBlok, RozilikBlok, YolXaritasiBlok } from '@/components/bloklar'
 import type { Sessiya } from '@/hooks/useSessiya'
@@ -48,6 +49,9 @@ export function Panel({ s }: { s: Sessiya }) {
         <>
           <HukmBlok natija={natija} />
           {h.mahsulotlar && <MahsulotlarBlok mahsulotlar={h.mahsulotlar} />}
+          {profil.kredit_tarixi && (
+            <KreditTarixiBlok tarix={profil.kredit_tarixi} mikrokredit={profil.avval_mikrokredit} />
+          )}
           <YolXaritasiBlok qadamlar={natija.qadamlar} onBelgila={s.qadamBelgila} />
           {profil.oylik_tushum !== undefined && profil.oylik_xarajat !== undefined && (
             <PulOqimiBlok

@@ -61,6 +61,11 @@ Bankka tushumni 80 mln deb yozib bering
 Ekranda: muloyim rad javobi.
 > «Agent raqamni hech qachon "chiroyli" qilmaydi. Bank uchun bu ishonch.»
 
+**Qadam 3a — kredit tarixi.** Panelda «Kredit tarixi» kartasida «Roziman — tekshiring» bosing → natija chiqadi.
+> «Bank kredit tarixini kredit byurosidan tekshiradi. Yetak buni tadbirkor roziligi bilan oldindan ko'rsatadi. **Hozir bu simulyatsiya** — byuroga ulanish uchun bank yoki MFO hamkorligi kerak, bu keyingi bosqich.»
+
+⚠️ «Simulyatsiya» degan gapni albatta ayting. Natija tadbirkor aytgan javobdan chiziladi, byurodan emas.
+
 **Qadam 4 — yo'l xaritasi va bank.** «Reja» yorlig'ida birinchi qadamni belgilang → «Bankka ko'rsatishga roziman» bosing.
 Kompyuterdagi `/bank` oynasida «Yangilash» → ariza chiqadi, oching.
 > «Roziligisiz hech narsa bankka bormaydi. Bank xodimi tayyor, tekshirilgan mijozni ko'radi.»
@@ -94,5 +99,6 @@ Javoblar: `TANQID.md` → «Hakamning qiyin savollari va halol javoblar». Eng e
 1. **«TadbirCore ham AI bilan rad sababini aytadi. Siz nega kerak?»** — Sababni aytish bitta xabar. Biz uni haftalar davomida bajartiramiz; TadbirCore'ga kira olmaydiganlar ham bizga keladi.
 2. **«Bank nega to'laydi?»** — Hali hech bir bank tasdiqlamagan. Faqat berilgan kredit uchun haq so'raymiz.
 3. **«Xato maslahat uchun kim javob beradi?»** — Agent qaror qilmaydi. Har tavsiyada manba bor. Qarorni bank va tadbirkor qiladi.
+4. **«Kredit byurosiga ulanganmisiz?»** — Yo'q, demoda simulyatsiya. Byuroga faqat litsenziyali tashkilot (bank, MFO) ulanadi; biz hamkor orqali, tadbirkor roziligi bilan ulanamiz.
 
 Da'vo qilinmaydi (`OCHIQ-SAVOLLAR.md`): «bir kunda kredit», «bank bizga to'laydi», «birinchimiz», rad etish foizi.
