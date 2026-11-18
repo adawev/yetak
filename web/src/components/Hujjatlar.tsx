@@ -10,6 +10,7 @@ import {
   Copy,
   Download,
   ExternalLink,
+  FileCheck,
   FileText,
   FolderOpen,
   Loader2,
@@ -72,10 +73,12 @@ function Yoriqnoma({ olish }: { olish: OlishYoli | null }) {
   }
   return (
     <div className="space-y-2 text-sm">
-      <p>
-        <span className="text-muted-foreground">Qayerda: </span>
-        <span className="font-medium">{olish.qayerda}</span>
-      </p>
+      {olish.qadamlar.length > 0 && (
+        <p>
+          <span className="text-muted-foreground">Qayerda: </span>
+          <span className="font-medium">{olish.qayerda}</span>
+        </p>
+      )}
       {olish.qidiruv && (
         <div className="flex items-center gap-2 rounded-md bg-primary-soft px-2.5 py-2">
           <p className="min-w-0 flex-1">
@@ -83,6 +86,12 @@ function Yoriqnoma({ olish }: { olish: OlishYoli | null }) {
           </p>
           <Nusxa matn={olish.qidiruv} />
         </div>
+      )}
+      {olish.qadamlar.length === 0 && olish.qayerda && (
+        <p>
+          <span className="text-muted-foreground">Qayerdan: </span>
+          <span className="font-medium">{olish.qayerda}</span>
+        </p>
       )}
       {olish.qadamlar.length > 0 && (
         <ol className="list-decimal space-y-0.5 pl-5">
@@ -194,6 +203,12 @@ function Hujjat({ h, a }: { h: PapkaHujjat; a: HujjatAmallari }) {
         </div>
       </div>
 
+      {h.qoralama && !h.fayl && !tekshirilmoqda && (
+        <p className="mt-2 flex items-start gap-1.5 rounded-md bg-success/10 px-2.5 py-2 text-sm text-success">
+          <FileCheck size={16} className="mt-0.5 shrink-0" />
+          {h.qoralama}
+        </p>
+      )}
       {tekshirilmoqda && (
         <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground" role="status">
           <Loader2 size={14} className="animate-spin" />
@@ -294,7 +309,7 @@ export function HujjatlarPapka({ holat, amallar }: { holat: SessiyaHolati; amall
             <select
               value={p.mahsulot.kalit}
               onChange={(e) => amallar.onMahsulot(e.target.value)}
-              className="mt-1 block min-h-11 w-full rounded-lg border border-border bg-card px-2 text-sm text-foreground"
+              className="mt-1 block min-h-11 w-full rounded-lg border border-border bg-card px-2 text-sm text-foreground truncate pr-8 text-ellipsis"
             >
               {variantlar.map((m) => (
                 <option key={m.kalit} value={m.kalit}>

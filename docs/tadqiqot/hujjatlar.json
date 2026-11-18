@@ -335,6 +335,27 @@
         "havola": "https://my.gov.uz",
         "manba": "https://buxgalter.uz/oz/publish/doc/text171228_qanday_qilib_uydan_kredit_tarihini_tekshirish_mumkin_qadamma-qadam_yuriqnoma"
       }
+    },
+    "eri": {
+      "nom": "Elektron imzo (ERI)",
+      "qayerdan": "my.gov.uz, e-imzo.soliq.uz yoki Davlat xizmatlari markazi",
+      "onlayn": null,
+      "bank_ozi_oladi": false,
+      "olish": {
+        "qayerda": "my.gov.uz, e-imzo.soliq.uz yoki Davlat xizmatlari markazi",
+        "qidiruv": "Elektron raqamli imzo",
+        "qadamlar": [
+          "Telefoningizga MyID yoki «Soliq» ilovasini o'rnating",
+          "Ariza bering: shaxsiy raqamingiz (JShShIR) va telefon bilan tasdiqlang",
+          "Xizmat haqini to'lang",
+          "Kalitga parol qo'ying — parol tiklanmaydi, yozib qo'ying"
+        ],
+        "vaqt": null,
+        "narx": "jismoniy shaxs uchun taxminan 26–29 ming so'm (2026-sentabrgacha narx; hozir biroz oshgan bo'lishi mumkin)",
+        "eri_kerak": false,
+        "havola": "https://e-imzo.soliq.uz",
+        "manba": "https://kun.uz/news/2026/09/07/elektron-raqamli-imzo-qanday-olinadi"
+      }
     }
   },
   "mahsulotlar": [

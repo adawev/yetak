@@ -5,6 +5,7 @@
 
 import {
   PROFIL_MAYDONLARI,
+  type MahsulotMoslik,
   type Hisob,
   type Hukm,
   type Manba,
@@ -121,7 +122,12 @@ type TolaProfil = Required<Profil>;
  * Asosiy funksiya. Profil to'liq bo'lmasa — null.
  * `bajarilgan` — tadbirkor belgilagan qadamlar kalitlari.
  */
-export function baholash(profil: Profil, bajarilgan: string[] = []): Natija | null {
+export function baholash(
+  profil: Profil,
+  bajarilgan: string[] = [],
+  /** Aniq bank mahsulotlariga moslik (mahsulotlar.ts). Natija bilan mahsulot kartasi bir-biriga zid bo'lmasin. */
+  mahsulotlar: MahsulotMoslik[] = [],
+): Natija | null {
   if (!profilTolami(profil)) return null;
   const p = profil as TolaProfil;
 
@@ -352,6 +358,29 @@ export function baholash(profil: Profil, bajarilgan: string[] = []): Natija | nu
     });
   }
 
+  // --- Aniq mahsulot bilan kelishtirish ---
+  // Umumiy talab (garov 125%, 6 oy) bajarilmasa ham, aniq bir mahsulot shartlarida ✗ bo'lmasa — bu to'siq emas.
+  // Aks holda hukm «hali emas», mahsulot kartasi esa «mos» deb, bir-biriga zid gapiradi.
+  const mosYol = olmangSababi ? undefined : mahsulotlar.find((m) => m.mos !== "mos_emas");
+  const yol = mosYol ? `${mosYol.bank} «${mosYol.nom.replace(/[«»]/g, "")}»` : "";
+  if (mosYol) {
+    for (const t of topilmalar) {
+      if (t.daraja === "tosiq" && (t.kalit === "garov" || t.kalit === "faoliyat_muddati")) {
+        t.daraja = "ogohlantirish";
+        t.matn += ` Lekin ${yol} shartlariga to'g'ri kelasiz.`;
+      }
+    }
+    for (let i = qadamlar.length - 1; i >= 0; i--) {
+      if (qadamlar[i].kalit === "kafolat" || qadamlar[i].kalit === "faoliyat_muddati") qadamlar.splice(i, 1);
+    }
+    qadamlar.unshift({
+      kalit: "hujjatlar",
+      sarlavha: `${yol} uchun hujjatlarni yig'ing`,
+      izoh: "Ro'yxat va har birini qayerdan olish «Hujjatlar» bo'limida. Rasmga olib yuklang — tekshirib, bitta papka qilamiz.",
+      manba: mosYol.manba,
+    });
+  }
+
   // --- Hukm ---
   const tosiqlar = topilmalar.filter((t) => t.daraja === "tosiq");
   let hukm: Hukm;
@@ -364,17 +393,27 @@ export function baholash(profil: Profil, bajarilgan: string[] = []): Natija | nu
     xulosa = `Hali tayyor emassiz: ${tosiqlar.length} ta to'siq bor. Yo'l xaritasidagi qadamlarni bajarsangiz, ariza berishingiz mumkin.`;
   } else {
     hukm = "tayyor";
-    xulosa =
-      "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi.";
+    xulosa = mosYol
+      ? `Sizga mos yo'l bor: ${yol}. Hujjatlarni yig'sangiz, ariza berasiz. Qarorni bank qiladi.`
+      : "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi.";
   }
 
   if (hukm !== "olmang") {
-    qadamlar.push({
-      kalit: "ariza",
-      sarlavha: "TadbirCore yoki bankka ariza bering",
-      izoh: "TadbirCore — bir arizani bir nechta bankka yuboradigan davlat platformasi. Arizani o'zingiz yuborasiz.",
-      manba: MANBALAR.tadbircore,
-    });
+    qadamlar.push(
+      mosYol
+        ? {
+            kalit: "ariza",
+            sarlavha: `Hujjatlar tayyor bo'lgach, ${mosYol.bank}ga ariza bering`,
+            izoh: "Bitta PDF papkani «Hujjatlar» bo'limidan yuklab oling va bankka olib boring. Arizani o'zingiz berasiz.",
+            manba: mosYol.manba,
+          }
+        : {
+            kalit: "ariza",
+            sarlavha: "TadbirCore yoki bankka ariza bering",
+            izoh: "TadbirCore — bir arizani bir nechta bankka yuboradigan davlat platformasi. Arizani o'zingiz yuborasiz.",
+            manba: MANBALAR.tadbircore,
+          },
+    );
   } else {
     qadamlar.push({
       kalit: "qayta_tekshirish",

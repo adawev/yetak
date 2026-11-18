@@ -157,7 +157,7 @@ function HujjatlarBolimi({ id, papka }: { id: string; papka: NonNullable<BankAri
               <span className="min-w-0">
                 {h.nom}
                 <span className="block text-xs text-muted-foreground">
-                  {!h.fayl ? 'Yuklanmagan' : t ? (t.holat === 'mos' ? 'Yuklangan, tekshirilgan' : t.muammolar.join(' ') || 'Muammo bor') : 'Yuklangan, tekshirilmagan'}
+                  {!h.fayl ? (h.qoralama ? 'Qoralama papkada' : 'Yuklanmagan') : t ? (t.holat === 'mos' ? 'Yuklangan, tekshirilgan' : t.muammolar.join(' ') || 'Muammo bor') : 'Yuklangan, tekshirilmagan'}
                 </span>
               </span>
             </li>

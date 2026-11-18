@@ -149,6 +149,8 @@ export interface PapkaHujjat {
   tavsiya: boolean;
   olish: OlishYoli | null;
   fayl: YuklanganFayl | null;
+  /** Yetak bu hujjatning qoralamasini tadbirkor aytgan raqamlardan o'zi tayyorlaydi (PDF papkada bor). Matn — tadbirkorga izoh. */
+  qoralama: string | null;
 }
 
 /** Hujjatlar papkasi: tanlangan mahsulot, kerakli hujjatlar va yuklanganlari. */

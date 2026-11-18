@@ -68,6 +68,10 @@ class Yozuvchi {
       this.y -= size + 4;
     }
   }
+  yangiSahifa() {
+    this.page = this.doc.addPage(A4);
+    this.y = A4[1] - CHET;
+  }
   bosh(h = 8) {
     this.y -= h;
   }
@@ -80,7 +84,57 @@ export interface PapkaFayli {
   data: Buffer;
 }
 
-export async function papkaPdf(k: { papka: Papka; profil: Profil; fayllar: PapkaFayli[]; sana: string }): Promise<Uint8Array> {
+export interface PulOqimiKirish {
+  oylik_tushum: number;
+  oylik_xarajat: number;
+  oylik_tolov: number;
+  yillik_stavka: number;
+  muddat_oy: number;
+  summa: number;
+}
+
+/** Pul oqimi qoralamasi sahifasi: birinchi 12 oy (yoki muddat qisqa bo'lsa — shuncha). Hisobni kod qiladi. */
+function pulOqimiSahifa(w: Yozuvchi, qalin: PDFFont, font: PDFFont, po: PulOqimiKirish) {
+  const kulrang: [number, number, number] = [0.42, 0.45, 0.5];
+  w.yangiSahifa();
+  w.qator("Pul oqimi prognozi (qoralama)", { size: 18, bold: true });
+  w.qator(
+    "Tadbirkor aytgan o'rtacha oylik raqamlar asosida. Mavsumiy o'zgarish hisobga olinmagan. Yakuniy shaklni bank beradi.",
+    { size: 9.5, rang: kulrang },
+  );
+  w.bosh(10);
+  const xlar = [CHET, CHET + 50, CHET + 170, CHET + 290, CHET + 400];
+  const sarlavha = ["Oy", "Tushum", "Xarajat", "Kredit to'lovi", "Qoladi"];
+  const qator = (v: string[], f: PDFFont, rang: [number, number, number] = [0.1, 0.12, 0.18]) => {
+    v.forEach((t, i) => w.page.drawText(matnTozala(t), { x: xlar[i], y: w.y - 10, size: 9.5, font: f, color: rgb(...rang) }));
+    w.y -= 16;
+  };
+  qator(sarlavha, qalin);
+  w.page.drawLine({ start: { x: CHET, y: w.y + 3 }, end: { x: A4[0] - CHET, y: w.y + 3 }, thickness: 0.7, color: rgb(0.6, 0.62, 0.66) });
+  w.bosh(3);
+  const oylar = Math.min(12, Math.max(0, Math.floor(po.muddat_oy)));
+  for (let i = 1; i <= oylar; i++) {
+    const qoladi = po.oylik_tushum - po.oylik_xarajat - po.oylik_tolov;
+    qator(
+      [String(i), somda(po.oylik_tushum), somda(po.oylik_xarajat), somda(po.oylik_tolov), somda(qoladi)],
+      font,
+      qoladi < 0 ? [0.7, 0.3, 0.1] : [0.1, 0.12, 0.18],
+    );
+  }
+  w.bosh(8);
+  w.qator(
+    `Oylik to'lov - ${po.yillik_stavka}% taxminiy stavka bilan hisoblangan (annuitet). Bankning haqiqiy foizi boshqacha bo'lishi mumkin.`,
+    { size: 9, rang: kulrang },
+  );
+}
+
+export async function papkaPdf(k: {
+  papka: Papka;
+  profil: Profil;
+  fayllar: PapkaFayli[];
+  sana: string;
+  pulOqimi?: PulOqimiKirish;
+}): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   doc.setTitle(matnTozala(`Kredit hujjatlari papkasi - ${k.papka.mahsulot.bank}`));
   doc.setProducer("Yetak");
@@ -139,6 +193,8 @@ export async function papkaPdf(k: { papka: Papka; profil: Profil; fayllar: Papka
     "Hujjatlar tadbirkor yuklagan ko'rinishda, o'zgartirishsiz ilova qilingan. Sun'iy intellekt faqat o'qilishi va turini tekshirgan. Kredit qarorini bank qiladi.",
     { size: 9, rang: kulrang },
   );
+
+  if (k.pulOqimi) pulOqimiSahifa(w, qalin, font, k.pulOqimi);
 
   for (const f of k.fayllar) {
     try {

@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { HujjatTekshiruvi, SessiyaHolati } from "../../shared/types";
 import { appYaratish, faylTuri } from "../src/app";
 import { NAMUNALAR } from "../src/namunalar";
-import { matnTozala } from "../src/papka-pdf";
+import { PDFDocument } from "pdf-lib";
+import { matnTozala, papkaPdf } from "../src/papka-pdf";
+import { papkaYasash } from "../src/hujjatlar";
+import { mahsulotlarniMoslash } from "../src/mahsulotlar";
 import { XotiraFaylOmbor, XotiraStore } from "../src/store";
 import { hukmChiqarish, type HujjatTekshiruvchi } from "../src/tekshiruv";
 
@@ -109,9 +112,19 @@ describe("papka.pdf", () => {
     expect(Buffer.from(await r.arrayBuffer()).subarray(0, 5).toString()).toBe("%PDF-");
   });
 
-  it("fayl yo'q — 409; sessiya yo'q — 404", async () => {
+  it("pulOqimi bilan — yaroqli PDF, bitta sahifa ko'proq", async () => {
+    const profil = { shakl: "mchj" as const, faoliyat_oy: 24, kredit_summa: 100_000_000, kredit_muddat_oy: 36, oylik_tushum: 50_000_000, oylik_xarajat: 30_000_000 };
+    const papka = papkaYasash(profil, mahsulotlarniMoslash(profil), undefined, {})!;
+    const sahifa = async (po?: Parameters<typeof papkaPdf>[0]["pulOqimi"]) =>
+      (await PDFDocument.load(await papkaPdf({ papka, profil, fayllar: [], sana: "2026-11-18", pulOqimi: po }))).getPageCount();
+    const oddiy = await sahifa();
+    const bilan = await sahifa({ oylik_tushum: 50_000_000, oylik_xarajat: 30_000_000, oylik_tolov: 4_000_000, yillik_stavka: 24, muddat_oy: 36, summa: 100_000_000 });
+    expect(bilan).toBe(oddiy + 1);
+  });
+
+  it("fayl yo'q, lekin profil to'liq — pul oqimi qoralamasi bilan 200; sessiya yo'q — 404", async () => {
     const { app, id } = await tayyorla();
-    expect((await app.request(`/api/sessions/${id}/papka.pdf`)).status).toBe(409);
+    expect((await app.request(`/api/sessions/${id}/papka.pdf`)).status).toBe(200);
     expect((await app.request(`/api/sessions/yoq/papka.pdf`)).status).toBe(404);
   });
 

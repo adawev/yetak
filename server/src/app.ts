@@ -8,7 +8,8 @@ import { AgentXatosi, SALOM, type Agent } from "./agent";
 import { papkadaBormi, papkaYasash } from "./hujjatlar";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { papkaPdf } from "./papka-pdf";
-import { baholash, kerakliMaydonlar, toldirilganSoni } from "./rules";
+import { natijaHisobla } from "./natija";
+import { kerakliMaydonlar, toldirilganSoni } from "./rules";
 import type { FaylOmbor, Sessiya, Store } from "./store";
 import { RUXSAT_TURLAR, type HujjatTekshiruvchi, type RuxsatTur } from "./tekshiruv";
 
@@ -33,7 +34,7 @@ function holat(s: Sessiya): SessiyaHolati {
     id: s.id,
     xabarlar: s.xabarlar,
     profil: s.profil,
-    natija: baholash(s.profil, s.bajarilgan),
+    natija: natijaHisobla(s.profil, s.bajarilgan),
     tugmalar: s.tugmalar,
     jarayon: { toldirilgan: toldirilganSoni(s.profil), jami: kerakliMaydonlar(s.profil).length },
     bank_roziligi: s.bank_roziligi,
@@ -176,7 +177,7 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
     if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
     const body = await jsonOqish(c);
     if (typeof body?.bajarildi !== "boolean") return xato(c, 400, "«bajarildi» true yoki false bo'lishi kerak.");
-    const natija = baholash(s.profil, s.bajarilgan);
+    const natija = natijaHisobla(s.profil, s.bajarilgan);
     const kalit = c.req.param("kalit");
     if (!natija?.qadamlar.some((q) => q.kalit === kalit)) {
       return xato(c, 404, "Bunday qadam yo'l xaritasida yo'q.");
@@ -194,7 +195,7 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
     if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
     const body = await jsonOqish(c);
     if (typeof body?.rozi !== "boolean") return xato(c, 400, "«rozi» true yoki false bo'lishi kerak.");
-    if (body.rozi && !baholash(s.profil, s.bajarilgan)) {
+    if (body.rozi && !natijaHisobla(s.profil, s.bajarilgan)) {
       return xato(c, 422, "Avval savollarga javob berib, tekshiruvni yakunlang. Keyin bankka ko'rsatish mumkin.");
     }
     s.bank_roziligi = body.rozi;
@@ -306,12 +307,27 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
         const data = fayllar.oqi(s.id, h.kalit);
         return data ? [{ kalit: h.kalit, nom: h.nom, tur: h.fayl!.tur, data }] : [];
       });
-    if (!ruyxat.length) return xato(c, 409, "Hali hech qanday hujjat yuklanmagan.");
+    // Pul oqimi qoralamasi: raqamlarni kod hisoblaydi (natija.hisob), AI emas.
+    const n = natijaHisobla(s.profil, s.bajarilgan);
+    const p = s.profil;
+    const pulOqimi =
+      n && p.oylik_tushum != null && p.oylik_xarajat != null && p.kredit_summa != null && p.kredit_muddat_oy != null
+        ? {
+            oylik_tushum: p.oylik_tushum,
+            oylik_xarajat: p.oylik_xarajat,
+            oylik_tolov: n.hisob.oylik_tolov,
+            yillik_stavka: n.hisob.yillik_stavka,
+            muddat_oy: p.kredit_muddat_oy,
+            summa: p.kredit_summa,
+          }
+        : undefined;
+    if (!ruyxat.length && !pulOqimi) return xato(c, 409, "Hali hech qanday hujjat yuklanmagan.");
     const pdf = await papkaPdf({
       papka,
       profil: s.profil,
       fayllar: ruyxat,
       sana: new Date().toISOString().slice(0, 10),
+      pulOqimi,
     });
     return new Response(new Blob([pdf as BlobPart]), {
       headers: {
@@ -335,7 +351,7 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
   });
 
   const bankArizasi = (s: Sessiya): BankArizasi | null => {
-    const natija = baholash(s.profil, s.bajarilgan);
+    const natija = natijaHisobla(s.profil, s.bajarilgan);
     if (!s.bank_roziligi || !natija) return null;
     return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija, papka: sessiyaPapkasi(s) };
   };

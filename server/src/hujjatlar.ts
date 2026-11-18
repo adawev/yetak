@@ -27,6 +27,13 @@ const jsonMahsulot = (kalit: string) => MANBA.mahsulotlar.find((m) => m.id === k
 /** Ariza berishdan oldin har kim o'zi tekshirib oladigan hujjat (bank ham tekshiradi). */
 const TAVSIYA = ["kredit_tarixi"] as const;
 
+const PUL_OQIMI_QORALAMA =
+  "Yetak siz aytgan raqamlardan qoralama tayyorladi — papka PDF ida bor. Bank shakli bo'lsa, unga ko'chiring.";
+
+/** Pul oqimi qoralamasi uchun kerakli raqamlar to'liqmi. */
+export const pulOqimiQoralamaBor = (p: Profil): boolean =>
+  p.oylik_tushum != null && p.oylik_xarajat != null && p.kredit_summa != null && p.kredit_muddat_oy != null;
+
 /**
  * Hujjat shartini profilga qarab o'qiydi.
  * kerak=false — bu tadbirkorga tegishli emas (masalan, YaTT uchun MChJ hujjati).
@@ -138,6 +145,7 @@ export function papkaYasash(
       tavsiya: false,
       olish: j?.olish ?? null,
       fayl: fayllar[h.hujjat] ?? null,
+      qoralama: h.hujjat === "pul_oqimi" && pulOqimiQoralamaBor(p) ? PUL_OQIMI_QORALAMA : null,
     });
   }
   for (const k of TAVSIYA) {
@@ -152,6 +160,21 @@ export function papkaYasash(
       tavsiya: true,
       olish: j.olish ?? null,
       fayl: fayllar[k] ?? null,
+      qoralama: null,
+    });
+  }
+  if (p.eri_bor === false && !bor.has("eri")) {
+    bor.add("eri");
+    const j = MANBA.hujjatlar.eri;
+    hujjatlar.push({
+      kalit: "eri",
+      nom: j?.nom ?? "Elektron imzo (ERI)",
+      shart: "Onlayn ariza va ko'p davlat xizmatlari uchun kerak",
+      bank_ozi_oladi: false,
+      tavsiya: true,
+      olish: j?.olish ?? null,
+      fayl: fayllar.eri ?? null,
+      qoralama: null,
     });
   }
   for (const x of m.bank_ozi_tekshiradi ?? []) {
@@ -165,6 +188,7 @@ export function papkaYasash(
       tavsiya: false,
       olish: null,
       fayl: null,
+      qoralama: null,
     });
   }
 

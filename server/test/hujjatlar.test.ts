@@ -66,6 +66,21 @@ describe("papkaYasash", () => {
     expect(bank.every((h) => h.kalit.startsWith("bank:") && h.fayl === null && h.olish === null)).toBe(true);
     expect(kalitlar(p.hujjatlar).filter((k) => k.includes("kredit_tarixi"))).toEqual(["kredit_tarixi"]);
   });
+  it("pul_oqimi qoralamasi: raqamlar to'liq bo'lsa matn, aks holda null; boshqa hujjatda null", () => {
+    const toliq: Profil = { ...mchj, oylik_tushum: 50 * MLN, oylik_xarajat: 30 * MLN };
+    const p = yasash(toliq, "hamkorbank_pq312")!;
+    const po = p.hujjatlar.find((h) => h.kalit === "pul_oqimi")!;
+    expect(po.qoralama).toContain("qoralama tayyorladi");
+    expect(p.hujjatlar.filter((h) => h.kalit !== "pul_oqimi").every((h) => h.qoralama === null)).toBe(true);
+    const yoq = yasash({ ...toliq, oylik_xarajat: undefined }, "hamkorbank_pq312")!;
+    expect(yoq.hujjatlar.find((h) => h.kalit === "pul_oqimi")!.qoralama).toBeNull();
+  });
+  it("eri tavsiya faqat eri_bor === false bo'lganda", () => {
+    const eri = (e?: boolean) => yasash({ ...mchj, eri_bor: e }, "hamkorbank_pq312")!.hujjatlar.find((h) => h.kalit === "eri");
+    expect(eri(false)?.tavsiya).toBe(true);
+    expect(eri(true)).toBeUndefined();
+    expect(eri(undefined)).toBeUndefined();
+  });
   it("tayyor/jami: faqat olib boriladigan va 'mos' hujjatlar sanaladi", () => {
     const bosh = yasash(mchj, "hamkorbank_pq312")!;
     const olib = bosh.hujjatlar.filter((h) => !h.bank_ozi_oladi && !h.tavsiya);
@@ -113,6 +128,7 @@ describe("ismlarniSolishtirish", () => {
     bank_ozi_oladi: false,
     tavsiya: false,
     olish: null,
+    qoralama: null,
     fayl: egasi ? fayl("mos", egasi) : null,
   });
   it("mos ism — ogohlantirish yo'q (tartib va registr farqi muhim emas)", () => {
