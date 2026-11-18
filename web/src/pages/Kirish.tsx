@@ -4,6 +4,10 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '@/lib/api'
 import { BOSH_SAHIFA, joriySessiya, useAuth } from '@/lib/auth'
 
+// Demo akkauntlar — server/src/hisoblar.ts dagi DEMO bilan bir xil (taqdimot uchun, maxfiy emas).
+const DEMO_BANK = { telefon: '998900000002', parol: 'yetak-demo' }
+const DEMO_ADMIN = { telefon: '998900000001', parol: 'yetak-demo' }
+
 const maydon =
   'mt-1 block min-h-11 w-full rounded-lg border border-border bg-card px-3 text-base outline-none focus:border-primary'
 
@@ -19,15 +23,21 @@ export default function Kirish({ royxat = false }: { royxat?: boolean }) {
 
   if (f) return <Navigate to={BOSH_SAHIFA[f.rol]} replace />
 
-  const yubor = async (e: FormEvent) => {
+  const yubor = (e: FormEvent) => {
     e.preventDefault()
+    return kir(royxat ? 'royxat' : { telefon, parol })
+  }
+
+  /** Oddiy kirish yoki demo akkaunt bilan bir bosishda kirish. */
+  const kir = async (k: 'royxat' | { telefon: string; parol: string }) => {
     setXato(null)
     setBand(true)
     try {
       const sessiya_id = joriySessiya()
-      const j = royxat
-        ? await api.royxat({ ism, telefon, parol, sessiya_id })
-        : await api.kirish({ telefon, parol, sessiya_id })
+      const j =
+        k === 'royxat'
+          ? await api.royxat({ ism, telefon, parol, sessiya_id })
+          : await api.kirish({ ...k, sessiya_id })
       await kirdi(j)
       const keyin = params.get('next')
       nav(keyin?.startsWith('/') ? keyin : BOSH_SAHIFA[j.foydalanuvchi.rol], { replace: true })
@@ -112,6 +122,30 @@ export default function Kirish({ royxat = false }: { royxat?: boolean }) {
         </p>
         {royxat && (
           <p className="text-center text-xs text-muted-foreground">Yetak tadbirkor uchun bepul. Ro'yxatdan o'tish ixtiyoriy.</p>
+        )}
+
+        {!royxat && (
+          <div className="border-t border-border pt-4">
+            <p className="mb-2 text-center text-xs text-muted-foreground">Demo: parolsiz, bir bosishda</p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                disabled={band}
+                onClick={() => kir(DEMO_BANK)}
+                className="min-h-11 rounded-lg border border-border text-sm font-medium hover:bg-foreground/5 disabled:opacity-60"
+              >
+                Bank xodimi
+              </button>
+              <button
+                type="button"
+                disabled={band}
+                onClick={() => kir(DEMO_ADMIN)}
+                className="min-h-11 rounded-lg border border-border text-sm font-medium hover:bg-foreground/5 disabled:opacity-60"
+              >
+                Admin
+              </button>
+            </div>
+          </div>
         )}
       </form>
     </main>
