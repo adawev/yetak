@@ -126,6 +126,38 @@ Belgilar: ✅ so'raydi · ⚙️ bank o'zi bazadan oladi · ➕ faqat ma'lum hol
 
 Bu jadvaldan agent tadbirkor holatiga qarab bankni ham tanlay oladi: yangi o'zini o'zi band → HAM-Q yoki MKB; 1 yildan ortiq ishlagan, garovi yo'q → HAM-312 (100 mln gacha garovsiz) yoki IPAK (YaTT); garovi bor → KAP yoki SQB.
 
+### 4.0.1. Har bir hujjatni qayerdan olish (tadbirkor uchun yo'riqnoma)
+
+Kalit: 🌐 onlayn · 🏢 idoraga borish kerak · 🔑 elektron imzo (ERI) kerak · 🆓 bepul
+
+| Hujjat | Qayerdan olinadi | Qanday | Narx / muddat | Manba |
+|---|---|---|---|---|
+| **Kredit tarixi** (jismoniy shaxs, YaTT, o'zini o'zi band) | my.gov.uz → «Moliya va bank» → «Kredit tarixini olish»; KATM mobil ilovasi; portal.infokredit.uz; Davlat xizmatlari markazi | 🌐 OneID orqali kirish, so'rovnoma — fayl shaxsiy kabinetga bir necha soniyada keladi | yiliga 1 marta bepul; keyingisi pullik (my.gov.uz da 15 300 so'm deb ko'rsatilgan, sana noma'lum) | [Buxgalter.uz](https://buxgalter.uz/oz/publish/doc/text171228_qanday_qilib_uydan_kredit_tarihini_tekshirish_mumkin_qadamma-qadam_yuriqnoma), [Anhor](https://anhor.uz/uzl/iqtisodiyot/kredit-tarixi-2025), [my.gov.uz](https://oldmy.gov.uz/oz/news/1372) |
+| **Kredit tarixi** (yuridik shaxs) | YIDXP (my.gov.uz), «Iqtisodiyot va biznes» bo'limi | 🌐 avtomatik, qo'shimcha hujjat kerak emas | topilmadi | [Spot](https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/) |
+| **Kredit taqiqi / «Freeze» tekshiruvi** — yoqilgan bo'lsa, odamning o'zi ham kredit ololmaydi | infokredit.uz, my.gov.uz | 🌐 ariza berishdan oldin o'chirib qo'yish kerak | Freeze yoqish — BHM ning 0,03 barobari; taqiq xizmati bepul | [Kun.uz](https://www.kun.uz/news/2025/06/26/kredit-olishga-taqiq-va-freeze-xizmati-ularning-farqi-nima), [Anhor](https://anhor.uz/uzl/news/kredit-tarixini-muzlatib-qo-yish-imkoniyati-yaratildi/) |
+| **Majburiy ijro (MIB) qarzi** yo'qligi | mib.uz | 🌐 | topilmadi | [Daryo](https://daryo.uz/2022/05/06/ijobiy-kredit-tarixi-nima-uchun-muhim) |
+| **Soliq qarzi yo'qligi ma'lumotnomasi** | davlat xizmati sifatida mavjud | 🌐 tartib topilmadi | topilmadi | [advice.uz](https://advice.uz/oz/search/index?page=2&tag=Soliq) |
+| **Elektron imzo (ERI)** | my.gov.uz, e-imzo.soliq.uz, Davlat xizmatlari markazi | 🌐 kompyuterda E-IMZO, telefonda MyID | 8-bo'limga qarang | [Kun.uz](https://kun.uz/news/2026/09/07/elektron-raqamli-imzo-qanday-olinadi) |
+| **Yuridik shaxs ma'lumotnomasi** (STIR, ro'yxat sanasi, ustav fondi, ta'sischilar va ulushlar) | registr.stat.uz | 🌐 PDF yuklab olinadi | topilmadi | [Buxgalter.uz](https://buxgalter.uz/oz/publish/doc/text164141_qanday_qilib_ruyhatdan_utkazuvchi_va_vakolatli_organlar_malumotlari_buyicha_yuridik_shahs_tugrisida_ahborot_olish_mumkin) |
+| **KTYaDR ko'chirmasi** (korxonalar yagona davlat registri) | stat.uz | 🌐 🆓 | bepul | [Buxgalter.uz](https://buxgalter.uz/oz/publish/doc/text206642_ktyadr_malumotnomasini_qanday_olish_mumkin) |
+| **Ta'sis hujjatlari** (ustav va o'zgartirishlar) va **ta'sischilar qarori** | korxonaning o'zida; qaror korxona tomonidan tuziladi | 🏢 | onlayn olish yo'li topilmadi; bank qaror shaklini beradimi — topilmadi | — |
+| **Litsenziya / ruxsatnoma** | license.gov.uz yoki my.gov.uz | 🌐 ariza, to'lov, holatni kuzatish onlayn | faoliyatga qarab | [Buxgalter.uz](https://buxgalter.uz/ru/publish/doc/text175602_kakie_licenzii_mojno_poluchit_cherez_epigu), [gov.uz](https://gov.uz/oz/advice/69/document/201) |
+| **Faoliyat joyi — ijara bo'lsa:** ro'yxatga olingan ijara shartnomasi guvohnomasi | ijara.soliq.uz (QR-kodli guvohnoma); my.gov.uz da «Soliq organidan ro'yxatdan o'tkazilgan amaldagi ijara shartnomani olish» | 🌐 🔑 ijaraga beruvchi ro'yxatdan o'tkazadi | 🆓; shartnoma kuchga kirganidan 10 kun ichida ro'yxatga olinishi shart | [Buxgalter.uz](https://buxgalter.uz/oz/publish/doc/text175350_yuriqnoma_ijara_shartnomasi_e-ijara_da_qanday_ruyhatdan_utkaziladi), [my.gov.uz](https://oldmy.gov.uz/oz/service/972), [gov.uz](https://gov.uz/oz/advice/645/document/2778) |
+| **Faoliyat joyi — o'z mulki bo'lsa:** ko'chmas mulk haqida ma'lumotnoma / kadastr | my.gov.uz («Ko'chmas mulk») yoki Davlat xizmatlari markazi | 🌐 yoki 🏢 | kadastr pasporti: kvartira 3 ish kunigacha, yakka uy 5 ish kunigacha | [UzA](https://uza.uz/ar/posts/kadastr-hujjatlari-yoqolgan-bolsa-nima-qilish-kerak_921021), [Kun.uz](https://kun.uz/news/2022/05/25/kochmas-mulk-obektiga-kadastr-pasportini-berish-tartibi-elon-qilindi) |
+| **Moliyaviy hisobot** (1-shakl balans, 2-shakl moliyaviy natijalar) | soliq organiga elektron topshirilgan nusxa — soliq shaxsiy kabineti | 🌐 🔑 ba'zi banklar (SQB) o'zi elektron oladi | — | [sqb.uz](https://sqb.uz/uz/business/small-business-credits/tezkor-krediti) |
+| **O'zini o'zi band qilganlik ma'lumotnomasi** (QR-kodli) | «Soliq» mobil ilovasi | 🌐 🆓 ro'yxatdan o'tganda avtomatik shakllanadi, yuklab olish yoki chop etish mumkin | bepul | [gov.uz / Soliq qo'mitasi](https://gov.uz/oz/soliq/news/view/36075), [advice.uz](https://www.advice.uz/oz/document/2477) |
+| **«Mening faoliyat turlarim» skrinshoti** (Hamkorbank «Biznesga qadam») | «Soliq» ilovasi → «Umumiy xizmatlar» → «O'zini o'zi band qilish» → «Mening faoliyat turlarim» | 🌐 | bepul | [Hamkorbank pasporti](https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf) |
+| **Soliq to'lovi tasdig'i** (ijtimoiy soliq va boshqalar) | my3.soliq.uz yoki SoliqUZ ilovasi | 🌐 🔑 | — | [Buxgalter.uz](https://buxgalter.uz/oz/publish/doc/text203409_uzini_uzi_band_qilgan_shahs_uchun_aylanmadan_soliq_tulashni_boshlash_buyicha_qullanma) |
+| **Boshqa banklardagi aylanma** | har bir bankning o'zidan | tartib topilmadi | topilmadi | — |
+| **Pul oqimi prognozi / biznes-reja** | tadbirkorning o'zi. Yordam: «Biznes start» dasturida tayyor biznes-reja beriladi; Agrobank markazlarida «Loyihalar fabrikasi» bilan tayyorlanadi | 🏢 / o'zi | — | [gov.uz](https://gov.uz/oz/bv-jizzax/news/view/207503), [Spot (reklama)](https://www.spot.uz/oz/2026/11/02/agrobank/) |
+| **Oldi-sotdi shartnomasi / invoys** | sotuvchidan | — | — | [Hamkorbank pasporti](https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf) |
+| **Garov — ko'chmas mulk / avto** | huquq hujjatlari egasida; 2026-yil 1-oktabrdan garovga qo'yish yoki taqiqni olish uchun my.gov.uz orqali murojaat qilish mumkin | 🌐 | — | [Anhor](https://anhor.uz/uzl/news/my-gov-uz-dagi-xizmatlar-soni-kengaytiriladi/) |
+| **Mustaqil baholovchi hisoboti** | baholash tashkiloti (tadbirkor o'zi tanlashi mumkin) | 🏢 | pullik; narx topilmadi | [Spot](https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/), [MB savol-javob](https://cbu.uz/upload/medialibrary/e06/djzxbjkume33enh2zlqmne4cjkaj11tt/Baliqchilik_ochiq_muloqot_Savol_javob.pdf) |
+
+**Foydali:** 2026-yil 1-yanvardan «Biznesni 15 daqiqada boshlash» tartibi bilan ro'yxatdan o'tishda ERI, bank hisobi, litsenziya arizasi va ijara shartnomasi birga rasmiylashtiriladi ([Anhor](https://anhor.uz/uzl/news/biznesni-15-daqiqada-boshlash-tamoyili-joriy-etiladi/)). Ba'zi faoliyatlarni litsenziyasiz 3 oy boshlash mumkin ([Anhor](https://anhor.uz/uzl/yangiliklar/uzbekistan-predprinimateli-bez-licenzii-tri-mesyaca)) — bu davrda bank litsenziya so'rasa nima bo'lishi topilmadi.
+
+Mashina o'qiydigan shakl: `docs/tadqiqot/hujjatlar.json` (Sardor `rules.ts` ga kiritadi).
+
 ### 4.1. Kapitalbank — yuridik shaxs (standart to'plam)
 
 | Hujjat | Kim beradi | Avtomatik olinadimi | Manba |
