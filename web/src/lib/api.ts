@@ -49,7 +49,8 @@ async function sorov<T>(yol: string, init?: RequestInit, kutish = 60_000): Promi
       ...init,
       signal: boshqaruv.signal,
       headers: {
-        'Content-Type': 'application/json',
+        // FormData (fayl yuklash) — Content-Type ni brauzer o'zi qo'yadi
+        ...(init?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
         ...(tokenOl() ? { Authorization: `Bearer ${tokenOl()}` } : {}),
         ...init?.headers,
       },
@@ -73,15 +74,40 @@ const post = (body?: unknown): RequestInit => ({
   body: body === undefined ? undefined : JSON.stringify(body),
 })
 
+export const papkaPdfUrl = (id: string) => `${API}/api/sessions/${id}/papka.pdf`
+
 export const api = {
   yangiSessiya: () => sorov<BoySessiya>('/api/sessions', post()),
   sessiya: (id: string) => sorov<BoySessiya>(`/api/sessions/${id}`),
   xabar: (id: string, matn: string) =>
     sorov<BoySessiya>(`/api/sessions/${id}/messages`, post({ matn })),
+  rasmliXabar: (id: string, matn: string, rasm: File) => {
+    const forma = new FormData()
+    forma.append('matn', matn)
+    forma.append('rasm', rasm)
+    return sorov<BoySessiya>(
+      `/api/sessions/${id}/hujjatlar/skrinshot`,
+      { method: 'POST', body: forma },
+      90_000,
+    )
+  },
   qadam: (id: string, kalit: string, bajarildi: boolean) =>
     sorov<BoySessiya>(`/api/sessions/${id}/qadamlar/${kalit}`, post({ bajarildi })),
   rozilik: (id: string, rozi: boolean) =>
     sorov<BoySessiya>(`/api/sessions/${id}/rozilik`, post({ rozi })),
+  mahsulot: (id: string, kalit: string) =>
+    sorov<BoySessiya>(`/api/sessions/${id}/mahsulot`, post({ kalit })),
+  hujjatYukla: (id: string, kalit: string, fayl: File) => {
+    const forma = new FormData()
+    forma.append('fayl', fayl)
+    return sorov<BoySessiya>(
+      `/api/sessions/${id}/hujjatlar/${kalit}`,
+      { method: 'POST', body: forma },
+      90_000,
+    )
+  },
+  hujjatOchir: (id: string, kalit: string) =>
+    sorov<BoySessiya>(`/api/sessions/${id}/hujjatlar/${kalit}/ochirish`, post()),
 
   // Login
   royxat: (p: { ism: string; telefon: string; parol: string; sessiya_id?: string }) =>
@@ -108,4 +134,18 @@ export const api = {
   xodimQosh: (bankId: string, p: { ism: string; telefon: string; parol: string }) =>
     sorov<HamkorBank>(`/api/admin/banks/${bankId}/staff`, post(p)),
   hisobot: () => sorov<AdminHisobot>('/api/admin/report'),
+  /** Bank xodimi uchun papka PDF: login tokeni bilan yuklab, yangi oynada ochadi. */
+  bankPapkaOch: async (id: string) => {
+    const t = tokenOl()
+    const j = await fetch(`${API}/api/bank/applications/${id}/papka.pdf`, {
+      headers: t ? { Authorization: `Bearer ${t}` } : {},
+    })
+    if (!j.ok) {
+      const x = (await j.json().catch(() => null)) as { xato?: string } | null
+      throw new ApiXato(x?.xato ?? 'Papkani ochib bo\'lmadi. Qayta urinib ko\'ring.', j.status)
+    }
+    const url = URL.createObjectURL(await j.blob())
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  },
 }

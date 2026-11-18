@@ -1,7 +1,7 @@
 // Bank oynasi: rozilik bergan, tekshirilgan tadbirkorlar. Raqamlar serverdan (rules.ts va kabinet.ts).
 // Bu yerda faqat ko'rsatish uchun nisbatlar: foyda ÷ to'lov va garov ÷ kerakli garov.
-import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Profil } from '@shared/types'
-import { ArrowLeft, ChevronRight, Inbox, Loader2, RotateCcw } from 'lucide-react'
+import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Papka, Profil } from '@shared/types'
+import { ArrowLeft, Check, ChevronRight, Circle, Download, Inbox, Loader2, RotateCcw, TriangleAlert } from 'lucide-react'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { GarovBlok, HukmBlok, PulOqimiBlok, YolXaritasiBlok } from '@/components/bloklar'
@@ -270,6 +270,75 @@ function Malumot({ nom, qiymat }: { nom: string; qiymat: ReactNode }) {
 const haYoq = (b?: boolean) => (b == null ? '—' : b ? 'Ha' : "Yo'q")
 const pul = (n?: number) => (n == null ? '—' : som(n))
 
+function HujjatlarBolimi({ id, papka }: { id: string; papka: Papka }) {
+  const [pdfXato, setPdfXato] = useState<string | null>(null)
+  const olib = papka.hujjatlar.filter((h) => !h.bank_ozi_oladi)
+  return (
+    <section className="rounded-xl border border-border bg-card">
+      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+        <h2 className="font-semibold">Hujjatlar</h2>
+        <span className="text-sm text-muted-foreground tabular-nums">
+          {papka.tayyor} / {papka.jami} tayyor
+        </span>
+      </div>
+      <div className="p-5">
+        <p className="mb-3 text-sm text-muted-foreground">
+          {papka.mahsulot.bank}, {papka.mahsulot.nom}
+        </p>
+        {papka.ogohlantirishlar.length > 0 && (
+          <ul className="mb-4 space-y-1 border-l-2 border-warning pl-3 text-sm">
+            {papka.ogohlantirishlar.map((o) => (
+              <li key={o}>{o}</li>
+            ))}
+          </ul>
+        )}
+        <ul className="divide-y divide-border text-sm">
+          {olib.map((h) => {
+            const t = h.fayl?.tekshiruv
+            return (
+              <li key={h.kalit} className="flex items-start gap-2.5 py-2.5">
+                {!h.fayl ? (
+                  <Circle size={16} className="mt-0.5 shrink-0 text-muted-foreground" />
+                ) : t?.holat === 'muammo' ? (
+                  <TriangleAlert size={16} className="mt-0.5 shrink-0 text-warning" />
+                ) : (
+                  <Check size={16} className={`mt-0.5 shrink-0 ${t ? 'text-success' : 'text-muted-foreground'}`} />
+                )}
+                <span className="min-w-0">
+                  {h.nom}
+                  <span className="block text-muted-foreground">
+                    {!h.fayl
+                      ? h.qoralama
+                        ? 'Qoralama papkada'
+                        : 'Yuklanmagan'
+                      : t
+                        ? t.holat === 'mos'
+                          ? 'Yuklangan, tekshirilgan'
+                          : t.muammolar.join(' ') || 'Muammo bor'
+                        : 'Yuklangan, tekshirilmagan'}
+                  </span>
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+        <button
+          type="button"
+          onClick={() => {
+            setPdfXato(null)
+            api.bankPapkaOch(id).catch((e: Error) => setPdfXato(e.message))
+          }}
+          className={`${tugma.ikkinchi} mt-4 w-full`}
+        >
+          <Download size={16} />
+          Papkani ochish (PDF)
+        </button>
+        {pdfXato && <p className="mt-2 text-sm text-destructive">{pdfXato}</p>}
+      </div>
+    </section>
+  )
+}
+
 export function BankAriza() {
   const { id = '' } = useParams()
   const yukla = useCallback(() => api.ariza(id), [id])
@@ -333,6 +402,7 @@ export function BankAriza() {
                   )}
                   {a.profil.garov_qiymati != null && <GarovBlok bor={a.profil.garov_qiymati} kerak={a.natija.hisob.kerakli_garov} />}
                 </div>
+                {a.papka && <HujjatlarBolimi id={a.id} papka={a.papka} />}
                 <YolXaritasiBlok qadamlar={a.natija.qadamlar} />
               </div>
 

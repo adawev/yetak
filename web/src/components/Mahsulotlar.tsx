@@ -1,6 +1,7 @@
 import type { MahsulotMoslik, ShartHolati } from '@shared/types'
 import { Check, ChevronDown, CircleHelp, ExternalLink, Landmark, X } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
+import { qisqaSom } from '../lib/format'
 
 const MOS: Record<MahsulotMoslik['mos'], { matn: string; rang: string }> = {
   mos: { matn: 'Mos', rang: 'bg-success/15 text-success' },
@@ -93,14 +94,62 @@ function Mahsulot({ m, ochiqBoshla }: { m: MahsulotMoslik; ochiqBoshla: boolean 
   )
 }
 
+function Fakt({ nom, qiymat }: { nom: string; qiymat: string }) {
+  return (
+    <div className="min-w-0 rounded-md bg-muted/50 px-2.5 py-1.5">
+      <p className="text-xs text-muted-foreground">{nom}</p>
+      <p className="text-base font-semibold tabular-nums">{qiymat}</p>
+    </div>
+  )
+}
+
+function EngYaxshi({ m }: { m: MahsulotMoslik }) {
+  const t = m.taklif!
+  const foizMatn = t.foiz_min === t.foiz_max ? `${t.foiz_max}%` : `${t.foiz_min}–${t.foiz_max}%`
+  return (
+    <li className="rounded-lg border border-border bg-card p-3">
+      <div className="flex items-start gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold">{m.bank}</p>
+          <p className="text-sm">{m.nom}</p>
+        </div>
+        <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${MOS[m.mos].rang}`}>
+          {m.mos === 'qisman' ? 'Bankdan aniqlang' : MOS[m.mos].matn}
+        </span>
+      </div>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <Fakt nom="Summa" qiymat={qisqaSom(t.summa)} />
+        <Fakt nom="Foiz" qiymat={foizMatn} />
+        <Fakt nom="Muddat" qiymat={`${t.muddat_oy} oy`} />
+        <Fakt nom="Oyiga to'lov" qiymat={`~${qisqaSom(t.oylik_tolov)}`} />
+      </div>
+      {t.izoh && <p className="mt-2 text-xs text-muted-foreground">{t.izoh}</p>}
+    </li>
+  )
+}
+
 /** Tekshirilgan bank mahsulotlari: har shart ✓ / ✗ / ?. Eng mosi birinchi. */
 export function MahsulotlarBlok({ mahsulotlar }: { mahsulotlar: MahsulotMoslik[] }) {
   if (!mahsulotlar.length) return null
+  const eng = mahsulotlar.filter((m) => m.taklif).slice(0, 2)
   return (
     <div className="rounded-lg border border-border bg-card/50 p-3">
+      {eng.length > 0 && (
+        <div className="mb-3">
+          <p className="mb-2 text-sm font-semibold">Sizga eng mos {eng.length === 1 ? 'bank' : `${eng.length} bank`}</p>
+          <ul className="space-y-2">
+            {eng.map((m) => (
+              <EngYaxshi key={m.kalit} m={m} />
+            ))}
+          </ul>
+          <p className="mt-1.5 text-xs text-muted-foreground">
+            Hisob taxminiy: yuqori foiz bilan. Yakuniy shartni bank aytadi.
+          </p>
+        </div>
+      )}
       <p className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground">
         <Landmark size={16} />
-        Sizga mos bank mahsulotlari
+        {eng.length > 0 ? 'Boshqa banklar va shartlar' : 'Sizga mos bank mahsulotlari'}
       </p>
       <ul className="space-y-2">
         {mahsulotlar.map((m, i) => (

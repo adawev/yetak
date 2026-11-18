@@ -1,19 +1,26 @@
 import "./env";
+import { join } from "node:path";
 import { serve } from "@hono/node-server";
 import { ClaudeAgent } from "./agent";
 import { appYaratish } from "./app";
 import { config } from "./config";
 import { Hisoblar } from "./hisoblar";
-import { FaylStore } from "./store";
+import { DiskFaylOmbor, FaylStore } from "./store";
+import { ClaudeTekshiruvchi } from "./tekshiruv";
 
 const store = new FaylStore(config.dataDir, config.saqlashKun);
+const fayllar = new DiskFaylOmbor(join(config.dataDir, "fayllar"));
+// Muddati o'tgan sessiyalarning hujjatlari ham o'chadi.
+fayllar.tozala(new Set(store.hammasi().map((s) => s.id)));
 const agent = config.kalitBor() ? new ClaudeAgent() : null;
-if (!agent) console.warn("ANTHROPIC_API_KEY yo'q: xabar yuborish 503 qaytaradi.");
+const tekshiruvchi = config.kalitBor() ? new ClaudeTekshiruvchi() : null;
+if (!agent) console.warn("ANTHROPIC_API_KEY yo'q: xabar yuborish 503 qaytaradi, hujjatlar tekshirilmaydi.");
 
 const hisoblar = new Hisoblar(config.dataDir);
 hisoblar.adminTayyorla(config.adminTelefon, config.adminParol);
+hisoblar.demoTayyorla();
 
-const app = appYaratish({ store, agent, corsOrigin: config.corsOrigin, hisoblar });
+const app = appYaratish({ store, agent, corsOrigin: config.corsOrigin, hisoblar, fayllar, tekshiruvchi });
 
 serve({ fetch: app.fetch, port: config.port, hostname: config.host }, (i) => {
   console.log(`Yetak server: http://${config.host}:${i.port} (model ${config.model})`);

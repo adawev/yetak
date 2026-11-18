@@ -1,5 +1,5 @@
 // Chat ichidagi va yon paneldagi boy bloklar. Raqamlar serverdan keladi; bu yerda faqat chiziladi.
-import type { Hukm, Natija, Qadam, Topilma } from '@shared/types'
+import type { Hukm, Natija, Papka, Qadam, Topilma } from '@shared/types'
 import {
   AlertTriangle,
   BookOpen,
@@ -16,6 +16,7 @@ import {
   Hand,
 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
+import { HujjatlarKarta } from '@/components/Hujjatlar'
 import { MahsulotlarBlok } from '@/components/Mahsulotlar'
 import type { Blok } from '@/lib/bloklar'
 import { foiz, qisqaSom, som } from '@/lib/format'
@@ -91,7 +92,7 @@ export function GarovBlok({ bor, kerak }: { bor: number; kerak: number }) {
 
 const HUKMLAR: Record<Hukm, { sarlavha: string; belgi: ReactNode; rang: string }> = {
   tayyor: {
-    sarlavha: 'Ariza berishga tayyorsiz',
+    sarlavha: 'Mos bank topildi',
     belgi: <CheckCircle2 size={18} />,
     rang: 'border-success/50 bg-success/10 text-success',
   },
@@ -275,10 +276,12 @@ export function RozilikBlok({ rozi, onOzgartir }: { rozi: boolean; onOzgartir: (
 export function BlokKorsat({
   blok,
   natija,
+  papka,
   onBelgila,
 }: {
   blok: Blok
   natija: Natija | null
+  papka?: Papka | null
   onBelgila?: (kalit: string, bajarildi: boolean) => void
 }) {
   switch (blok.tur) {
@@ -296,5 +299,7 @@ export function BlokKorsat({
       return <AtamaBlok atama={blok.atama} izoh={blok.izoh} />
     case 'mahsulotlar':
       return <MahsulotlarBlok mahsulotlar={blok.mahsulotlar} />
+    case 'hujjatlar':
+      return papka ? <HujjatlarKarta papka={papka} /> : null
   }
 }

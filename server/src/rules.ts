@@ -5,6 +5,7 @@
 
 import {
   PROFIL_MAYDONLARI,
+  type MahsulotMoslik,
   type Hisob,
   type Hukm,
   type Manba,
@@ -36,8 +37,8 @@ export const MANBALAR = {
     url: "https://gov.uz/oz/bv-jizzax/news/view/207503",
   },
   stavka: {
-    nom: "UzDaily — milliy valyutadagi kreditlar o'rtacha stavkasi",
-    url: "https://www.uzdaily.uz/en/average-loan-rate-in-uzbekistan-falls-to-204/",
+    nom: "Markaziy bank — yuridik shaxslarga aylanma mablag' uchun o'rtacha stavka (21.09.2026)",
+    url: "https://cbu.uz/upload/medialibrary/9ca/bvticcmgifan5k0kcyg11nyajwjta1ov/Foiz_stavkalar_21_09_2026.pdf",
   },
   tadbircore: {
     nom: "UzA — TadbirCore: turli banklar takliflari bir joyda",
@@ -57,8 +58,8 @@ export const QOIDA = {
   mikrokreditMax: 200_000_000,
   /** «Biznes start»: 200 mln so'mgacha garovsiz — gov.uz, to'liq shartlari topilmadi. */
   biznesStartMax: 200_000_000,
-  /** Milliy valyutadagi kreditlar o'rtacha stavkasi, 2026-sentabr — UzDaily. Taxminiy. */
-  yillikStavka: 20.4,
+  /** Yuridik shaxslar, aylanma mablag': o'rtacha 23,1% (banklar bo'yicha 20,5–33,1%) — Markaziy bank, 21.09.2026. Har mijozga alohida. */
+  yillikStavka: 23.1,
   /** Bizning ehtiyot chegaramiz (bank qoidasi emas): to'lov foydaning yarmidan oshmasin. */
   tolovFoydaUlushiMax: 0.5,
 };
@@ -91,6 +92,24 @@ export function profilTolami(p: Profil): boolean {
   return yetishmayotgan(p).length === 0;
 }
 
+/**
+ * Biznes toifasi — yillik daromad bo'yicha (PF-21, 10.02.2023; matbuot: buxgalter.uz, tashkenttimes.uz).
+ * Mikrofirma ≤ 1 mlrd, kichik 1–10 mlrd, o'rta 10–100 mlrd, yirik ≥ 100 mlrd so'm. YaTT — kichik biznes.
+ * Yillik daromad = oylik tushum × 12 (tadbirkor aytgan o'rtacha) — taxmin.
+ */
+export function biznesToifasi(p: Profil): string | null {
+  if (p.shakl === "yatt") return "Kichik biznes (YaTT)";
+  if (p.shakl === "ozini_band") return "O'zini o'zi band qilgan";
+  if (p.shakl === "norasmiy") return "Ro'yxatdan o'tmagan";
+  if (p.oylik_tushum == null) return null;
+  const yillik = p.oylik_tushum * 12;
+  const mlrd = 1_000_000_000;
+  if (yillik <= mlrd) return "Mikrofirma (yillik daromad 1 mlrd so'mgacha)";
+  if (yillik <= 10 * mlrd) return "Kichik korxona (yillik daromad 1–10 mlrd so'm)";
+  if (yillik <= 100 * mlrd) return "O'rta biznes (yillik daromad 10–100 mlrd so'm)";
+  return "Yirik biznes (yillik daromad 100 mlrd so'mdan ko'p)";
+}
+
 /** "12 500 000 so'm" */
 export function somda(n: number): string {
   return `${Math.round(n).toLocaleString("en-US").replace(/,/g, " ")} so'm`;
@@ -121,7 +140,12 @@ type TolaProfil = Required<Profil>;
  * Asosiy funksiya. Profil to'liq bo'lmasa — null.
  * `bajarilgan` — tadbirkor belgilagan qadamlar kalitlari.
  */
-export function baholash(profil: Profil, bajarilgan: string[] = []): Natija | null {
+export function baholash(
+  profil: Profil,
+  bajarilgan: string[] = [],
+  /** Aniq bank mahsulotlariga moslik (mahsulotlar.ts). Natija bilan mahsulot kartasi bir-biriga zid bo'lmasin. */
+  mahsulotlar: MahsulotMoslik[] = [],
+): Natija | null {
   if (!profilTolami(profil)) return null;
   const p = profil as TolaProfil;
 
@@ -352,29 +376,73 @@ export function baholash(profil: Profil, bajarilgan: string[] = []): Natija | nu
     });
   }
 
-  // --- Hukm ---
+  // --- Aniq mahsulot bilan kelishtirish ---
+  // Umumiy talab (garov 125%, 6 oy) bajarilmasa ham, aniq bir mahsulot shartlarida ✗ bo'lmasa — bu to'siq emas.
+  // Aks holda hukm «hali emas», mahsulot kartasi esa «mos» deb, bir-biriga zid gapiradi.
+  const mosYol = olmangSababi ? undefined : mahsulotlar.find((m) => m.mos !== "mos_emas");
+  const yol = mosYol ? `${mosYol.bank} «${mosYol.nom.replace(/[«»]/g, "")}»` : "";
+  if (mosYol) {
+    for (const t of topilmalar) {
+      if (t.daraja === "tosiq" && (t.kalit === "garov" || t.kalit === "faoliyat_muddati")) {
+        t.daraja = "ogohlantirish";
+        t.matn += ` Lekin ${yol} shartlariga to'g'ri kelasiz.`;
+      }
+    }
+    for (let i = qadamlar.length - 1; i >= 0; i--) {
+      if (qadamlar[i].kalit === "kafolat" || qadamlar[i].kalit === "faoliyat_muddati") qadamlar.splice(i, 1);
+    }
+    qadamlar.unshift({
+      kalit: "hujjatlar",
+      sarlavha: `${yol} uchun hujjatlarni yig'ing`,
+      izoh: "Ro'yxat va har birini qayerdan olish «Hujjatlar» bo'limida. Rasmga olib yuklang — tekshirib, bitta papka qilamiz.",
+      manba: mosYol.manba,
+    });
+  }
+
+  // Umumiy qoidalar o'tsa ham, tekshirilgan mahsulotlardan hech biri to'g'ri kelmasa — «tayyor» demaymiz.
+  if (!olmangSababi && mahsulotlar.length > 0 && !mosYol) {
+    topilmalar.push({
+      kalit: "mahsulot",
+      daraja: "tosiq",
+      matn: "Biz tekshirgan bank mahsulotlaridan hech biri hozir sizga to'liq to'g'ri kelmaydi. Kartada har birida nima yetishmasligi ko'rsatilgan.",
+    });
+  }
+
+  // --- Hukm --- (hammasi tadbirkor aytgan raqamlarga tayanadi — matnda shuni aytamiz)
   const tosiqlar = topilmalar.filter((t) => t.daraja === "tosiq");
   let hukm: Hukm;
   let xulosa: string;
   if (olmangSababi) {
     hukm = "olmang";
-    xulosa = `Hozir qarz olmang: ${olmangSababi}. Avval shuni tuzating, keyin qayta tekshiramiz.`;
+    xulosa = `Siz aytgan raqamlarga ko'ra, hozircha ariza bermang: ${olmangSababi}. Avval shuni tuzating, keyin qayta tekshiramiz.`;
   } else if (tosiqlar.length > 0) {
     hukm = "hali_emas";
-    xulosa = `Hali tayyor emassiz: ${tosiqlar.length} ta to'siq bor. Yo'l xaritasidagi qadamlarni bajarsangiz, ariza berishingiz mumkin.`;
+    xulosa = `Siz aytgan raqamlarga ko'ra, hali tayyor emassiz: ${tosiqlar.length} ta to'siq bor. Yo'l xaritasidagi qadamlarni bajarsangiz, ariza berishingiz mumkin.`;
   } else {
     hukm = "tayyor";
-    xulosa =
-      "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi.";
+    xulosa = !mosYol
+      ? "Siz aytgan raqamlarga ko'ra, asosiy talablarga javob berasiz. Endi hujjatlar kerak. Qarorni bank qiladi."
+      : mosYol.mos === "mos"
+        ? `Siz aytgan raqamlarga ko'ra, mos bank topildi: ${yol}. Endi hujjatlar kerak. Qarorni bank qiladi.`
+        : `Siz aytgan raqamlarga ko'ra, eng yaqin bank: ${yol}. Ba'zi shartlarni bankdan aniqlash kerak («?» belgili). Endi hujjatlar kerak.`;
   }
 
   if (hukm !== "olmang") {
-    qadamlar.push({
-      kalit: "ariza",
-      sarlavha: "TadbirCore yoki bankka ariza bering",
-      izoh: "TadbirCore — bir arizani bir nechta bankka yuboradigan davlat platformasi. Arizani o'zingiz yuborasiz.",
-      manba: MANBALAR.tadbircore,
-    });
+    qadamlar.push(
+      mosYol
+        ? {
+            kalit: "ariza",
+            sarlavha: `Hujjatlar tayyor bo'lgach, ${mosYol.bank}ga ariza bering`,
+            izoh: "Bitta PDF papkani «Hujjatlar» bo'limidan yuklab oling va bankka olib boring. Arizani o'zingiz berasiz.",
+            manba: mosYol.manba,
+          }
+        : {
+            kalit: "ariza",
+            sarlavha: "TadbirCore yoki bankka ariza bering",
+            izoh: "TadbirCore — bir arizani bir nechta bankka yuboradigan davlat platformasi. Arizani o'zingiz yuborasiz.",
+            manba: MANBALAR.tadbircore,
+          },
+    );
   } else {
     qadamlar.push({
       kalit: "qayta_tekshirish",

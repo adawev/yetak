@@ -14,12 +14,13 @@ import type {
   Hukm,
   KirishJavobi,
   MenJavobi,
+  Papka,
   Rol,
   Shartnoma,
   XatoJavobi,
 } from "../../shared/types";
 import { type Hisoblar, telefonTozala } from "./hisoblar";
-import { baholash } from "./rules";
+import { natijaHisobla } from "./natija";
 import type { Sessiya, Store } from "./store";
 
 type Status = 400 | 401 | 403 | 404 | 409 | 422 | 429;
@@ -44,11 +45,15 @@ const matn = (v: unknown, max = 100) => (typeof v === "string" ? v.trim().slice(
 
 export function kabinetYollari(
   app: Hono,
-  { store, hisoblar, chegara, ip }: {
+  { store, hisoblar, chegara, ip, papka, pdf }: {
     store: Store;
     hisoblar: Hisoblar;
     chegara: (ip: string) => boolean;
     ip: (c: Context) => string;
+    /** Sessiyaning hujjatlar papkasi (bank oynasida ko'rinadi). */
+    papka?: (s: Sessiya) => Papka | null;
+    /** Papka PDF javobi. */
+    pdf?: (c: Context, s: Sessiya) => Promise<Response>;
   },
 ) {
   const token = (c: Context) => c.req.header("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
@@ -81,7 +86,7 @@ export function kabinetYollari(
               yangilangan: s.yangilangan,
               faoliyat: s.profil.faoliyat,
               kredit_summa: s.profil.kredit_summa,
-              hukm: baholash(s.profil, s.bajarilgan)?.hukm ?? null,
+              hukm: natijaHisobla(s.profil, s.bajarilgan)?.hukm ?? null,
               bank_roziligi: s.bank_roziligi,
             }))
             .sort((a, b) => b.yangilangan.localeCompare(a.yangilangan)),
@@ -136,10 +141,10 @@ export function kabinetYollari(
   // ── Bank oynasi ──
 
   const bankArizasi = (bankId: string, s: Sessiya): BankArizasiHolat | null => {
-    const natija = baholash(s.profil, s.bajarilgan);
+    const natija = natijaHisobla(s.profil, s.bajarilgan);
     if (!s.bank_roziligi || !natija) return null;
     const qaror = hisoblar.qaror(bankId, s.id) ?? { holat: "yangi" as const, yangilangan: s.yangilangan };
-    return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija, qaror };
+    return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija, qaror, papka: papka?.(s) ?? null };
   };
 
   /** Bank xodimi va uning faol shartnomali banki. */
@@ -170,6 +175,15 @@ export function kabinetYollari(
     const a = s ? bankArizasi(x.bank.id, s) : null;
     if (!a) return xato(c, 404, "Ariza topilmadi yoki tadbirkor rozilikni qaytarib oldi.");
     return c.json(a);
+  });
+
+  /** Tadbirkor hujjatlar papkasi (PDF) — faqat rozilik bergan va shu bank xodimiga. */
+  app.get("/api/bank/applications/:id/papka.pdf", async (c) => {
+    const x = bankXodimi(c);
+    if (x instanceof Response) return x;
+    const s = store.olish(c.req.param("id"));
+    if (!s || !bankArizasi(x.bank.id, s) || !pdf) return xato(c, 404, "Ariza topilmadi yoki tadbirkor rozilikni qaytarib oldi.");
+    return pdf(c, s);
   });
 
   app.post("/api/bank/applications/:id/decision", async (c) => {
@@ -204,7 +218,7 @@ export function kabinetYollari(
     let komissiya = 0;
     for (const s of store.hammasi()) {
       const q = hisoblar.qaror(bankId, s.id);
-      const korinadi = s.bank_roziligi && baholash(s.profil, s.bajarilgan);
+      const korinadi = s.bank_roziligi && natijaHisobla(s.profil, s.bajarilgan);
       // Qaror qilingan ariza rozilik qaytarilsa ham hisobda qoladi (kredit berilgan bo'lishi mumkin)
       if (!q && !korinadi) continue;
       const h = q?.holat ?? "yangi";
@@ -298,7 +312,7 @@ export function kabinetYollari(
     let tugallangan = 0;
     let rozilik = 0;
     for (const s of sessiyalar) {
-      const n = baholash(s.profil, s.bajarilgan);
+      const n = natijaHisobla(s.profil, s.bajarilgan);
       if (n) {
         tugallangan++;
         hukmlar[n.hukm]++;

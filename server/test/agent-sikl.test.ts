@@ -104,4 +104,34 @@ describe("ClaudeAgent sikli", () => {
       }),
     ).rejects.toMatchObject({ status: 502 });
   });
+
+  it("asbob chaqiruvi matnga tushib qolsa — tozalanadi va bir marta qayta so'raladi", async () => {
+    const xom = 'Mana: <invoke name="korsatish"><parameter name="bloklar">["hujjatlar"]</parameter></invoke>';
+    const { mijoz, sorovlar } = soxtaMijoz([
+      { stop_reason: "end_turn", content: [{ type: "text", text: xom }] },
+      { stop_reason: "end_turn", content: [{ type: "text", text: "Kredit tarixini my.gov.uz dan oling." }] },
+    ]);
+    const j = await new ClaudeAgent(mijoz).javob({
+      xabarlar: [{ kim: "tadbirkor", matn: "qaysi hujjat kere", vaqt: "2026-11-18T00:00:00Z" }],
+      profil: {},
+      bajarilgan: [],
+    });
+    expect(sorovlar).toHaveLength(2);
+    expect(j.matn).toBe("Kredit tarixini my.gov.uz dan oling.");
+    expect(j.matn).not.toContain("<invoke");
+  });
+
+  it("bank_tanlash — papka yangi bankka o'tadi", async () => {
+    const p = NAMUNALAR.hali_emas;
+    const { mijoz } = soxtaMijoz([
+      { stop_reason: "tool_use", content: [tool("t1", "bank_tanlash", { kalit: "tbc_onlayn" })] },
+      { stop_reason: "end_turn", content: [{ type: "text", text: "TBC uchun hujjatlar." }] },
+    ]);
+    const j = await new ClaudeAgent(mijoz).javob({
+      xabarlar: [{ kim: "tadbirkor", matn: "TBC bo'lsin", vaqt: "2026-11-18T00:00:00Z" }],
+      profil: p,
+      bajarilgan: [],
+    });
+    expect(j.mahsulot).toBe("tbc_onlayn");
+  });
 });

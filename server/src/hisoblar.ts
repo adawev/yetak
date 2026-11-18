@@ -29,6 +29,14 @@ interface Malumot {
 const TOKEN_KUN = 30;
 
 /** Telefonni "998XXXXXXXXX" ko'rinishiga keltiradi. Noto'g'ri bo'lsa null. */
+/** Demo kirish ma'lumotlari — web dagi «demo» tugmalari bilan bir xil (web/src/pages/Kirish.tsx). */
+export const DEMO = {
+  parol: "yetak-demo",
+  admin: { telefon: "998900000001" },
+  bank: { telefon: "998900000002" },
+  bankNom: "Demo bank",
+} as const;
+
 export function telefonTozala(t: string): string | null {
   const r = t.replace(/\D/g, "");
   const toliq = r.length === 9 ? `998${r}` : r;
@@ -120,6 +128,19 @@ export class Hisoblar {
     }
     this.yarat({ ism: "Admin", telefon: t, parol, rol: "admin" });
     console.log("Admin akkaunti yaratildi.");
+  }
+
+  /**
+   * Demo akkauntlar (taqdimot uchun, jamoa qarori: oddiy kirish, maxfiylik kerak emas).
+   * Bir marta yaratiladi; login sahifasidagi «demo» tugmalari shular bilan kiradi.
+   */
+  demoTayyorla() {
+    const bor = (t: string) => this.m.foydalanuvchilar.some((f) => f.telefon === t);
+    if (!bor(DEMO.admin.telefon)) this.yarat({ ism: "Demo admin", telefon: DEMO.admin.telefon, parol: DEMO.parol, rol: "admin" });
+    if (!bor(DEMO.bank.telefon)) {
+      const bank = this.banklar().find((b) => b.nom === DEMO.bankNom) ?? this.bankYarat({ nom: DEMO.bankNom, shartnoma: "faol", komissiya_foiz: 1 });
+      this.yarat({ ism: "Demo bank xodimi", telefon: DEMO.bank.telefon, parol: DEMO.parol, rol: "bank", bank_id: bank.id });
+    }
   }
 
   // ── Tokenlar ──

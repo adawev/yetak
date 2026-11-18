@@ -1,4 +1,5 @@
 import { Info } from 'lucide-react'
+import { HujjatlarPapka } from '@/components/Hujjatlar'
 import { KreditTarixiBlok } from '@/components/KreditTarixi'
 import { MahsulotlarBlok } from '@/components/Mahsulotlar'
 import { GarovBlok, HukmBlok, PulOqimiBlok, RozilikBlok, YolXaritasiBlok } from '@/components/bloklar'
@@ -49,6 +50,11 @@ export function Panel({ s }: { s: Sessiya }) {
         <>
           <HukmBlok natija={natija} />
           {h.mahsulotlar && <MahsulotlarBlok mahsulotlar={h.mahsulotlar} />}
+          {h.papka && (
+            <div className="hidden lg:block">
+              <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />
+            </div>
+          )}
           {profil.kredit_tarixi && (
             <KreditTarixiBlok tarix={profil.kredit_tarixi} mikrokredit={profil.avval_mikrokredit} />
           )}

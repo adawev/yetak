@@ -18,7 +18,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^1.9.0",
     "@hono/node-server": "^2.1.9",
-    "hono": "^4.13.19"
+    "hono": "^4.13.19",
+    "pdf-lib": "1.17.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
