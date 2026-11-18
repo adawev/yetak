@@ -4,6 +4,7 @@ import { serve } from "@hono/node-server";
 import { ClaudeAgent } from "./agent";
 import { appYaratish } from "./app";
 import { config } from "./config";
+import { Hisoblar } from "./hisoblar";
 import { DiskFaylOmbor, FaylStore } from "./store";
 import { ClaudeTekshiruvchi } from "./tekshiruv";
 
@@ -15,7 +16,10 @@ const agent = config.kalitBor() ? new ClaudeAgent() : null;
 const tekshiruvchi = config.kalitBor() ? new ClaudeTekshiruvchi() : null;
 if (!agent) console.warn("ANTHROPIC_API_KEY yo'q: xabar yuborish 503 qaytaradi, hujjatlar tekshirilmaydi.");
 
-const app = appYaratish({ store, agent, corsOrigin: config.corsOrigin, fayllar, tekshiruvchi });
+const hisoblar = new Hisoblar(config.dataDir);
+hisoblar.adminTayyorla(config.adminTelefon, config.adminParol);
+
+const app = appYaratish({ store, agent, corsOrigin: config.corsOrigin, hisoblar, fayllar, tekshiruvchi });
 
 serve({ fetch: app.fetch, port: config.port, hostname: config.host }, (i) => {
   console.log(`Yetak server: http://${config.host}:${i.port} (model ${config.model})`);

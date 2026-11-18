@@ -14,5 +14,8 @@ export const config = {
   model: process.env.CLAUDE_MODEL ?? "claude-sonnet-5-5",
   /** Shuncha kun ishlatilmagan sessiya o'chiriladi (keraksiz ma'lumot saqlanmaydi). */
   saqlashKun: son(process.env.SAQLASH_KUN, 30),
+  /** Birinchi admin (faqat admin yo'q bo'lsa yaratiladi). Parol faqat server/.env da. */
+  adminTelefon: process.env.ADMIN_TELEFON,
+  adminParol: process.env.ADMIN_PAROL,
   kalitBor: () => Boolean(process.env.ANTHROPIC_API_KEY),
 };

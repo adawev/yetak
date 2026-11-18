@@ -244,3 +244,99 @@ export interface BankArizasi {
 export interface XatoJavobi {
   xato: string; // foydalanuvchiga ko'rsatiladigan haqiqiy sabab, o'zbekcha
 }
+
+// ── Kabinetlar: login, hamkor banklar, ariza holati, hisobot ──
+
+export type Rol = "tadbirkor" | "bank" | "admin";
+
+/** Foydalanuvchining ochiq ko'rinishi (parol va token hech qachon qaytarilmaydi). */
+export interface Foydalanuvchi {
+  id: string;
+  ism: string;
+  telefon: string;
+  rol: Rol;
+  /** Faqat rol "bank" bo'lsa */
+  bank_id?: string;
+  yaratilgan: string;
+}
+
+export interface KirishJavobi {
+  token: string;
+  foydalanuvchi: Foydalanuvchi;
+}
+
+/** Tadbirkor kabineti: o'z suhbatlari */
+export interface MeningSuhbatim {
+  id: string;
+  yangilangan: string;
+  faoliyat?: string;
+  kredit_summa?: number;
+  hukm: Hukm | null;
+  bank_roziligi: boolean;
+}
+
+export interface MenJavobi {
+  foydalanuvchi: Foydalanuvchi;
+  suhbatlar: MeningSuhbatim[];
+}
+
+export type Shartnoma = "faol" | "muzokarada" | "toxtatilgan";
+
+/** Hamkor bank. Yetak tadbirkordan pul olmaydi — bank berilgan kredit uchun komissiya to'laydi. */
+export interface HamkorBank {
+  id: string;
+  nom: string;
+  shartnoma: Shartnoma;
+  /** Berilgan kredit summasidan foiz */
+  komissiya_foiz: number;
+  yaratilgan: string;
+  xodimlar: Foydalanuvchi[];
+}
+
+export type ArizaHolati = "yangi" | "korilmoqda" | "berildi" | "rad";
+
+export interface ArizaQarori {
+  holat: ArizaHolati;
+  /** "berildi" bo'lsa — bank bergan summa */
+  summa?: number;
+  /** "rad" bo'lsa — sabab */
+  sabab?: string;
+  /** Hisoblangan komissiya (server: summa × komissiya_foiz) */
+  komissiya?: number;
+  yangilangan: string;
+}
+
+/** Bank xodimi ko'radigan ariza: tadbirkor profili + shu bankning qarori */
+export interface BankArizasiHolat extends BankArizasi {
+  qaror: ArizaQarori;
+}
+
+export interface BankHisobi {
+  bank: { id: string; nom: string; komissiya_foiz: number; shartnoma: Shartnoma };
+  jami: number;
+  holatlar: Record<ArizaHolati, number>;
+  berilgan_summa: number;
+  komissiya: number;
+}
+
+export interface AdminHisobot {
+  foydalanuvchilar: Record<Rol, number>;
+  suhbatlar: {
+    jami: number;
+    tugallangan: number;
+    hukmlar: Record<Hukm, number>;
+    rozilik: number;
+  };
+  /** Oxirgi 7 kun: [sana "YYYY-MM-DD", yangi suhbatlar] */
+  kunlik: { sana: string; soni: number }[];
+  banklar: {
+    id: string;
+    nom: string;
+    shartnoma: Shartnoma;
+    komissiya_foiz: number;
+    holatlar: Record<ArizaHolati, number>;
+    berilgan_summa: number;
+    komissiya: number;
+  }[];
+  jami: { berilgan_kredit: number; berilgan_summa: number; daromad: number };
+}

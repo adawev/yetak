@@ -3,22 +3,26 @@
 import { randomUUID } from "node:crypto";
 import { Hono, type Context } from "hono";
 import { cors } from "hono/cors";
-import type { BankArizasi, Papka, SessiyaHolati, XatoJavobi, YuklanganFayl } from "../../shared/types";
+import type { Papka, SessiyaHolati, XatoJavobi, YuklanganFayl } from "../../shared/types";
 import { AgentXatosi, SALOM, type Agent } from "./agent";
+import { Hisoblar } from "./hisoblar";
 import { papkadaBormi, papkaYasash } from "./hujjatlar";
+import { kabinetYollari } from "./kabinet";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { papkaPdf } from "./papka-pdf";
 import { natijaHisobla } from "./natija";
 import { kerakliMaydonlar, toldirilganSoni } from "./rules";
-import type { FaylOmbor, Sessiya, Store } from "./store";
+import { XotiraFaylOmbor, type FaylOmbor, type Sessiya, type Store } from "./store";
 import { RUXSAT_TURLAR, type HujjatTekshiruvchi, type RuxsatTur } from "./tekshiruv";
 
 export interface AppSozlama {
   store: Store;
   agent: Agent | null; // null — kalit yo'q
   corsOrigin: string;
-  fayllar: FaylOmbor;
-  tekshiruvchi: HujjatTekshiruvchi | null; // null — kalit yo'q: fayl saqlanadi, tekshirilmaydi
+  fayllar?: FaylOmbor;
+  tekshiruvchi?: HujjatTekshiruvchi | null; // null — kalit yo'q: fayl saqlanadi, tekshirilmaydi
+  /** Login, banklar, qarorlar. Berilmasa — xotirada. */
+  hisoblar?: Hisoblar;
 }
 
 const MAX_MATN = 2000;
@@ -81,11 +85,19 @@ async function jsonOqish(c: Context): Promise<Record<string, unknown> | null> {
   }
 }
 
-export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }: AppSozlama) {
+export function appYaratish({
+  store,
+  agent,
+  corsOrigin,
+  fayllar = new XotiraFaylOmbor(),
+  tekshiruvchi = null,
+  hisoblar = new Hisoblar(),
+}: AppSozlama) {
   const app = new Hono();
   const band = new Set<string>(); // javob kutilayotgan sessiyalar
   const xabarChegara = chegara(20);
   const sessiyaChegara = chegara(10);
+  const kirishChegara = chegara(10);
   const ip = (c: Context) =>
     c.req.header("x-real-ip") ?? c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "lokal";
 
@@ -94,7 +106,7 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
     cors({
       origin: corsOrigin === "*" ? "*" : corsOrigin.split(",").map((s) => s.trim()),
       allowMethods: ["GET", "POST", "OPTIONS"],
-      allowHeaders: ["Content-Type"],
+      allowHeaders: ["Content-Type", "Authorization"],
     }),
   );
 
@@ -385,33 +397,8 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
     return pdfJavob(c, s);
   });
 
-  app.get("/api/bank/arizalar/:id/papka.pdf", async (c) => {
-    const s = store.olish(c.req.param("id"));
-    if (!s || !s.bank_roziligi) return xato(c, 404, "Ariza topilmadi yoki tadbirkor rozilikni qaytarib oldi.");
-    return pdfJavob(c, s);
-  });
-
-  const bankArizasi = (s: Sessiya): BankArizasi | null => {
-    const natija = natijaHisobla(s.profil, s.bajarilgan);
-    if (!s.bank_roziligi || !natija) return null;
-    return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija, papka: sessiyaPapkasi(s) };
-  };
-
-  app.get("/api/bank/arizalar", (c) => {
-    const royxat = store
-      .hammasi()
-      .map(bankArizasi)
-      .filter((a): a is BankArizasi => a !== null)
-      .sort((a, b) => b.yangilangan.localeCompare(a.yangilangan));
-    return c.json(royxat);
-  });
-
-  app.get("/api/bank/arizalar/:id", (c) => {
-    const s = store.olish(c.req.param("id"));
-    const a = s ? bankArizasi(s) : null;
-    if (!a) return xato(c, 404, "Ariza topilmadi yoki tadbirkor rozilikni qaytarib oldi.");
-    return c.json(a);
-  });
+  // Login, tadbirkor kabineti, bank oynasi (login bilan), admin panel. Bank papka PDF ini ham shu yerda (login bilan).
+  kabinetYollari(app, { store, hisoblar, chegara: kirishChegara, ip, papka: sessiyaPapkasi, pdf: pdfJavob });
 
   app.notFound((c) => xato(c, 404, "Bunday manzil yo'q."));
   app.onError((e, c) => {

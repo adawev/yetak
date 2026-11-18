@@ -33,6 +33,12 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-18 | Pul (reja): yo'l ko'rsatish bepul; «hujjatlarni biz tayyorlaymiz» 10–20 ming so'm (demoda to'lov ulanmagan); bank tayyor mijoz uchun haq to'laydi | Aralash model; hech kim hali to'lamagan |
 | 2026-11-18 | Hujjatlarni my.gov.uz dan avtomatik yig'ish — faqat davlat bilan rasmiy kelishuvdan keyin; hozir yo'l ko'rsatamiz | Kirish tadbirkorning OneID/ERI si orqali, imzoni faqat egasi ishlatadi |
 | 2026-11-18 | Biznes toifasi yillik daromaddan kod bilan aniqlanadi (PF-21: mikro ≤1 mlrd, kichik 1–10, o'rta 10–100, yirik ≥100 mlrd so'm), qo'shimcha savol yo'q | Savollar kam bo'lsin |
+| 2026-11-18 | Uchta rol: tadbirkor (ro'yxatdan o'tish ixtiyoriy), bank xodimi va admin. Bank xodimini admin ochadi | Bank oynasi ochiq turmasin; demoda bank tomoni ham ko'rinsin |
+| 2026-11-18 | Biznes modeli mahsulot ichida: tadbirkor 0 so'm, bank «kredit berildi» qarori uchun komissiya to'laydi, komissiyani server hisoblaydi | Pul modeli faqat slaydda emas, ishlaydigan tizimda ko'rinsin |
+| 2026-11-18 | Tadbirkorga bitta suhbat. Kirganda o'z suhbati ochiladi, boshqa qurilmadan ham | Ko'p suhbat chalg'itadi; tadbirkorning bitta yo'li bor |
+| 2026-11-18 | Manzillar inglizcha: `/login`, `/register`, `/chat`, `/bank`, `/admin`, yangi API ham. Chat `/` dan `/chat` ga ko'chdi, `/` — bosh sahifa | Chat egasi qarori |
+| 2026-11-18 | Demoda haqiqiy bank nomi ishlatilishi mumkin; shartnoma yo'qligi so'ralsa ochiq aytiladi | Chat egasi qarori |
+| 2026-11-18 | Kredit tarixi kartasi demoda simulyatsiya; pitchda og'zaki aytiladi | Kredit byurosiga ulanish uchun litsenziyali hamkor kerak |
 
 ## Hali hal qilinmagan
 

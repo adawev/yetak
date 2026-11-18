@@ -135,15 +135,12 @@ describe("papka.pdf", () => {
     expect((await app.request(`/api/sessions/${s.id}/papka.pdf`)).status).toBe(409);
   });
 
-  it("bank PDF: roziliksiz 404, rozilik bilan 200", async () => {
+  it("bank PDF — faqat bank xodimi logini bilan; eski ochiq yo'l yo'q", async () => {
     const { app, id } = await tayyorla();
     await yukla(app, id, "ariza", PNG);
-    expect((await app.request(`/api/bank/arizalar/${id}/papka.pdf`)).status).toBe(404);
     await app.request(`/api/sessions/${id}/rozilik`, post({ rozi: true }));
-    const r = await app.request(`/api/bank/arizalar/${id}/papka.pdf`);
-    // Rozilik natija bo'lsagina qabul qilinadi; natija bor — 200 kutiladi
-    expect(r.status).toBe(200);
-    expect(r.headers.get("content-type")).toBe("application/pdf");
+    expect((await app.request(`/api/bank/applications/${id}/papka.pdf`)).status).toBe(401);
+    expect((await app.request(`/api/bank/arizalar/${id}/papka.pdf`)).status).toBe(404);
   });
 });
 
