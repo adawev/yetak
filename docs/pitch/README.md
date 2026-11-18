@@ -9,7 +9,7 @@ PDF ni yangilash:
 
 ```
 python3 docs/pitch/yigish.py
-google-chrome --headless=new --no-pdf-header-footer --print-to-pdf=docs/Yetak-pitch-dek.pdf docs/pitch/dek.html
+google-chrome --headless=new --no-pdf-header-footer --print-to-pdf=Yetak-pitch-dek.pdf docs/pitch/dek.html
 ```
 
 Raqamlar va farazlar: [../PITCH-RAQAMLAR.md](../PITCH-RAQAMLAR.md).
