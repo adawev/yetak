@@ -16,6 +16,7 @@ const HUJJATLAR = [
     bolim: "### 1.2 Kredit olish",
     nom: "Yetak tadqiqoti: kichik biznes krediti",
   },
+  { fayl: "docs/tadqiqot/banklar_tekshirilgan.md", nom: "Tekshirilgan bank mahsulotlari (5 ta bank)" },
 ];
 
 function bolimniOl(matn, sarlavha) {
