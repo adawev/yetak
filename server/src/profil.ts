@@ -2,7 +2,7 @@
 
 import type { KreditTarixi, Profil, Shakl } from "../../shared/types";
 
-const SHAKLLAR: Shakl[] = ["yatt", "mchj", "ozini_band", "norasmiy"];
+const SHAKLLAR: Shakl[] = ["yatt", "mchj", "oilaviy", "xususiy", "ozini_band", "norasmiy"];
 const TARIXLAR: KreditTarixi[] = ["yaxshi", "yomon", "yoq"];
 
 const matn = (v: unknown) =>

@@ -1,6 +1,22 @@
 // Server va web uchun yagona turlar. Faqat shu yerda o'zgartiriladi.
 
-export type Shakl = "yatt" | "mchj" | "ozini_band" | "norasmiy";
+export type Shakl = "yatt" | "mchj" | "oilaviy" | "xususiy" | "ozini_band" | "norasmiy";
+
+/** Tashkiliy shakl nomi — hamma joyda shu yerdan. */
+export const SHAKL_NOMI: Record<Shakl, string> = {
+  yatt: "Yakka tartibdagi tadbirkor (YaTT)",
+  mchj: "MChJ",
+  oilaviy: "Oilaviy korxona",
+  xususiy: "Xususiy korxona",
+  ozini_band: "O'zini o'zi band qilgan",
+  norasmiy: "Ro'yxatdan o'tmagan",
+};
+
+/** Qisqa yozuv: korxona nomidan keyin ("«Non uyi» MChJ"). */
+export const SHAKL_QISQA: Partial<Record<Shakl, string>> = { mchj: "MChJ", oilaviy: "OK", xususiy: "XK" };
+
+/** Yuridik shaxs (korxona): MChJ, oilaviy korxona, xususiy korxona. */
+export const yuridikShaxs = (s?: Shakl | null): boolean => s === "mchj" || s === "oilaviy" || s === "xususiy";
 export type KreditTarixi = "yaxshi" | "yomon" | "yoq";
 
 /** Tadbirkor holati. Agent suhbat davomida to'ldiradi. Pul — so'mda. */

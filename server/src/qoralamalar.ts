@@ -3,7 +3,7 @@
 // Demo farazi (QARORLAR.md, 2026-11-18): bank shaklini Yetak oladi va shu maydonlarni unga ko'chiradi.
 // Bank qoidasi o'ylab topilmaydi — qoralamada faqat tadbirkor aytgani va hisob.
 
-import type { Profil } from "../../shared/types";
+import { SHAKL_NOMI, SHAKL_QISQA, yuridikShaxs, type Profil } from "../../shared/types";
 import { biznesToifasi, kreditTolovi, somda } from "./rules";
 
 export type QoralamaKalit = "ariza" | "tasischi_qarori" | "daromad_manbalari" | "pul_oqimi";
@@ -81,12 +81,6 @@ export interface QoralamaSahifa {
 }
 
 const BOSH = "____________________";
-const SHAKL: Record<string, string> = {
-  yatt: "Yakka tartibdagi tadbirkor (YaTT)",
-  mchj: "Mas'uliyati cheklangan jamiyat (MChJ)",
-  ozini_band: "O'zini o'zi band qilgan",
-  norasmiy: "Ro'yxatdan o'tmagan",
-};
 const IZOH = "Tadbirkor Yetak suhbatida aytgan ma'lumot asosida. Imzolanmaguncha qoralama.";
 
 /** Oylik to'lov va foiz: bank taklifi bo'lsa — undan, bo'lmasa umumiy stavka bilan. Hisobni kod qiladi. */
@@ -117,11 +111,11 @@ function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qoralam
       sarlavha: `Kredit arizasi - ${k.bank}`,
       izoh: `${k.mahsulot}. ${IZOH}`,
       qatorlar: [
-        ...(p.shakl === "mchj"
-          ? ([["Ariza beruvchi (jamiyat)", korxona], ["Rahbar (F.I.Sh.)", ism]] as [string, string][])
+        ...(yuridikShaxs(p.shakl)
+          ? ([[`Ariza beruvchi (${SHAKL_QISQA[p.shakl!] ?? "korxona"})`, korxona], ["Rahbar (F.I.Sh.)", ism]] as [string, string][])
           : ([["Ariza beruvchi (F.I.Sh.)", ism]] as [string, string][])),
         ["STIR", stir],
-        ["Tashkiliy shakl", p.shakl ? SHAKL[p.shakl] : BOSH],
+        ["Tashkiliy shakl", p.shakl ? SHAKL_NOMI[p.shakl] : BOSH],
         ["Faoliyat turi", p.faoliyat ?? BOSH],
         ["Biznes toifasi", biznesToifasi(p) ?? BOSH],
         ["Faoliyat muddati", p.faoliyat_oy != null ? `${p.faoliyat_oy} oy` : BOSH],
@@ -199,7 +193,7 @@ export function qoralamaUchunKerak(p: Profil, qoralamalar: string[]): (keyof Pro
   const kerak: (keyof Profil)[] = [];
   if (!qoralamalar.some((k) => k === "ariza" || k === "tasischi_qarori" || k === "daromad_manbalari")) return kerak;
   if (!p.ism) kerak.push("ism");
-  if (p.shakl === "mchj" && !p.korxona_nomi) kerak.push("korxona_nomi");
+  if (yuridikShaxs(p.shakl) && !p.korxona_nomi) kerak.push("korxona_nomi");
   if (qoralamalar.includes("tasischi_qarori") && !p.ishtirokchilar) kerak.push("ishtirokchilar");
   return kerak;
 }

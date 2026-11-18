@@ -5,6 +5,7 @@
 
 import {
   PROFIL_MAYDONLARI,
+  SHAKL_NOMI,
   type MahsulotMoslik,
   type Hisob,
   type Hukm,
@@ -203,7 +204,7 @@ export function baholash(
     topilmalar.push({
       kalit: "shakl",
       daraja: "yaxshi",
-      matn: p.shakl === "yatt" ? "Yakka tartibdagi tadbirkor sifatida ro'yxatdan o'tgansiz." : "MChJ sifatida ro'yxatdan o'tgansiz.",
+      matn: `${SHAKL_NOMI[p.shakl]} sifatida ro'yxatdan o'tgansiz.`,
     });
   }
 

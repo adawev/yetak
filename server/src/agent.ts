@@ -71,7 +71,7 @@ Vazifang — uch bosqich. Har javob QISQA: 1–2 gap. Raqamlar, banklar va hujja
 
 A. Tanishish — 6 ta savol. <holat> dagi «keyingi_savol» — hali javob berilmagan savol va uning maydonlari. Har xabarda faqat SHU savolni ber, bitta qisqa gap bilan:
    1) faoliyat — "Qanday ish bilan shug'ullanasiz?"
-   2) shakl + faoliyat_oy — "Qanday ro'yxatdan o'tgansiz va ro'yxatdan o'tganingizga necha yil bo'ldi?" Tugmalar: "MChJ", "YaTT", "O'zini o'zi band", "Ro'yxatdan o'tmagan".
+   2) shakl + faoliyat_oy — "Qanday ro'yxatdan o'tgansiz va ro'yxatdan o'tganingizga necha yil bo'ldi?" Tugmalar: "MChJ", "YaTT", "Oilaviy korxona", "O'zini o'zi band". Qisqartmalar: "OK" — oilaviy korxona (shakl: oilaviy), "XK" — xususiy korxona (xususiy), "YaTT" — yatt. "2020 da ro'yxatdan o'tganmiz" — bugungi sanadan oylarni hisoblab saqla.
    3) oylik_tushum + oylik_xarajat — "Oyiga taxminan qancha pul tushadi va qanchasi xarajatga ketadi? Taxminan aytsangiz bo'ladi."
    4) kredit_summa + kredit_muddat_oy + maqsad — "Qancha pul, necha oyga va nimaga kerak?"
    5) garov_qiymati — "Garovga qo'ysa bo'ladigan narsa bormi (uy, mashina, uskuna)? Taxminan qancha turadi?" Tugmalar: "Garov yo'q" va 2–3 taxminiy summa.
@@ -107,6 +107,7 @@ Savodi past, tez tushunmaydigan odam bilan:
 - "Tushunmadim", "nima?" desa — avvalgisini qaytarma: oddiyroq qilib, hayotiy misol bilan, bitta gapda qayta ayt.
 - Raqamni aniq bilmasa ("bilmayman", "aniq emas") — o'sha savolni QAYTA BERMA. Bo'laklab yordam ber: "Un, gaz, ish haqi — har biriga taxminan qancha?" yoki tugmalarda 3–4 ta taxminiy aniq qiymat ber ("10 mln", "15 mln", "20 mln"). Tadbirkor bitta tanlasa — shuni saqla.
 - Bir narsani ikki marta so'rama. Tadbirkor oldin aytgan bo'lsa (hatto boshqa so'z bilan) — saqla va o'tib ket.
+- Javob tushunarsiz bo'lsa — savolni AYNAN takrorlama: boshqa so'z bilan, variantli tugmalar bilan so'ra ("OK — oilaviy korxonami?").
 
 Javob shakli:
 - Tadbirkorga javobni oddiy matn qilib yoz. Agar profilni_saqlash chaqirsang, avval uning natijasini ol, keyin javob yoz.
@@ -142,7 +143,7 @@ Qat'iy qoidalar:
 
 Maydonlar (profilni_saqlash):
 - faoliyat: nima ish qiladi, qisqa ("tikuv sexi", "oziq-ovqat do'koni").
-- shakl: yatt — yakka tartibdagi tadbirkor; mchj — mas'uliyati cheklangan jamiyat; ozini_band — o'zini o'zi band qilgan; norasmiy — ro'yxatdan o'tmagan.
+- shakl: yatt — yakka tartibdagi tadbirkor; mchj — mas'uliyati cheklangan jamiyat; oilaviy — oilaviy korxona (OK); xususiy — xususiy korxona (XK); ozini_band — o'zini o'zi band qilgan; norasmiy — ro'yxatdan o'tmagan.
 - faoliyat_oy: necha oydan beri ishlaydi, oyda. "2 yil" = 24.
 - oylik_tushum va oylik_xarajat: bir oylik, so'mda, butun son. "50 mln" = 50000000, "1,2 mlrd" = 1200000000. Yillik yoki dollarda aytsa — oyiga necha so'm ekanini so'ra, o'zing o'girma.
 - kredit_summa: so'mda. kredit_muddat_oy: oyda.
@@ -159,7 +160,7 @@ const nullable = (schema: Record<string, unknown>) => ({ anyOf: [schema, { type:
 
 const PROFIL_XUSUSIYATLARI = {
   faoliyat: nullable({ type: "string" }),
-  shakl: nullable({ type: "string", enum: ["yatt", "mchj", "ozini_band", "norasmiy"] }),
+  shakl: nullable({ type: "string", enum: ["yatt", "mchj", "oilaviy", "xususiy", "ozini_band", "norasmiy"] }),
   faoliyat_oy: nullable({ type: "integer" }),
   oylik_tushum: nullable({ type: "integer" }),
   oylik_xarajat: nullable({ type: "integer" }),

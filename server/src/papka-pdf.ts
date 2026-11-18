@@ -2,7 +2,7 @@
 // Hujjatlar o'zgartirilmaydi — rasm sahifaga joylanadi, PDF sahifalari aynan ko'chiriladi.
 
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
-import type { Papka, Profil } from "../../shared/types";
+import { SHAKL_NOMI, type Papka, type Profil } from "../../shared/types";
 import type { QoralamaSahifa } from "./qoralamalar";
 import { biznesToifasi, somda } from "./rules";
 
@@ -173,7 +173,7 @@ export async function papkaPdf(k: {
   w.bosh(14);
 
   const p = k.profil;
-  const shakl = { yatt: "Yakka tartibdagi tadbirkor (YaTT)", mchj: "MChJ", ozini_band: "O'zini o'zi band qilgan", norasmiy: "Ro'yxatdan o'tmagan" };
+  const shakl = SHAKL_NOMI;
   w.qator("Tadbirkor haqida (o'zi aytgan ma'lumot)", { size: 13, bold: true });
   const qatorlar: [string, string | undefined][] = [
     ["Faoliyat", p.faoliyat],

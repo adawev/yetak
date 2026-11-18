@@ -3,7 +3,7 @@
 // Hujjat ro'yxatini faqat shu fayl beradi — mahsulot kartasi ham, papka ham, PDF ham shu yerdan oladi.
 
 import manbaJson from "../../docs/tadqiqot/hujjatlar.json";
-import type { MahsulotMoslik, OlishYoli, Papka, PapkaHujjat, Profil, YuklanganFayl } from "../../shared/types";
+import { yuridikShaxs, type MahsulotMoslik, type OlishYoli, type Papka, type PapkaHujjat, type Profil, type YuklanganFayl } from "../../shared/types";
 import { matnTozala } from "./papka-pdf";
 import { QORALAMA_ASOSI, QORALAMA_MATNI, qoralamaBormi } from "./qoralamalar";
 
@@ -45,7 +45,7 @@ export function shartniOqish(shart: string | undefined, p: Profil): { kerak: boo
   if (!shart) return { kerak: true, matn: null };
   switch (shart) {
     case "yuridik_shaxs":
-      return { kerak: p.shakl == null || p.shakl === "mchj", matn: p.shakl === "mchj" ? null : "MChJ bo'lsa" };
+      return { kerak: p.shakl == null || yuridikShaxs(p.shakl), matn: yuridikShaxs(p.shakl) ? null : "Korxona bo'lsa" };
     case "yatt":
       return { kerak: p.shakl == null || p.shakl === "yatt", matn: p.shakl === "yatt" ? null : "YaTT bo'lsa" };
     case "garov bo'lsa":
@@ -57,7 +57,7 @@ export function shartniOqish(shart: string | undefined, p: Profil): { kerak: boo
         matn: "100 mln dan oshgan qismi uchun",
       };
     case "xususiy korxonaga shart emas":
-      return { kerak: p.shakl == null || p.shakl === "mchj", matn: "Xususiy korxonaga shart emas" };
+      return { kerak: p.shakl == null || (yuridikShaxs(p.shakl) && p.shakl !== "xususiy"), matn: "Xususiy korxonaga shart emas" };
     case "faoliyat talab qilsa":
       return { kerak: true, matn: "Faoliyatingiz litsenziya talab qilsa" };
     case "kafillik berilsa":

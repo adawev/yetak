@@ -1,6 +1,6 @@
 // Bank oynasi: rozilik bergan, tekshirilgan tadbirkorlar. Raqamlar serverdan (rules.ts va kabinet.ts).
 // Bu yerda faqat ko'rsatish uchun nisbatlar: foyda ÷ to'lov va garov ÷ kerakli garov.
-import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Papka, Profil } from '@shared/types'
+import { SHAKL_QISQA, yuridikShaxs, type ArizaHolati, type BankArizasiHolat, type BankHisobi, type Hukm, type Papka, type Profil } from '@shared/types'
 import { ArrowLeft, Check, ChevronRight, Circle, Download, Inbox, Loader2, RotateCcw, TriangleAlert } from 'lucide-react'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -24,6 +24,8 @@ function HukmYorliq({ hukm }: { hukm: Hukm }) {
 const SHAKL: Record<NonNullable<Profil['shakl']>, string> = {
   yatt: 'YaTT',
   mchj: 'MChJ',
+  oilaviy: 'Oilaviy korxona',
+  xususiy: 'Xususiy korxona',
   ozini_band: "O'zini o'zi band",
   norasmiy: "Ro'yxatdan o'tmagan",
 }
@@ -42,7 +44,7 @@ const qoplashRang = (k: number) => (k < 1 ? 'text-destructive' : k < 1.2 ? 'text
 
 /** Ro'yxat va sarlavha uchun nom: korxona nomi yoki ism, bo'lmasa faoliyat. */
 const nomi = (a: BankArizasiHolat) =>
-  (a.profil.shakl === 'mchj' && a.profil.korxona_nomi ? `«${a.profil.korxona_nomi}» MChJ` : a.profil.ism) ?? a.profil.faoliyat ?? 'Tadbirkor'
+  (yuridikShaxs(a.profil.shakl) && a.profil.korxona_nomi ? `«${a.profil.korxona_nomi}» ${SHAKL_QISQA[a.profil.shakl!] ?? ''}`.trim() : a.profil.ism) ?? a.profil.faoliyat ?? 'Tadbirkor'
 
 /** Tagsatr: faoliyat, shakl, muddat, rahbar. */
 const tagsatr = (a: BankArizasiHolat) =>
@@ -50,7 +52,7 @@ const tagsatr = (a: BankArizasiHolat) =>
     a.profil.faoliyat && (a.profil.korxona_nomi || a.profil.ism) ? a.profil.faoliyat : null,
     a.profil.shakl ? SHAKL[a.profil.shakl] : null,
     a.profil.faoliyat_oy != null ? `${a.profil.faoliyat_oy} oy` : null,
-    a.profil.shakl === 'mchj' && a.profil.korxona_nomi && a.profil.ism ? a.profil.ism : null,
+    yuridikShaxs(a.profil.shakl) && a.profil.korxona_nomi && a.profil.ism ? a.profil.ism : null,
   ]
     .filter(Boolean)
     .join(', ')

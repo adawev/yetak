@@ -24,10 +24,10 @@ describe("shartniOqish", () => {
   it("shartsiz — har doim kerak", () => {
     expect(shartniOqish(undefined, {})).toEqual({ kerak: true, matn: null });
   });
-  it("yuridik_shaxs: MChJ kerak, YaTT kerak emas, noma'lum — 'MChJ bo'lsa'", () => {
+  it("yuridik_shaxs: MChJ kerak, YaTT kerak emas, noma'lum — 'Korxona bo'lsa'", () => {
     expect(shartniOqish("yuridik_shaxs", { shakl: "mchj" })).toEqual({ kerak: true, matn: null });
     expect(shartniOqish("yuridik_shaxs", { shakl: "yatt" }).kerak).toBe(false);
-    expect(shartniOqish("yuridik_shaxs", {})).toEqual({ kerak: true, matn: "MChJ bo'lsa" });
+    expect(shartniOqish("yuridik_shaxs", {})).toEqual({ kerak: true, matn: "Korxona bo'lsa" });
   });
   it("100 mln dan oshgan qismi", () => {
     expect(shartniOqish("100 mln dan oshgan qismi", { kredit_summa: 100 * MLN }).kerak).toBe(false);

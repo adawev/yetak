@@ -2,7 +2,7 @@
 // Manba: docs/tadqiqot/banklar_tekshirilgan.md (2026-11-18). Har shart — bank sahifasi yoki rasmiy hujjatdan.
 // Ma'lumot yo'q bo'lsa shart «nomalum» bo'ladi — taxmin qilinmaydi.
 
-import type { MahsulotMoslik, Profil, ShartHolati } from "../../shared/types";
+import { yuridikShaxs, type MahsulotMoslik, type Profil, type ShartHolati } from "../../shared/types";
 import { mahsulotHujjatNomlari, mahsulotBankTekshiradi } from "./hujjatlar";
 import { oylikTolov, somda } from "./rules";
 
@@ -54,7 +54,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
       return [
         p.shakl === "ozini_band"
           ? nomalum("Kichik tadbirkorlik subyekti (o'zini o'zi band qilganga — bank ko'rib chiqishda aniqlaydi)")
-          : tekshir("Kichik tadbirkorlik subyekti (YaTT yoki MChJ)", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+          : tekshir("Kichik tadbirkorlik subyekti (YaTT yoki korxona)", p.shakl, () => p.shakl === "yatt" || yuridikShaxs(p.shakl)),
         tekshir("Ro'yxatdan o'tganiga kamida 1 yil", p.faoliyat_oy, () => p.faoliyat_oy! >= 12),
         tekshir("Kredit tarixi ijobiy yoki umuman yo'q", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
         tekshir("Summa 300 mln gacha", s, () => s! <= mln(300)),
@@ -99,7 +99,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
         p.kredit_muddat_oy,
         () => p.kredit_muddat_oy! >= 3 && p.kredit_muddat_oy! <= 36,
       ),
-      tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+      tekshir("YaTT yoki korxona (yuridik shaxs)", p.shakl, () => p.shakl === "yatt" || yuridikShaxs(p.shakl)),
       tekshir("Kamida 6 oy faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
       p.kredit_tarixi === "yoq"
         ? nomalum("Bank «ijobiy kredit tarixi» so'raydi — kredit olmaganlarni ko'rib chiqishda baholaydi")
@@ -174,7 +174,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
     shartlar: (p) => {
       const s = p.kredit_summa;
       return [
-        tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+        tekshir("YaTT yoki korxona (yuridik shaxs)", p.shakl, () => p.shakl === "yatt" || yuridikShaxs(p.shakl)),
         tekshir("Kamida 6 oy faoliyat (summa katta bo'lsa — ko'proq)", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
         p.shakl === "yatt"
           ? tekshir("YaTT uchun summa 1 mlrd gacha", s, () => s! <= mln(1000))
@@ -202,7 +202,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
     shartlar: (p) => {
       const s = p.kredit_summa;
       return [
-        tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+        tekshir("YaTT yoki korxona (yuridik shaxs)", p.shakl, () => p.shakl === "yatt" || yuridikShaxs(p.shakl)),
         tekshir("Kamida 6 oy faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
         tekshir(
           "Zarar bilan ishlamaydi",

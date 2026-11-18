@@ -84,3 +84,15 @@ describe("mahsulotlarniMoslash", () => {
     expect(mahsulotlarniMoslash(p).slice(0, 2).map((m) => m.kalit)).toEqual(["mikrokreditbank_birinchi_qadam", "hamkorbank_biznesga_qadam"]);
   });
 });
+
+describe("oilaviy va xususiy korxona", () => {
+  it("oilaviy korxona — yuridik shaxs: Hamkorbank va TBC shakl sharti ✓", () => {
+    const p: Profil = { shakl: "oilaviy", faoliyat_oy: 60, oylik_tushum: 60e6, oylik_xarajat: 40e6, kredit_summa: 80e6, kredit_muddat_oy: 24, garov_qiymati: 0, kredit_tarixi: "yaxshi" };
+    const r = mahsulotlarniMoslash(p);
+    for (const k of ["hamkorbank_pq312", "tbc_onlayn"]) {
+      const m = r.find((x) => x.kalit === k)!;
+      expect(m.shartlar.find((s) => s.matn.includes("korxona"))?.holat, k).toBe("ha");
+    }
+    expect(r[0].kalit).toBe("hamkorbank_pq312");
+  });
+});
