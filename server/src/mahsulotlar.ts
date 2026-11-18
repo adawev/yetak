@@ -3,6 +3,7 @@
 // Ma'lumot yo'q bo'lsa shart «nomalum» bo'ladi — taxmin qilinmaydi.
 
 import type { MahsulotMoslik, Profil, ShartHolati } from "../../shared/types";
+import { mahsulotHujjatNomlari, mahsulotBankTekshiradi } from "./hujjatlar";
 import { somda } from "./rules";
 
 type Shart = { matn: string; holat: ShartHolati };
@@ -17,31 +18,16 @@ interface Mahsulot {
   bank: string;
   nom: string;
   qisqa: string;
-  hujjatlar: string[];
-  bank_tekshiradi: string[];
   manba: { nom: string; url: string };
   shartlar: (p: Profil) => Shart[];
 }
 
 export const MAHSULOTLAR: Mahsulot[] = [
   {
-    kalit: "hamkor_pq312",
+    kalit: "hamkorbank_pq312",
     bank: "Hamkorbank",
     nom: "«Kichik biznesga ko'mak» (PQ–312)",
     qisqa: "300 mln gacha · 100 mln garovsiz · 18–24% · 84 oygacha",
-    hujjatlar: [
-      "Kredit buyurtmanomasi",
-      "Pul oqimi prognozi",
-      "Tovar yoki uskuna oldi-sotdi shartnomasi",
-      "Faoliyat joyi hujjati (yoki kassa cheklari)",
-      "MChJ bo'lsa — ta'sischilar roziligi",
-      "100 mln dan ortiq qismi uchun garov hujjatlari",
-    ],
-    bank_tekshiradi: [
-      "Kichik biznes maqomi — soliq kabineti yoki integratsiya orqali",
-      "Faoliyat muddati — guvohnoma yoki integratsiya orqali",
-      "Kredit tarixi — kredit byurosidan",
-    ],
     manba: {
       nom: "Hamkorbank kredit pasporti",
       url: "https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf",
@@ -73,12 +59,10 @@ export const MAHSULOTLAR: Mahsulot[] = [
     },
   },
   {
-    kalit: "ipak_onlayn",
+    kalit: "ipakyoli_onlayn",
     bank: "Ipak Yo'li Banki",
     nom: "Tadbirkorlar uchun onlayn kredit",
     qisqa: "200 mln gacha · garovsiz · 30% · 12 oygacha · onlayn",
-    hujjatlar: ["Ipak Yo'li Bankida hisob raqami", "Ipak Yuli Business ilovasida onlayn ariza"],
-    bank_tekshiradi: ["Hisob raqamdagi aylanma — avtomatik, qaror bir necha daqiqada"],
     manba: { nom: "Ipak Yo'li Banki sahifasi", url: "https://en.ipakyulibank.uz/legal/credit/online-loan-for-business" },
     shartlar: (p) => [
       tekshir("Faqat YaTT", p.shakl, () => p.shakl === "yatt"),
@@ -94,8 +78,6 @@ export const MAHSULOTLAR: Mahsulot[] = [
     bank: "TBC Bank",
     nom: "TBC Business onlayn kredit",
     qisqa: "10–600 mln · garovsiz · 33–38% · 3–36 oy · onlayn",
-    hujjatlar: ["TBC Business ilovasida hisob va onlayn ariza"],
-    bank_tekshiradi: [],
     manba: { nom: "Spot.uz — TBC (reklama materiali)", url: "https://www.spot.uz/ru/2026/05/01/tbc/" },
     shartlar: (p) => [
       tekshir("Summa 10–600 mln", p.kredit_summa, () => p.kredit_summa! >= mln(10) && p.kredit_summa! <= mln(600)),
@@ -109,12 +91,10 @@ export const MAHSULOTLAR: Mahsulot[] = [
     ],
   },
   {
-    kalit: "mkb_birinchi_qadam",
+    kalit: "mikrokreditbank_birinchi_qadam",
     bank: "Mikrokreditbank",
     nom: "«Biznesga birinchi qadam»",
     qisqa: "50 mln gacha · 21% · 24–84 oy · 125% garov yoki kafil",
-    hujjatlar: ["ID-karta yoki pasport", "O'zini o'zi band qilganlik guvohnomasi", "Garov yoki kafillik hujjatlari"],
-    bank_tekshiradi: [],
     manba: {
       nom: "Mikrokreditbank sahifasi",
       url: "https://mkbank.uz/uz/private/crediting/biznesga-birinchi-qadam-mikroqarz/",
@@ -137,9 +117,81 @@ export const MAHSULOTLAR: Mahsulot[] = [
       ];
     },
   },
+  {
+    kalit: "hamkorbank_biznesga_qadam",
+    bank: "Hamkorbank",
+    nom: "«Biznesga qadam»",
+    qisqa: "100 mln gacha · 25–28% · 36 oygacha · yangi o'zini o'zi band qilganlarga",
+    manba: {
+      nom: "Hamkorbank kredit pasporti",
+      url: "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf",
+    },
+    shartlar: (p) => [
+      tekshir("Faqat o'zini o'zi band qilganlar", p.shakl, () => p.shakl === "ozini_band"),
+      tekshir("Ro'yxatdan o'tganiga 6 oydan oshmagan", p.faoliyat_oy, () => p.faoliyat_oy! <= 6),
+      tekshir("Kredit tarixi salbiy emas", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
+      tekshir("Summa 100 mln gacha", p.kredit_summa, () => p.kredit_summa! <= mln(100)),
+      tekshir("Muddat 36 oygacha", p.kredit_muddat_oy, () => p.kredit_muddat_oy! <= 36),
+      p.kredit_summa != null && p.kredit_summa <= mln(10)
+        ? nomalum("Ta'minot: sug'urta polisi yoki rasmiy daromadli kafil")
+        : nomalum("Ta'minot: depozit, ko'chmas mulk, avtomobil yoki tilla"),
+      nomalum("Yosh 21–60"),
+    ],
+  },
+  {
+    kalit: "sqb_tezkor_plus",
+    bank: "SQB",
+    nom: "«Tezkor+»",
+    qisqa: "25% · 36 oygacha · 3 oy imtiyoz · garov 135%",
+    manba: { nom: "SQB sahifasi", url: "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti" },
+    shartlar: (p) => {
+      const s = p.kredit_summa;
+      return [
+        tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+        tekshir("Kamida 6 oy faoliyat (summa katta bo'lsa — ko'proq)", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
+        p.shakl === "yatt"
+          ? tekshir("YaTT uchun summa 1 mlrd gacha", s, () => s! <= mln(1000))
+          : nomalum("Summa chegarasi dollarda belgilangan — bankdan aniqlang"),
+        tekshir("Muddat 36 oygacha", p.kredit_muddat_oy, () => p.kredit_muddat_oy! <= 36),
+        tekshir(
+          "Garov summaning 135% idan kam emas",
+          s == null || p.garov_qiymati == null ? null : 1,
+          () => p.garov_qiymati! >= s! * 1.35,
+        ),
+        tekshir("Kredit tarixi salbiy emas", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
+        nomalum("Oxirgi 6 oyda har oy tushum bo'lgan"),
+      ];
+    },
+  },
+  {
+    kalit: "kapitalbank_standart",
+    bank: "Kapitalbank",
+    nom: "Standart biznes krediti",
+    qisqa: "Garov 125% · 6 oydan ishlaganlarga · shartlar reklama materialidan",
+    manba: { nom: "Spot.uz — Kapitalbank (reklama materiali)", url: "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/" },
+    shartlar: (p) => {
+      const s = p.kredit_summa;
+      return [
+        tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+        tekshir("Kamida 6 oy faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
+        tekshir(
+          "Zarar bilan ishlamaydi",
+          p.oylik_tushum == null || p.oylik_xarajat == null ? null : 1,
+          () => p.oylik_tushum! > p.oylik_xarajat!,
+        ),
+        tekshir("Kredit tarixi salbiy emas", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
+        tekshir(
+          "Garov summaning 125% idan kam emas",
+          s == null || p.garov_qiymati == null ? null : 1,
+          () => p.garov_qiymati! >= s! * 1.25,
+        ),
+        nomalum("Kapitalbankda hisob raqam (ochsa bo'ladi)"),
+      ];
+    },
+  },
 ];
 
-const TARTIB = { mos: 0, qisman: 1, mos_emas: 2 } as const;
+const TARTIB ={ mos: 0, qisman: 1, mos_emas: 2 } as const;
 
 /** Profilni har bir mahsulot bilan solishtiradi. Shakl va summa noma'lum bo'lsa — bo'sh ro'yxat. */
 export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
@@ -155,8 +207,8 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
       qisqa: m.qisqa,
       shartlar,
       mos,
-      hujjatlar: m.hujjatlar,
-      bank_tekshiradi: m.bank_tekshiradi,
+      hujjatlar: mahsulotHujjatNomlari(m.kalit, p),
+      bank_tekshiradi: mahsulotBankTekshiradi(m.kalit),
       manba: m.manba,
     };
   }).sort((a, b) => {

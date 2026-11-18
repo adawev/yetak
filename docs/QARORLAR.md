@@ -25,6 +25,9 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-17 | API manzili: `yetak-api.diyorjon.com` (kichik server). Veb: Netlify, `yetak.diyorjon.com` | API uzoq Claude javobi va fayl saqlash uchun serverda qoladi; Netlify vebni o'zi yig'adi |
 | 2026-11-17 | RAG: Claude citations, korpus — docs'dagi tekshirilgan hujjatlar, vektor bazasiz | Korpus kichik (~8 ming belgi); har javobda manba ko'rinadi, o'ylab topilgan fakt kamayadi |
 | 2026-11-17 | Chatda boy bloklar: agent tanlaydi, raqamni server qo'yadi. Soxta API yo'q, web haqiqiy serverga ulangan | Tadbirkor diagrammani matndan yaxshi tushunadi; «hisobni kod qiladi» qoidasi saqlanadi |
+| 2026-11-18 | Asosiy qiymat — hujjatlar papkasi: aniq bank mahsuloti uchun kerakli hujjatlar, har birini qayerdan va qanday olish (my.gov.uz qidiruvi, vaqt, narx), yuklash, AI tekshiruvi va bitta PDF papka | Oddiy savol-javob va «bankka boring» qiymat bermaydi; tadbirkorning asl og'rig'i — hujjat yig'ish |
+| 2026-11-18 | Hujjatlar ro'yxatining yagona manbasi — `docs/tadqiqot/hujjatlar.json` | Ikki joyda ikki xil ro'yxat bo'lmasin |
+| 2026-11-18 | Kredit tarixi kartasi — namuna (simulyatsiya), ekranda «Namuna» deb yozilgan | Kredit byurosiga ulanmaganmiz; foydalanuvchini aldamaslik |
 
 ## Hali hal qilinmagan
 

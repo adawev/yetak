@@ -40,8 +40,20 @@ Hukm, topilmalar, qadamlar, hisob — `natija` ichida, profil 12 maydonning hamm
 | GET | `/api/bank/arizalar` | — | `BankArizasi[]` (faqat rozilik bergan va natijasi borlar) |
 | GET | `/api/bank/arizalar/:id` | — | `BankArizasi` |
 | GET | `/api/health` | — | `{ "ok": true }` |
+| POST | `/api/sessions/:id/mahsulot` | `{ "kalit": string }` | `SessiyaHolati` (papka boshqa bank mahsulotiga) |
+| POST | `/api/sessions/:id/hujjatlar/:kalit` | multipart, `fayl` (JPG/PNG/WEBP/PDF, ≤10 MB) | `SessiyaHolati` (AI tekshiruvi bilan, 5–30 s) |
+| POST | `/api/sessions/:id/hujjatlar/:kalit/ochirish` | — | `SessiyaHolati` |
+| GET | `/api/sessions/:id/papka.pdf` | — | bitta PDF: muqova + ro'yxat + yuklangan hujjatlar |
+| GET | `/api/bank/arizalar/:id/papka.pdf` | — | o'sha PDF, faqat rozilik bo'lsa |
 
 Turlar: `shared/types.ts`.
+
+## Hujjatlar papkasi
+
+- Yagona manba: `docs/tadqiqot/hujjatlar.json` — har bank mahsulotiga kerakli hujjatlar (shartlari bilan) va har hujjatni qanday olish (`olish`: qayerda, qidiruv, qadamlar, vaqt, narx, manba). Mahsulot kartasi, papka, PDF va agent shu fayldan oladi (`server/src/hujjatlar.ts`).
+- `SessiyaHolati.papka`: tanlangan mahsulot (bo'lmasa — eng mosi), hujjatlar ro'yxati (olib boriladigan / oldindan tekshiriladigan / bank o'zi oladigan), `tayyor/jami`, hujjatlar orasidagi ism nomuvofiqligi.
+- Yuklangan fayl turini server baytlaridan aniqlaydi. Claude faqat o'qiydi: qanday hujjat, o'qiladimi, sanasi, egasining ismi, muammolar (`server/src/tekshiruv.ts`); «mos / muammo» hukmini kod chiqaradi. AI ishlamasa fayl baribir saqlanadi.
+- Fayllar serverda `DATA_DIR/fayllar/<sessiya>/` da, sessiya bilan birga 30 kunda o'chadi. Log'ga hujjat matni yoki ism yozilmaydi.
 
 Agent xabari (`Xabar`, `kim: "agent"`) qo'shimcha maydonlari:
 

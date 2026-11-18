@@ -1,4 +1,4 @@
-import type { Natija } from '@shared/types'
+import type { Natija, Papka } from '@shared/types'
 import { AlertCircle, ArrowUp, RotateCcw, X } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { BlokKorsat } from '@/components/bloklar'
@@ -9,11 +9,13 @@ import type { BoyXabar } from '@/lib/bloklar'
 export function XabarPufak({
   xabar,
   natija,
+  papka,
   onBelgila,
   holati,
 }: {
   xabar: Pick<BoyXabar, 'kim' | 'matn' | 'bloklar' | 'manbalar'>
   natija: Natija | null
+  papka?: Papka | null
   onBelgila?: (kalit: string, bajarildi: boolean) => void
   holati?: 'yuborilmoqda' | 'yuborilmadi'
 }) {
@@ -37,7 +39,7 @@ export function XabarPufak({
         </div>
       )}
       {xabar.bloklar?.map((b, i) => (
-        <BlokKorsat key={i} blok={b} natija={natija} onBelgila={onBelgila} />
+        <BlokKorsat key={i} blok={b} natija={natija} papka={papka} onBelgila={onBelgila} />
       ))}
       {xabar.manbalar && <ManbaChiplari manbalar={xabar.manbalar} />}
     </div>

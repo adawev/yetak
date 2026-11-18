@@ -3,20 +3,30 @@
 import { randomUUID } from "node:crypto";
 import { Hono, type Context } from "hono";
 import { cors } from "hono/cors";
-import type { BankArizasi, SessiyaHolati, XatoJavobi } from "../../shared/types";
+import type { BankArizasi, Papka, SessiyaHolati, XatoJavobi, YuklanganFayl } from "../../shared/types";
 import { AgentXatosi, SALOM, type Agent } from "./agent";
+import { papkadaBormi, papkaYasash } from "./hujjatlar";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
+import { papkaPdf } from "./papka-pdf";
 import { baholash, kerakliMaydonlar, toldirilganSoni } from "./rules";
-import type { Sessiya, Store } from "./store";
+import type { FaylOmbor, Sessiya, Store } from "./store";
+import { RUXSAT_TURLAR, type HujjatTekshiruvchi, type RuxsatTur } from "./tekshiruv";
 
 export interface AppSozlama {
   store: Store;
   agent: Agent | null; // null — kalit yo'q
   corsOrigin: string;
+  fayllar: FaylOmbor;
+  tekshiruvchi: HujjatTekshiruvchi | null; // null — kalit yo'q: fayl saqlanadi, tekshirilmaydi
 }
 
 const MAX_MATN = 2000;
 const MAX_XABAR = 300;
+const MAX_FAYL = 10 * 1024 * 1024;
+
+export function sessiyaPapkasi(s: Sessiya): Papka | null {
+  return papkaYasash(s.profil, mahsulotlarniMoslash(s.profil), s.mahsulot, s.fayllar ?? {});
+}
 
 function holat(s: Sessiya): SessiyaHolati {
   return {
@@ -28,7 +38,18 @@ function holat(s: Sessiya): SessiyaHolati {
     jarayon: { toldirilgan: toldirilganSoni(s.profil), jami: kerakliMaydonlar(s.profil).length },
     bank_roziligi: s.bank_roziligi,
     mahsulotlar: mahsulotlarniMoslash(s.profil),
+    papka: sessiyaPapkasi(s),
   };
+}
+
+/** Fayl boshidagi baytlardan haqiqiy turini aniqlaydi (brauzer aytgan turga ishonmaymiz). */
+export function faylTuri(b: Buffer): RuxsatTur | null {
+  if (b.length < 12) return null;
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "image/jpeg";
+  if (b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "image/png";
+  if (b.subarray(0, 4).toString("latin1") === "RIFF" && b.subarray(8, 12).toString("latin1") === "WEBP") return "image/webp";
+  if (b.subarray(0, 5).toString("latin1") === "%PDF-") return "application/pdf";
+  return null;
 }
 
 const xato = (c: Context, status: 400 | 404 | 409 | 413 | 422 | 429 | 500 | 502 | 503 | 504, sabab: string) =>
@@ -59,7 +80,7 @@ async function jsonOqish(c: Context): Promise<Record<string, unknown> | null> {
   }
 }
 
-export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
+export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }: AppSozlama) {
   const app = new Hono();
   const band = new Set<string>(); // javob kutilayotgan sessiyalar
   const xabarChegara = chegara(20);
@@ -128,6 +149,7 @@ export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
         xabarlar: [...s.xabarlar, yangiXabar],
         profil: s.profil,
         bajarilgan: s.bajarilgan,
+        papka: sessiyaPapkasi(s),
       });
       s.xabarlar.push(yangiXabar, {
         kim: "agent",
@@ -180,10 +202,142 @@ export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
     return c.json(holat(s));
   });
 
+  // --- Hujjatlar papkasi ---
+
+  app.post("/api/sessions/:id/mahsulot", async (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
+    const body = await jsonOqish(c);
+    const kalit = typeof body?.kalit === "string" ? body.kalit : "";
+    if (!mahsulotlarniMoslash(s.profil).some((m) => m.kalit === kalit)) {
+      return xato(c, 404, "Bunday bank mahsuloti ro'yxatda yo'q.");
+    }
+    s.mahsulot = kalit;
+    store.saqlash(s);
+    return c.json(holat(s));
+  });
+
+  const tekshirilmoqda = new Set<string>();
+  const yuklashChegara = chegara(15);
+
+  app.post("/api/sessions/:id/hujjatlar/:kalit", async (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
+    const kalit = c.req.param("kalit");
+    const papka = sessiyaPapkasi(s);
+    if (!papkadaBormi(papka, kalit)) return xato(c, 404, "Bu hujjat tanlangan bank ro'yxatida yo'q.");
+    if (Number(c.req.header("content-length") ?? 0) > MAX_FAYL + 64 * 1024) {
+      return xato(c, 413, "Fayl juda katta. 10 MB dan kichik fayl yuklang.");
+    }
+    if (!yuklashChegara(ip(c))) return xato(c, 429, "Juda ko'p fayl yuklandi. Bir daqiqadan keyin urinib ko'ring.");
+    const qulf = `${s.id}/${kalit}`;
+    if (tekshirilmoqda.has(qulf)) return xato(c, 409, "Bu hujjat hozir tekshirilyapti. Biroz kuting.");
+
+    let fayl: File | null = null;
+    try {
+      const forma = await c.req.parseBody();
+      fayl = forma.fayl instanceof File ? forma.fayl : null;
+    } catch {
+      return xato(c, 400, "Fayl yetib kelmadi. Qayta yuklang.");
+    }
+    if (!fayl || fayl.size === 0) return xato(c, 400, "Fayl tanlanmagan yoki bo'sh.");
+    if (fayl.size > MAX_FAYL) return xato(c, 413, "Fayl juda katta. 10 MB dan kichik fayl yuklang.");
+    const data = Buffer.from(await fayl.arrayBuffer());
+    const tur = faylTuri(data);
+    if (!tur) return xato(c, 422, "Bu fayl turi qabul qilinmaydi. Rasm (JPG, PNG) yoki PDF yuklang.");
+
+    const hujjat = papka!.hujjatlar.find((h) => h.kalit === kalit)!;
+    tekshirilmoqda.add(qulf);
+    try {
+      fayllar.yoz(s.id, kalit, data);
+      let tekshiruv: YuklanganFayl["tekshiruv"] = null;
+      if (tekshiruvchi) {
+        try {
+          tekshiruv = await tekshiruvchi.tekshir({
+            fayl: data,
+            tur,
+            kutilgan: hujjat.nom,
+            bugun: new Date().toISOString().slice(0, 10),
+          });
+        } catch (e) {
+          // Tekshiruv bo'lmasa ham fayl saqlanadi va papkaga kiradi.
+          console.error("hujjat tekshiruvi xatosi:", (e as Error)?.message);
+        }
+      }
+      s.fayllar = {
+        ...(s.fayllar ?? {}),
+        [kalit]: {
+          nom: (fayl.name || hujjat.nom).replace(/[^\p{L}\p{N}._ -]/gu, "").slice(0, 80),
+          tur,
+          hajm: data.length,
+          vaqt: new Date().toISOString(),
+          tekshiruv,
+        },
+      };
+      store.saqlash(s);
+      return c.json(holat(s));
+    } finally {
+      tekshirilmoqda.delete(qulf);
+    }
+  });
+
+  app.post("/api/sessions/:id/hujjatlar/:kalit/ochirish", (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
+    const kalit = c.req.param("kalit");
+    if (!s.fayllar?.[kalit]) return xato(c, 404, "Bu hujjat yuklanmagan.");
+    try {
+      fayllar.ochir(s.id, kalit);
+    } catch {
+      return xato(c, 400, "Noto'g'ri hujjat kaliti.");
+    }
+    const { [kalit]: _, ...qolgan } = s.fayllar;
+    s.fayllar = qolgan;
+    store.saqlash(s);
+    return c.json(holat(s));
+  });
+
+  const pdfJavob = async (c: Context, s: Sessiya) => {
+    const papka = sessiyaPapkasi(s);
+    if (!papka) return xato(c, 409, "Avval suhbatda ish turi va kerakli summani ayting — keyin papka tuziladi.");
+    const ruyxat = papka.hujjatlar
+      .filter((h) => h.fayl)
+      .flatMap((h) => {
+        const data = fayllar.oqi(s.id, h.kalit);
+        return data ? [{ kalit: h.kalit, nom: h.nom, tur: h.fayl!.tur, data }] : [];
+      });
+    if (!ruyxat.length) return xato(c, 409, "Hali hech qanday hujjat yuklanmagan.");
+    const pdf = await papkaPdf({
+      papka,
+      profil: s.profil,
+      fayllar: ruyxat,
+      sana: new Date().toISOString().slice(0, 10),
+    });
+    return new Response(new Blob([pdf as BlobPart]), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="yetak-papka-${new Date().toISOString().slice(0, 10)}.pdf"`,
+        "Cache-Control": "no-store",
+      },
+    });
+  };
+
+  app.get("/api/sessions/:id/papka.pdf", async (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
+    return pdfJavob(c, s);
+  });
+
+  app.get("/api/bank/arizalar/:id/papka.pdf", async (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s || !s.bank_roziligi) return xato(c, 404, "Ariza topilmadi yoki tadbirkor rozilikni qaytarib oldi.");
+    return pdfJavob(c, s);
+  });
+
   const bankArizasi = (s: Sessiya): BankArizasi | null => {
     const natija = baholash(s.profil, s.bajarilgan);
     if (!s.bank_roziligi || !natija) return null;
-    return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija };
+    return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija, papka: sessiyaPapkasi(s) };
   };
 
   app.get("/api/bank/arizalar", (c) => {

@@ -3,7 +3,7 @@ import type { SessiyaHolati } from "../../shared/types";
 import { AgentXatosi, type Agent } from "../src/agent";
 import { appYaratish } from "../src/app";
 import { NAMUNALAR } from "../src/namunalar";
-import { XotiraStore } from "../src/store";
+import { XotiraFaylOmbor, XotiraStore } from "../src/store";
 
 // Soxta agent: har xabarda profilni bitta namunadan to'ldiradi.
 const soxtaAgent: Agent = {
@@ -15,7 +15,7 @@ const soxtaAgent: Agent = {
 };
 
 function yangiApp(agent: Agent | null = soxtaAgent) {
-  return appYaratish({ store: new XotiraStore(), agent, corsOrigin: "*" });
+  return appYaratish({ store: new XotiraStore(), agent, corsOrigin: "*", fayllar: new XotiraFaylOmbor(), tekshiruvchi: null });
 }
 
 const post = (body?: unknown) => ({

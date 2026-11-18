@@ -19,7 +19,7 @@ async function sorov<T>(yol: string, init?: RequestInit, kutish = 60_000): Promi
     javob = await fetch(`${API}${yol}`, {
       ...init,
       signal: boshqaruv.signal,
-      headers: { 'Content-Type': 'application/json', ...init?.headers },
+      headers: init?.body instanceof FormData ? init?.headers : { 'Content-Type': 'application/json', ...init?.headers },
     })
   } catch {
     if (boshqaruv.signal.aborted) throw new ApiXato("Javob kelmadi. Qayta urinib ko'ring.")
@@ -40,6 +40,9 @@ const post = (body?: unknown): RequestInit => ({
   body: body === undefined ? undefined : JSON.stringify(body),
 })
 
+export const papkaPdfUrl = (id: string) => `${API}/api/sessions/${id}/papka.pdf`
+export const bankPapkaPdfUrl = (id: string) => `${API}/api/bank/arizalar/${id}/papka.pdf`
+
 export const api = {
   yangiSessiya: () => sorov<BoySessiya>('/api/sessions', post()),
   sessiya: (id: string) => sorov<BoySessiya>(`/api/sessions/${id}`),
@@ -49,6 +52,19 @@ export const api = {
     sorov<BoySessiya>(`/api/sessions/${id}/qadamlar/${kalit}`, post({ bajarildi })),
   rozilik: (id: string, rozi: boolean) =>
     sorov<BoySessiya>(`/api/sessions/${id}/rozilik`, post({ rozi })),
+  mahsulot: (id: string, kalit: string) =>
+    sorov<BoySessiya>(`/api/sessions/${id}/mahsulot`, post({ kalit })),
+  hujjatYukla: (id: string, kalit: string, fayl: File) => {
+    const forma = new FormData()
+    forma.append('fayl', fayl)
+    return sorov<BoySessiya>(
+      `/api/sessions/${id}/hujjatlar/${kalit}`,
+      { method: 'POST', body: forma },
+      90_000,
+    )
+  },
+  hujjatOchir: (id: string, kalit: string) =>
+    sorov<BoySessiya>(`/api/sessions/${id}/hujjatlar/${kalit}/ochirish`, post()),
   arizalar: () => sorov<BankArizasi[]>('/api/bank/arizalar'),
   ariza: (id: string) => sorov<BankArizasi>(`/api/bank/arizalar/${id}`),
 }

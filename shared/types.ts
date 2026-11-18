@@ -95,6 +95,73 @@ export interface MahsulotMoslik {
   manba: Manba;
 }
 
+/** Hujjatni qanday olish — tekshirilgan yo'riqnoma (docs/tadqiqot/hujjatlar.json). */
+export interface OlishYoli {
+  /** "my.gov.uz", "«Soliq» ilovasi", "bankning o'zi" */
+  qayerda: string;
+  /** Saytdagi qidiruvga yoziladigan xizmat nomi */
+  qidiruv: string | null;
+  qadamlar: string[];
+  /** "2 daqiqa", "1 ish kuni" */
+  vaqt: string | null;
+  /** "bepul", "BHM ning 0,03 barobari" */
+  narx: string | null;
+  eri_kerak: boolean | null;
+  /** Xizmat sahifasi — bosganda ochiladi */
+  havola: string | null;
+  /** Shu yo'lni tasdiqlovchi manba */
+  manba: string | null;
+}
+
+/** Yuklangan hujjatni sun'iy intellekt o'qib chiqqani. Hujjat o'zgartirilmaydi. */
+export interface HujjatTekshiruvi {
+  /** mos — kutilgan hujjat, o'qiladi, muammo topilmadi */
+  holat: "mos" | "muammo";
+  /** AI hujjatni nima deb tanidi: "Pasport", "Ijara shartnomasi" */
+  hujjat_turi: string;
+  /** Hujjatdagi egasining ismi (ko'rinsa) — hujjatlar orasidagi mosligini tekshirish uchun */
+  egasi: string | null;
+  /** Oddiy o'zbekcha, har biri bir gap */
+  muammolar: string[];
+  /** Bir gapli xulosa */
+  izoh: string;
+}
+
+export interface YuklanganFayl {
+  nom: string;
+  /** MIME: image/jpeg, image/png, image/webp, application/pdf */
+  tur: string;
+  hajm: number;
+  vaqt: string; // ISO
+  /** null — tekshirib bo'lmadi (AI javob bermadi); fayl baribir papkaga kiradi */
+  tekshiruv: HujjatTekshiruvi | null;
+}
+
+/** Tanlangan bank mahsuloti uchun bitta hujjat. */
+export interface PapkaHujjat {
+  kalit: string;
+  nom: string;
+  /** Qachon kerak: "MChJ bo'lsa", "100 mln dan oshgan qismi uchun". null — har doim */
+  shart: string | null;
+  /** true — bank o'zi davlat tizimidan oladi, olib borish shart emas */
+  bank_ozi_oladi: boolean;
+  /** true — bank so'ramaydi, lekin ariza berishdan oldin o'zingiz tekshirib oling (masalan, kredit tarixi) */
+  tavsiya: boolean;
+  olish: OlishYoli | null;
+  fayl: YuklanganFayl | null;
+}
+
+/** Hujjatlar papkasi: tanlangan mahsulot, kerakli hujjatlar va yuklanganlari. */
+export interface Papka {
+  mahsulot: { kalit: string; bank: string; nom: string };
+  hujjatlar: PapkaHujjat[];
+  /** Olib boriladigan (bank o'zi olmaydigan, tavsiya emas) hujjatlardan tekshiruvdan o'tganlari */
+  tayyor: number;
+  jami: number;
+  /** Hujjatlar orasidagi nomuvofiqlik: "Pasport va ijara shartnomasidagi ismlar farq qiladi" */
+  ogohlantirishlar: string[];
+}
+
 /**
  * Chat ichidagi boy blok. Agent qaysi blokni ko'rsatishni tanlaydi,
  * raqamlarni server profil va rules.ts dan qo'yadi.
@@ -107,7 +174,9 @@ export type Blok =
   | { tur: "hukm" }
   | { tur: "yol_xaritasi" }
   | { tur: "atama"; atama: string; izoh: string }
-  | { tur: "mahsulotlar"; mahsulotlar: MahsulotMoslik[] };
+  | { tur: "mahsulotlar"; mahsulotlar: MahsulotMoslik[] }
+  /** Sessiyaning joriy `papka` sidan chiziladi */
+  | { tur: "hujjatlar" };
 
 /** Agent javobi tayangan manba (Claude citations). `parcha` — manbadan aynan keltirilgan matn. */
 export interface Iqtibos {
@@ -139,6 +208,8 @@ export interface SessiyaHolati {
   bank_roziligi: boolean;
   /** Tekshirilgan bank mahsulotlariga moslik (shakl va summa ma'lum bo'lganda), eng mosi birinchi. */
   mahsulotlar?: MahsulotMoslik[];
+  /** Hujjatlar papkasi. Mahsulot tanlanmaguncha (shakl va summa noma'lum) null. */
+  papka?: Papka | null;
 }
 
 export interface BankArizasi {
@@ -146,6 +217,7 @@ export interface BankArizasi {
   yangilangan: string; // ISO
   profil: Profil;
   natija: Natija;
+  papka?: Papka | null;
 }
 
 export interface XatoJavobi {

@@ -26,6 +26,9 @@ export function useSessiya() {
   const [yuborilmagan, setYuborilmagan] = useState<string | null>(null)
   const [xato, setXato] = useState<string | null>(null)
   const band = useRef(false)
+  /** Hozir tekshirilayotgan hujjatlar (kalit bo'yicha). */
+  const [yuklanayotgan, setYuklanayotgan] = useState<Record<string, boolean>>({})
+  const [hujjatXatolari, setHujjatXatolari] = useState<Record<string, string>>({})
 
   const yangiSuhbat = useCallback(async () => {
     setYuklanmoqda(true)
@@ -127,8 +130,68 @@ export function useSessiya() {
     [holat],
   )
 
+  const hujjatXatosi = (kalit: string, matn: string | null) =>
+    setHujjatXatolari((x) => {
+      const y = { ...x }
+      if (matn) y[kalit] = matn
+      else delete y[kalit]
+      return y
+    })
+
+  const hujjatYukla = useCallback(
+    async (kalit: string, fayl: File) => {
+      if (!holat) return
+      hujjatXatosi(kalit, null)
+      setYuklanayotgan((y) => ({ ...y, [kalit]: true }))
+      try {
+        setHolat(await api.hujjatYukla(holat.id, kalit, fayl))
+      } catch (e) {
+        hujjatXatosi(kalit, xatoMatni(e))
+      } finally {
+        setYuklanayotgan((y) => ({ ...y, [kalit]: false }))
+      }
+    },
+    [holat],
+  )
+
+  const hujjatOchir = useCallback(
+    async (kalit: string) => {
+      if (!holat) return
+      hujjatXatosi(kalit, null)
+      setYuklanayotgan((y) => ({ ...y, [kalit]: true }))
+      try {
+        setHolat(await api.hujjatOchir(holat.id, kalit))
+      } catch (e) {
+        hujjatXatosi(kalit, xatoMatni(e))
+      } finally {
+        setYuklanayotgan((y) => ({ ...y, [kalit]: false }))
+      }
+    },
+    [holat],
+  )
+
+  const mahsulotTanla = useCallback(
+    async (kalit: string) => {
+      if (!holat) return
+      try {
+        setHolat(await api.mahsulot(holat.id, kalit))
+      } catch (e) {
+        setXato(xatoMatni(e))
+      }
+    },
+    [holat],
+  )
+
   return {
     holat,
+    hujjatAmallari: {
+      yuklanayotgan,
+      xatolar: hujjatXatolari,
+      onYukla: (k: string, f: File) => void hujjatYukla(k, f),
+      onOchir: (k: string) => void hujjatOchir(k),
+      onXato: hujjatXatosi,
+      onMahsulot: (k: string) => void mahsulotTanla(k),
+    },
     yuklanmoqda,
     yuborilmoqda,
     kutilayotgan,
