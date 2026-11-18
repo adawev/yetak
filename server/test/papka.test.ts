@@ -133,7 +133,10 @@ describe("papka.pdf", () => {
     const kirish = { profil, bank: "Hamkorbank", mahsulot: "Kichik biznesga ko'mak", taklif: { foiz_min: 18, foiz_max: 24, oylik_tolov: 3_923_000 } };
     const ariza = qoralamaSahifa("ariza", kirish);
     expect(ariza.qatorlar.find(([n]) => n === "Taxminiy oylik to'lov")![1]).toContain("3 923 000");
-    expect(qoralamaSahifa("ariza", { ...kirish, ism: "Aliyev Vali" }).qatorlar[0][1]).toBe("Aliyev Vali");
+    expect(qoralamaSahifa("ariza", { ...kirish, ism: "Aliyev Vali" }).qatorlar.find(([n]) => n === "Rahbar (F.I.Sh.)")![1]).toBe("Aliyev Vali");
+    const yagona = qoralamaSahifa("tasischi_qarori", { ...kirish, profil: { ...profil, ishtirokchilar: "yagona" as const, korxona_nomi: "Non MChJ" } });
+    expect(yagona.sarlavha).toBe("Yagona ishtirokchi qarori");
+    expect(yagona.qatorlar[0][1]).toBe("Non MChJ");
     const sahifa = async (q: ReturnType<typeof qoralamaSahifa>[]) =>
       (await PDFDocument.load(await papkaPdf({ papka, profil, fayllar: [], sana: "2026-11-18", qoralamalar: q }))).getPageCount();
     expect(await sahifa([ariza, qoralamaSahifa("tasischi_qarori", kirish)])).toBe((await sahifa([])) + 2);

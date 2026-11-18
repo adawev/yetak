@@ -147,8 +147,9 @@ export function papkaYasash(
       tavsiya: false,
       olish: h.olish ?? j?.olish ?? null,
       fayl: fayllar[h.hujjat] ?? null,
-      qoralama: qoralamaBormi(h.hujjat, p) ? QORALAMA_MATNI[h.hujjat] : null,
-      qoralama_asos: qoralamaBormi(h.hujjat, p) ? QORALAMA_ASOSI[h.hujjat] : null,
+      // Ariza bank ilovasida beriladigan bo'lsa (TBC, Ipak Yo'li) — qoralama emas, ilovadagi qadamlar
+      qoralama: h.shart !== "ilovada" && qoralamaBormi(h.hujjat, p) ? QORALAMA_MATNI[h.hujjat] : null,
+      qoralama_asos: h.shart !== "ilovada" && qoralamaBormi(h.hujjat, p) ? QORALAMA_ASOSI[h.hujjat] : null,
     });
   }
   for (const k of TAVSIYA) {

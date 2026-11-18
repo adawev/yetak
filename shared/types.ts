@@ -17,6 +17,11 @@ export interface Profil {
   kredit_tarixi?: KreditTarixi;
   avval_mikrokredit?: boolean; // ilgari mikrokredit olib, vaqtida qaytarganmi
   eri_bor?: boolean; // elektron imzo
+  // Qoralamalar uchun (hukmga ta'sir qilmaydi; bank tanlangach so'raladi)
+  ism?: string; // F.I.Sh. — YaTT egasi yoki MChJ rahbari
+  korxona_nomi?: string; // MChJ nomi
+  stir?: string; // 9 xonali STIR (ixtiyoriy)
+  ishtirokchilar?: "yagona" | "bir_nechta"; // MChJ ishtirokchilari
 }
 
 export const PROFIL_MAYDONLARI: (keyof Profil)[] = [
@@ -102,6 +107,8 @@ export interface MahsulotMoslik {
     izoh: string | null;
         /** Oylik to'lov — yuqori foiz bilan (ehtiyotkor hisob), annuitet */
     oylik_tolov: number;
+    /** Oylik to'lov foydaning necha foizi (kod hisoblaydi). null — foyda noma'lum */
+    foyda_ulushi: number | null;
   } | null;
   /** Tadbirkor o'zi olib boradigan hujjatlar */
   hujjatlar: string[];

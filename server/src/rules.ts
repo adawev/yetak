@@ -449,7 +449,7 @@ export function baholash(
         ? {
             kalit: "ariza",
             sarlavha: `Hujjatlar tayyor bo'lgach, ${mosYol.bank}ga ariza bering`,
-            izoh: "Roziligingiz bilan Yetak papkani bankka yuboradi. Bankka faqat imzoga borasiz.",
+            izoh: "Roziligingiz bilan papka bank xodimi oynasiga tushadi. Hujjat yig'ib bankka qatnamaysiz; shartnomani bankda imzolaysiz.",
             manba: mosYol.manba,
           }
         : {

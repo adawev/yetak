@@ -55,7 +55,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
         p.shakl === "ozini_band"
           ? nomalum("Kichik tadbirkorlik subyekti (o'zini o'zi band qilganga — bank ko'rib chiqishda aniqlaydi)")
           : tekshir("Kichik tadbirkorlik subyekti (YaTT yoki MChJ)", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
-        tekshir("Kamida 1 yil faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 12),
+        tekshir("Ro'yxatdan o'tganiga kamida 1 yil", p.faoliyat_oy, () => p.faoliyat_oy! >= 12),
         tekshir("Kredit tarixi ijobiy yoki umuman yo'q", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
         tekshir("Summa 300 mln gacha", s, () => s! <= mln(300)),
         garov,
@@ -101,7 +101,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
       ),
       tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
       tekshir("Kamida 6 oy faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
-      tekshir("Kredit tarixida muddati o'tgan qarz yo'q", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
+      p.kredit_tarixi === "yoq"
+        ? nomalum("Bank «ijobiy kredit tarixi» so'raydi — kredit olmaganlarni ko'rib chiqishda baholaydi")
+        : tekshir("Ijobiy kredit tarixi, muddati o'tgan qarz yo'q", p.kredit_tarixi, () => p.kredit_tarixi === "yaxshi"),
       { matn: "Garov va kafil kerak emas", holat: "ha" },
       nomalum("TBC Business'da hisob raqami (onlayn ochiladi)"),
     ],
@@ -224,8 +226,11 @@ const TARTIB ={ mos: 0, qisman: 1, mos_emas: 2 } as const;
 /** Profilni har bir mahsulot bilan solishtiradi. Shakl va summa noma'lum bo'lsa — bo'sh ro'yxat. */
 export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
   if (p.shakl == null || p.kredit_summa == null) return [];
+  // Har bankka umumiy: zarar bilan ishlasa kreditni qaytarib bo'lmaydi (hisob — kod).
+  const foyda = p.oylik_tushum != null && p.oylik_xarajat != null ? p.oylik_tushum - p.oylik_xarajat : null;
   return MAHSULOTLAR.map((m) => {
     const shartlar = m.shartlar(p);
+    if (foyda != null && foyda <= 0) shartlar.push({ matn: "Oylik foyda bor (zarar bilan ishlamaydi)", holat: "yoq" });
     const yoq = shartlar.filter((s) => s.holat === "yoq").length;
     const mos: MahsulotMoslik["mos"] = yoq > 0 ? "mos_emas" : shartlar.some((s) => s.holat === "nomalum") ? "qisman" : "mos";
     let taklif: MahsulotMoslik["taklif"] = null;
@@ -238,6 +243,7 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
         foiz_max: m.foiz[1],
         muddat_oy,
         oylik_tolov: Math.round(oylikTolov(summa, m.foiz[1], muddat_oy)),
+        foyda_ulushi: foyda != null && foyda > 0 ? Math.round((oylikTolov(summa, m.foiz[1], muddat_oy) / foyda) * 100) : null,
         izoh:
           m.kalit === "hamkorbank_pq312" && summa > mln(100)
             ? "18–24% faqat 100 mln gacha qismiga; qolgani bankning odatiy foizida — to'lov biroz ko'proq bo'lishi mumkin."

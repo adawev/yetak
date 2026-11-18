@@ -32,6 +32,10 @@ export function profilniTozalash(kirish: unknown): Partial<Profil> {
       : undefined,
     avval_mikrokredit: typeof k.avval_mikrokredit === "boolean" ? k.avval_mikrokredit : undefined,
     eri_bor: typeof k.eri_bor === "boolean" ? k.eri_bor : undefined,
+    ism: matn(k.ism),
+    korxona_nomi: matn(k.korxona_nomi),
+    stir: typeof k.stir === "string" && /^\d{9}$/.test(k.stir.replace(/\s/g, "")) ? k.stir.replace(/\s/g, "") : undefined,
+    ishtirokchilar: k.ishtirokchilar === "yagona" || k.ishtirokchilar === "bir_nechta" ? k.ishtirokchilar : undefined,
   };
   for (const kalit of Object.keys(p) as (keyof Profil)[]) {
     if (p[kalit] === undefined) delete p[kalit];

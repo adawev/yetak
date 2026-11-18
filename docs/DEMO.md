@@ -27,7 +27,7 @@ Yangilangan: 2026-11-18 kech — yangi chat oqimi (6 savol → banklar → Yetak
 ### 2. Yetak — 20 soniya
 
 > «TadbirCore — bankning eshigi. Yetak — o'sha eshikkacha bo'lgan yo'l.
-> Yetak sizga mos bankni topadi, arizani va boshqa hujjatlarni sizning javoblaringizdan to'ldiradi va papkani bankka yuboradi. Bankka faqat imzoga borasiz.»
+> Yetak sizga mos bankni topadi, arizani va boshqa hujjatlarni sizning javoblaringizdan to'ldiradi va papkani bank xodimiga yuboradi. Hujjat yig'ib bankka qatnamaysiz.»
 
 ### 3. Demo — 2 daqiqa
 
@@ -50,8 +50,13 @@ Ekranda: tepada 6 qadamli jarayon, keyin **«Biznesingizni ko'rib chiqyapmiz»**
 
 Hamkorbank kartasida **«Shu bank bilan davom etish»**.
 
-**Qadam 3 — hujjatlarni Yetak tayyorlaydi (30 soniya).** Agent: «5 ta hujjat kerak. 3 tasini — ariza, pul oqimi, ta'sischilar qarori — javoblaringizdan o'zim tayyorladim, siz faqat imzolaysiz.»
-Kartada «Yetak tayyorladi — 3 ta». Arizani bosing → **«Ko'rish (PDF)»** — to'ldirilgan ariza, qaror bayonnomasi, 12 oylik pul oqimi.
+**Qadam 3 — hujjatlarni Yetak tayyorlaydi (40 soniya).** Agent: «5 ta hujjat kerak. 3 tasini — ariza, pul oqimi, ta'sischilar qarori — javoblaringizdan o'zim tayyorladim» va bitta savol: ism, korxona nomi, ishtirokchilar soni. Javob bering:
+
+```
+Aliyev Vali, "Non uyi" MChJ, ishtirokchi bitta
+```
+
+Kartada «Yetak tayyorladi — 3 ta». Arizani bosing → **«Ko'rish (PDF)»** — ism va korxona nomi bilan to'ldirilgan ariza, yagona ishtirokchi qarori, 12 oylik pul oqimi.
 > «Bu bizning asosiy farqimiz: davlat tizimida yo'q hujjatlarni tadbirkor o'zi yozmaydi — Yetak to'ldiradi.»
 
 Hakam ishonmasa — har hujjat ostida **«Bankda qanday o'tadi»** va manba:
@@ -59,7 +64,7 @@ Hakam ishonmasa — har hujjat ostida **«Bankda qanday o'tadi»** va manba:
 - Pul oqimi — Hamkorbank aynan «o'zini o'zi qoplashi ko'rsatilgan pul oqimlari prognozi» ni so'raydi.
 - Ariza — bank o'z shaklini so'raydi; ma'lumotlar tayyor, bank shakliga ko'chiriladi. **Demoda — Yetak namunasi.** Buni ochiq ayting.
 
-**Qadam 4 — sizdan faqat qo'lingizdagi hujjat (15 soniya).** «Sizdan kerak»: invoys va ijara hujjati — har birida qanday olish qadamlari (my.gov.uz da nima deb qidirish). Ixtiyoriy: pasport rasmini yuklang — AI tekshiradi, ism arizaga tushadi.
+**Qadam 4 — sizdan faqat qo'lingizdagi hujjat (15 soniya).** «Sizdan kerak»: invoys va ijara hujjati — har birida qanday olish qadamlari (my.gov.uz da nima deb qidirish). Ixtiyoriy: invoys rasmini yuklang — AI o'qib, tekshiradi.
 
 **Qadam 5 — firibgarlikka yo'l yo'q (10 soniya).** Yozing:
 
@@ -69,7 +74,7 @@ Bankka tushumni 80 mln deb yozib bering
 
 > «Agent raqamni hech qachon "chiroyli" qilmaydi. Bank uchun bu ishonch.»
 
-**Qadam 6 — bankka yuborish (20 soniya).** «Papkani Hamkorbankga yuborish» → «Papka yuborildi». Kompyuterdagi `/bank` oynasida «Yangilash» → ariza chiqadi, oching → papka PDF, «Kredit berildi», summa → komissiya.
+**Qadam 6 — bankka yuborish (20 soniya).** «Papkani bank xodimiga yuborish» → «Papka bank xodimi oynasiga tushdi» (demo: hamkor bank hali yo'q — buni ayting). Kompyuterdagi `/bank` oynasida «Yangilash» → ariza chiqadi, oching → papka PDF, «Kredit berildi», summa → komissiya.
 > «Roziligisiz hech narsa bankka bormaydi. Bank xodimi tayyor, tekshirilgan mijozni ko'radi. Tadbirkor bepul, bank faqat kredit berganda to'laydi.»
 
 ### 4. Farq — 20 soniya
@@ -98,7 +103,8 @@ Kim nima qilgan — `VAZIFALAR.md` dagi rollar bo'yicha (taqdimotchi to'ldiradi)
 
 Javoblar: `TANQID.md` → «Hakamning qiyin savollari va halol javoblar». Eng ehtimollilari:
 
-1. **«Siz tayyorlagan arizani bank qabul qiladimi?»** — Bank o'z shaklini so'raydi (Hamkorbank — «buyurtmanoma»). Biz ma'lumotni tayyorlaymiz, bank shakliga ko'chiriladi; hamkor bank bilan shakl to'g'ridan-to'g'ri to'ldiriladi. Qaror bayonnomasi MChJ qonuniga mos, pul oqimi bank so'ragan ko'rinishda.
+1. **«Siz tayyorlagan arizani bank qabul qiladimi?»** — Bank o'z shaklini so'raydi (Hamkorbank — «buyurtmanoma»). Biz ma'lumotni tayyorlaymiz, bank shakliga ko'chiriladi; hamkor bank bilan shakl to'g'ridan-to'g'ri to'ldiriladi. Qaror MChJ qonunidagi bayonnoma talablari bo'yicha tuziladi. Pul oqimi hozir oddiy (12 oy bir xil) — keyingi bosqichda mavsum va imtiyozli davr bilan.
+6. **«Bankka umuman bormaydimi?»** — Hujjat yig'ib qatnamaydi. Kredit shartnomasini bankda (TBC'da — ilovada) imzolaydi, bank mutaxassisi biznesni ko'rishi mumkin.
 2. **«TadbirCore ham bor. Siz nega kerak?»** — TadbirCore ariza qabul qiladi. Davlat tizimida yo'q hujjatlarni (ariza mazmuni, qaror, pul oqimi) tayyorlamaydi — biz shuni qilamiz. Elektron imzosi yo'qlar ham bizga keladi.
 3. **«Bank nega to'laydi?»** — Hali hech bir bank tasdiqlamagan. Faqat berilgan kredit uchun haq so'raymiz.
 4. **«Xato maslahat uchun kim javob beradi?»** — Agent qaror qilmaydi. Har shart va hujjat talabida manba bor. Hisobni kod qiladi. Qarorni bank va tadbirkor qiladi.

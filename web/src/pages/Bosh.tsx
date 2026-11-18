@@ -69,7 +69,7 @@ const QADAMLAR = [
   ['6 ta savol', "Nima ish, qancha tushum, qancha pul kerak. Taxminan aytsangiz ham bo'ladi."],
   ['Mos bank', "Tekshirilgan bank mahsulotlaridan eng mos 2–3 tasi: summa, foiz, oyiga to'lov."],
   ['Hujjatlarni tayyorlaymiz', "Ariza, ta'sischilar qarori va pul oqimini javoblaringizdan to'ldiramiz. Sizdan — faqat qo'lingizdagi hujjat."],
-  ['Bankka yuboramiz', "Papka roziligingiz bilan bankka ketadi. Bankka faqat imzoga borasiz."],
+  ['Bankka yuboramiz', "Papka roziligingiz bilan bank xodimiga ketadi. Hujjat yig'ib bankka qatnamaysiz."],
 ]
 
 const TAMOYILLAR = [
@@ -98,7 +98,7 @@ export default function Bosh() {
           </h1>
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
             Yetak biznesingizga mos bankni topadi, arizani va boshqa hujjatlarni javoblaringizdan to'ldiradi, papkani bankka
-            yuboradi. Bankka faqat imzoga borasiz. Tadbirkor uchun bepul.
+            yuboradi. Hujjat yig'ib bankka qatnamaysiz. Tadbirkor uchun bepul.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
@@ -138,7 +138,7 @@ export default function Bosh() {
           <div>
             <h2 className="text-2xl font-semibold sm:text-3xl">Tadbirkor hech narsa to'lamaydi</h2>
             <p className="mt-4 max-w-md text-lg text-muted-foreground">
-              Xizmat haqini hamkor bank to'laydi — faqat Yetak orqali kelgan mijozga kredit berilganda.
+              Reja: xizmat haqini hamkor bank to'laydi — faqat Yetak orqali kelgan mijozga kredit berilganda. Hali hech bir bank bilan shartnoma yo'q.
             </p>
           </div>
           <dl className="divide-y divide-border border-y border-border">

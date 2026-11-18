@@ -64,6 +64,7 @@ describe("mahsulotlarniMoslash", () => {
       foiz_max: 24,
       muddat_oy: 36,
       oylik_tolov: Math.round(oylikTolov(300_000_000, 24, 36)),
+      foyda_ulushi: null, // profilda tushum yo'q
       izoh: expect.stringContaining("100 mln gacha qismiga"),
     });
     expect(r.find((m) => m.kalit === "ipakyoli_onlayn")!.taklif).toBeNull(); // mos emas (faqat YaTT)

@@ -322,11 +322,11 @@ function TayyorlashTaklifi() {
   return (
     <div className="space-y-2 rounded-lg border border-border bg-card p-3">
       <div className="flex items-center justify-between gap-2">
-        <h4 className="font-medium">Hujjatlarni biz tayyorlaymiz</h4>
+        <h4 className="font-medium">Mutaxassis tekshiruvi</h4>
         <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-medium text-muted-foreground">Demo</span>
       </div>
       <p className="text-sm text-muted-foreground">
-        Yetak mutaxassisi hujjatlaringizni yig'ishga va tekshirishga yordam beradi, papkani bankka tayyor holga keltiradi.
+        Reja: bank tajribasi bor mutaxassis papkangizni bankka yuborishdan oldin qo'lda ko'rib chiqadi.
       </p>
       <p className="text-sm font-medium">20 000 so'm</p>
       {ochiq ? (
@@ -595,8 +595,10 @@ export function HujjatQadamlari({
       {onRozilik &&
         (holat.bank_roziligi ? (
           <div className="rounded-xl bg-success/10 p-3 text-sm">
-            <p className="font-semibold text-success">Papka {p.mahsulot.bank}ga yuborildi</p>
-            <p className="text-muted-foreground">Bank xodimi papkangizni ko'radi. Bankka faqat imzoga borasiz.</p>
+            <p className="font-semibold text-success">Papka bank xodimi oynasiga tushdi</p>
+            <p className="text-muted-foreground">
+              Demo: hamkor bank hali yo'q — papka Yetakning bank oynasida ko'rinadi. Shartnomani bankda imzolaysiz.
+            </p>
             <button type="button" onClick={() => onRozilik(false)} className="mt-1 text-xs text-muted-foreground underline">
               Rozilikni qaytarib olish
             </button>
@@ -608,10 +610,10 @@ export function HujjatQadamlari({
               onClick={() => onRozilik(true)}
               className="min-h-12 w-full rounded-xl bg-primary px-4 text-[15px] font-semibold text-white hover:opacity-90"
             >
-              Papkani {p.mahsulot.bank}ga yuborish
+              Papkani bank xodimiga yuborish
             </button>
             <p className="text-center text-xs text-muted-foreground">
-              Roziligingiz bilan bank xodimi papkani ko'radi. Bankka faqat imzoga borasiz.
+              Roziligingiz bilan bank xodimi papkani ko'radi. Hujjat yig'ib bankka qatnamaysiz.
             </p>
           </div>
         ))}

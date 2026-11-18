@@ -366,7 +366,7 @@ export function appYaratish({
     // Hukm hali chiqmagan bo'lsa ham (to'rt raqam yetarli) — papkadagi «qoralama» belgisi bilan bir xil shart.
     const p = s.profil;
     const taklif = mahsulotlarniMoslash(p).find((m) => m.kalit === papka.mahsulot.kalit)?.taklif ?? null;
-    const ism = papka.hujjatlar.find((h) => h.fayl?.tekshiruv?.egasi)?.fayl?.tekshiruv?.egasi ?? null;
+    const ism = p.ism ?? papka.hujjatlar.find((h) => h.kalit === "pasport")?.fayl?.tekshiruv?.egasi ?? null;
     const kirish = { profil: p, bank: papka.mahsulot.bank, mahsulot: papka.mahsulot.nom, taklif, ism };
     const qoralamalar = papka.hujjatlar
       .filter((h) => h.qoralama && !h.fayl && h.kalit !== "pul_oqimi" && qoralamaBormi(h.kalit, p))

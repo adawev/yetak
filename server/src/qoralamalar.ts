@@ -106,7 +106,9 @@ export function qoralamaSahifa(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qo
 
 function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: QoralamaKirish): Omit<QoralamaSahifa, "asos"> {
   const p = k.profil;
-  const ism = k.ism?.trim() || BOSH;
+  const ism = (p.ism ?? k.ism)?.trim() || BOSH;
+  const korxona = p.korxona_nomi?.trim() || BOSH;
+  const stir = p.stir ?? BOSH;
   if (kalit === "ariza") {
     const t = tolovMatni(k);
     const foyda = p.oylik_tushum != null && p.oylik_xarajat != null ? p.oylik_tushum - p.oylik_xarajat : null;
@@ -115,8 +117,10 @@ function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qoralam
       sarlavha: `Kredit arizasi - ${k.bank}`,
       izoh: `${k.mahsulot}. ${IZOH}`,
       qatorlar: [
-        ["Ariza beruvchi (F.I.Sh.)", ism],
-        ["STIR", BOSH],
+        ...(p.shakl === "mchj"
+          ? ([["Ariza beruvchi (jamiyat)", korxona], ["Rahbar (F.I.Sh.)", ism]] as [string, string][])
+          : ([["Ariza beruvchi (F.I.Sh.)", ism]] as [string, string][])),
+        ["STIR", stir],
         ["Tashkiliy shakl", p.shakl ? SHAKL[p.shakl] : BOSH],
         ["Faoliyat turi", p.faoliyat ?? BOSH],
         ["Biznes toifasi", biznesToifasi(p) ?? BOSH],
@@ -135,12 +139,27 @@ function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qoralam
       imzo: ["Ariza beruvchi imzosi", "Sana"],
     };
   }
+  if (kalit === "tasischi_qarori" && p.ishtirokchilar === "yagona") {
+    return {
+      sarlavha: "Yagona ishtirokchi qarori",
+      izoh: `Jamiyatning yagona ishtirokchisi umumiy yig'ilish o'rniga yozma qaror qabul qiladi. ${IZOH}`,
+      qatorlar: [
+        ["Jamiyat nomi", korxona],
+        ["Yagona ishtirokchi (F.I.Sh.)", ism],
+        ["Qaror", `Jamiyat ${k.bank} dan ${p.kredit_summa != null ? somda(p.kredit_summa) : BOSH} miqdorida, ${p.kredit_muddat_oy ?? BOSH} oy muddatga kredit olishga rozilik beraman.`],
+        ["Kredit maqsadi", p.maqsad ?? BOSH],
+        ["Ta'minot", p.garov_qiymati ? `Jamiyat mol-mulki garovga qo'yiladi (taxminiy qiymati ${somda(p.garov_qiymati)}).` : "Garovsiz yoki bank talab qilgan ta'minot bilan."],
+        ["Vakolat", "Jamiyat direktoriga kredit va ta'minot shartnomalarini imzolash vakolati beriladi."],
+      ],
+      imzo: ["Yagona ishtirokchi imzosi", "Sana", "Muhr"],
+    };
+  }
   if (kalit === "tasischi_qarori") {
     return {
       sarlavha: "Ishtirokchilar umumiy yig'ilishi bayonnomasi",
       izoh: `Kredit olish va ta'minot berishga rozilik. Tarkib MChJ qonuni (O'RQ-1137) bayonnoma talablariga ko'ra. ${IZOH}`,
       qatorlar: [
-        ["Jamiyat nomi", BOSH],
+        ["Jamiyat nomi", korxona],
         ["Yig'ilish vaqti va joyi", BOSH],
         ["Ishtirok etgan ishtirokchilar va ularning ovozlari (ulushi)", BOSH],
         ["Yig'ilish raisi", BOSH],
@@ -161,6 +180,7 @@ function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qoralam
     izoh: `Yakka tartibdagi tadbirkor. ${IZOH}`,
     qatorlar: [
       ["Tadbirkor (F.I.Sh.)", ism],
+      ["STIR", stir],
       ["Asosiy daromad manbai", p.faoliyat ?? BOSH],
       ["O'rtacha oylik tushum", p.oylik_tushum != null ? somda(p.oylik_tushum) : BOSH],
       ["O'rtacha oylik xarajat", p.oylik_xarajat != null ? somda(p.oylik_xarajat) : BOSH],
@@ -169,4 +189,17 @@ function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qoralam
     ],
     imzo: ["Tadbirkor imzosi", "Sana"],
   };
+}
+
+/**
+ * Qoralamalarni to'liq qilish uchun tadbirkordan so'raladigan maydonlar (bank tanlangach, bitta savolda).
+ * Faqat papkada shu qoralama bo'lsa so'raladi. STIR ixtiyoriy — bilmasa bo'sh qoladi.
+ */
+export function qoralamaUchunKerak(p: Profil, qoralamalar: string[]): (keyof Profil)[] {
+  const kerak: (keyof Profil)[] = [];
+  if (!qoralamalar.some((k) => k === "ariza" || k === "tasischi_qarori" || k === "daromad_manbalari")) return kerak;
+  if (!p.ism) kerak.push("ism");
+  if (p.shakl === "mchj" && !p.korxona_nomi) kerak.push("korxona_nomi");
+  if (qoralamalar.includes("tasischi_qarori") && !p.ishtirokchilar) kerak.push("ishtirokchilar");
+  return kerak;
 }

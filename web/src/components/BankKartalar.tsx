@@ -75,7 +75,7 @@ function BankKarta({
         </div>
         {tanlangan ? (
           <span className="shrink-0 rounded-full bg-primary px-2.5 py-1 text-xs font-medium text-white">Tanlandi</span>
-        ) : eng ? (
+        ) : eng && (t.foyda_ulushi == null || t.foyda_ulushi <= 50) ? (
           <span className="shrink-0 rounded-full bg-success/15 px-2.5 py-1 text-xs font-medium text-success">Eng qulay</span>
         ) : null}
       </div>
@@ -89,6 +89,12 @@ function BankKarta({
           <Raqam nom="Oyiga to'lov" qiymat={`~${qisqaSom(t.oylik_tolov)}${t.oylik_tolov < 1e6 ? " so'm" : ''}`} urgu />
           <Raqam nom="Yillik foiz" qiymat={foiz} urgu />
         </div>
+        {t.foyda_ulushi != null && (
+          <p className={`mt-2 text-xs ${t.foyda_ulushi > 50 ? 'font-medium text-warning' : 'text-muted-foreground'}`}>
+            To'lov oylik foydangizning {t.foyda_ulushi}% i
+            {t.foyda_ulushi > 50 ? " — og'ir: savdo pasaysa, to'lash qiyin bo'ladi. Kamroq summa yoki uzoqroq muddatni ko'ring." : ''}
+          </p>
+        )}
         {t.izoh && <p className="mt-2 text-xs text-muted-foreground">{t.izoh}</p>}
       </div>
 
@@ -139,7 +145,7 @@ function BankKarta({
       {onTanla && !tanlangan && (
         <button
           type="button"
-          onClick={() => onTanla(`${m.bank} bilan davom etamiz`)}
+          onClick={() => onTanla(m.bank)}
           className="mt-2 min-h-12 w-full rounded-xl bg-primary px-4 text-[15px] font-semibold text-white hover:opacity-90"
         >
           Shu bank bilan davom etish
