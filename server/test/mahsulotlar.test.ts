@@ -53,4 +53,9 @@ describe("mahsulotlarniMoslash", () => {
     const p: Profil = { shakl: "yatt", faoliyat_oy: 24, kredit_tarixi: "yomon", kredit_summa: 80_000_000 };
     expect(mahsulotlarniMoslash(p).find((m) => m.kalit === "hamkorbank_pq312")!.mos).toBe("mos_emas");
   });
+
+  it("2 oylik o'zini band — ko'proq «ha» bo'lgan Biznesga qadam birinchi", () => {
+    const p: Profil = { shakl: "ozini_band", faoliyat_oy: 2, oylik_tushum: 8e6, oylik_xarajat: 3e6, kredit_summa: 15e6, kredit_muddat_oy: 24, garov_qiymati: 0, kredit_tarixi: "yoq", eri_bor: false };
+    expect(mahsulotlarniMoslash(p)[0].kalit).toBe("hamkorbank_biznesga_qadam");
+  });
 });

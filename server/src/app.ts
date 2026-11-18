@@ -150,7 +150,8 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
         xabarlar: [...s.xabarlar, yangiXabar],
         profil: s.profil,
         bajarilgan: s.bajarilgan,
-        papka: sessiyaPapkasi(s),
+        mahsulot: s.mahsulot,
+        fayllar: s.fayllar,
       });
       s.xabarlar.push(yangiXabar, {
         kim: "agent",
@@ -161,6 +162,7 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
       });
       s.profil = j.profil;
       s.tugmalar = j.tugmalar;
+      if (j.mahsulot) s.mahsulot = j.mahsulot;
       store.saqlash(s);
       return c.json(holat(s));
     } catch (e) {

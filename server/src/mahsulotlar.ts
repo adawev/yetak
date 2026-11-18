@@ -215,6 +215,10 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
     const t = TARTIB[a.mos] - TARTIB[b.mos];
     if (t !== 0) return t;
     const yoqSoni = (x: MahsulotMoslik) => x.shartlar.filter((s) => s.holat === "yoq").length;
-    return yoqSoni(a) - yoqSoni(b);
+    const y = yoqSoni(a) - yoqSoni(b);
+    if (y !== 0) return y;
+    // Ko'proq tasdiqlangan («ha») shart — aniqroq mos mahsulot.
+    const haSoni = (x: MahsulotMoslik) => x.shartlar.filter((s) => s.holat === "ha").length;
+    return haSoni(b) - haSoni(a);
   });
 }

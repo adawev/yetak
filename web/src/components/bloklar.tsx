@@ -92,7 +92,7 @@ export function GarovBlok({ bor, kerak }: { bor: number; kerak: number }) {
 
 const HUKMLAR: Record<Hukm, { sarlavha: string; belgi: ReactNode; rang: string }> = {
   tayyor: {
-    sarlavha: 'Ariza berishga tayyorsiz',
+    sarlavha: 'Mos bank topildi',
     belgi: <CheckCircle2 size={18} />,
     rang: 'border-success/50 bg-success/10 text-success',
   },

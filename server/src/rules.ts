@@ -403,10 +403,10 @@ export function baholash(
   } else {
     hukm = "tayyor";
     xulosa = !mosYol
-      ? "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi."
+      ? "Siz aytgan raqamlarga ko'ra, asosiy talablarga javob berasiz. Endi hujjatlar kerak. Qarorni bank qiladi."
       : mosYol.mos === "mos"
-        ? `Siz aytgan raqamlarga ko'ra, sizga mos yo'l bor: ${yol}. Hujjatlarni yig'sangiz, ariza berasiz. Qarorni bank qiladi.`
-        : `Siz aytgan raqamlarga ko'ra, eng yaqin yo'l: ${yol}. Ba'zi shartlarni bankdan aniqlash kerak — kartada «?» bilan belgilangan. Qarorni bank qiladi.`;
+        ? `Siz aytgan raqamlarga ko'ra, mos bank topildi: ${yol}. Endi hujjatlar kerak. Qarorni bank qiladi.`
+        : `Siz aytgan raqamlarga ko'ra, eng yaqin bank: ${yol}. Ba'zi shartlarni bankdan aniqlash kerak («?» belgili). Endi hujjatlar kerak.`;
   }
 
   if (hukm !== "olmang") {

@@ -8,7 +8,7 @@
       "onlayn": null,
       "bank_ozi_oladi": false,
       "olish": {
-        "qayerda": "bankning o'zida (shakl) yoki bank ilovasida",
+        "qayerda": "bankning o'zida — ariza shaklini bank beradi (onlayn kreditda — bank ilovasida)",
         "qidiruv": null,
         "qadamlar": [],
         "vaqt": null,
@@ -351,7 +351,7 @@
           "Kalitga parol qo'ying — parol tiklanmaydi, yozib qo'ying"
         ],
         "vaqt": null,
-        "narx": "jismoniy shaxs uchun taxminan 26–29 ming so'm (2026-sentabrgacha narx; hozir biroz oshgan bo'lishi mumkin)",
+        "narx": "taxminan 26–29 ming so'm (narx biroz o'zgargan bo'lishi mumkin)",
         "eri_kerak": false,
         "havola": "https://e-imzo.soliq.uz",
         "manba": "https://kun.uz/news/2026/09/07/elektron-raqamli-imzo-qanday-olinadi"
