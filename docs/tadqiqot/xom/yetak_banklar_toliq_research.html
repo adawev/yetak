@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YETAK — O‘zbekistondagi Barcha 35 ta Bankning Kredit va Hujjatlar Tahlili (To‘liq Research)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-alt: #263449;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-dark: #0284c7;
+      --accent: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    /* Header / Hero */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .badge-top {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      max-width: 950px;
+      margin: 0 auto 12px;
+      color: #ffffff;
+    }
+
+    header p.subtitle {
+      color: var(--text-muted);
+      max-width: 820px;
+      margin: 0 auto 24px;
+      font-size: 1.05rem;
+    }
+
+    .quote-box {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--accent);
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      color: #d1fae5;
+    }
+
+    /* Navigation */
+    nav.sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    nav.sticky-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    nav.sticky-nav a:hover {
+      color: var(--text);
+      background: var(--bg-card);
+      border-color: var(--border);
+    }
+
+    .btn-print {
+      background: var(--primary-dark);
+      color: #fff !important;
+      cursor: pointer;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    section {
+      margin-top: 48px;
+      scroll-margin-top: 75px;
+    }
+
+    .section-title {
+      font-size: 1.65rem;
+      margin-bottom: 8px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 0.98rem;
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+
+    .card ul, .card ol {
+      padding-left: 20px;
+      color: #e2e8f0;
+    }
+
+    .card li {
+      margin-bottom: 8px;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .label {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Alert boxes */
+    .alert {
+      padding: 18px 22px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 5px solid;
+    }
+
+    .alert-important {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: var(--purple);
+    }
+
+    .alert-warning {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: var(--warning);
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: var(--accent);
+    }
+
+    .alert-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: var(--danger);
+    }
+
+    .alert h4 {
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-card);
+      font-size: 0.93rem;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: #0f172a;
+      color: var(--primary);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Progress Bar for 80/20 */
+    .progress-bar-container {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      height: 44px;
+      margin: 20px 0;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .pb-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      padding: 0 10px;
+    }
+
+    /* Filter Bar for 35 Banks */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      background: var(--bg-card);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .filter-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary-dark);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Bank Cards */
+    .bank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+    }
+
+    .bank-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .bank-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .bank-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .bank-num {
+      background: #0f172a;
+      color: var(--primary);
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+    }
+
+    .bank-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      flex: 1;
+    }
+
+    .cluster-tag {
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .c-1 { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669; }
+    .c-2 { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #0284c7; }
+    .c-3 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #d97706; }
+    .c-4 { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #9333ea; }
+    .c-5 { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid #db2777; }
+    .c-closed { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #dc2626; }
+
+    .bank-meta {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .bank-meta strong {
+      color: #fff;
+    }
+
+    .unique-doc-box {
+      background: rgba(15, 23, 42, 0.7);
+      border-left: 3px solid var(--primary);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-top: auto;
+    }
+
+    .unique-doc-box strong {
+      color: var(--primary);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* Flowchart / Decision Tree */
+    .decision-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .decision-step .q {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+
+    .decision-branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .branch {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .branch span.cond {
+      color: var(--warning);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .branch span.target {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 30px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media print {
+      nav.sticky-nav, .filter-bar { display: none !important; }
+      body { background: #fff; color: #000; }
+      .card, .bank-card, table, th, td, .decision-step, .branch {
+        background: #fff !important;
+        color: #000 !important;
+        border-color: #ccc !important;
+      }
+      header { background: #fff !important; color: #000 !important; }
+      header h1, .section-title, .bank-title, .card h3 { color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge-top">UMUMMILLIY AI XAKATON • TADBIRKORLIK YO‘NALISHI (20-MUAMMO)</div>
+    <h1>«YETAK» — O‘zbekistondagi Barcha Banklarning Kredit Berish Shartlari va Hujjatlar Tahlili</h1>
+    <p class="subtitle">
+      O‘zbekistondagi 35 ta faol tijorat banki (+1 tugatilgan bank) bo‘yicha to‘liq qiyosiy tadqiqot: qonunchilik, elektron integratsiya, kredit turlari, 80/20 o‘xshashlik formulasi va har bir bankning individual farqlari.
+    </p>
+    <div class="quote-box">
+      💡 <strong>Konsepsiya:</strong> «TadbirCore — bankning eshigi. <strong>Yetak</strong> — o‘sha eshikkacha bo‘lgan yo‘l: AI-agent tadbirkorni hujjat tayyorlashdan boshlab kredit olgungacha bosqichma-bosqich yetaklaydi.»
+    </div>
+  </header>
+
+  <nav class="sticky-nav">
+    <a href="#stats">📊 Asosiy Ko‘rsatkichlar</a>
+    <a href="#similarity">📐 80/20 O‘xshashlik Formulasi</a>
+    <a href="#auto-docs">🚫 Taqiqlangan Qog‘ozlar (Integratsiya)</a>
+    <a href="#credit-types">📑 Kredit Turlari & Botlar</a>
+    <a href="#clusters-diff">⚖️ 5 Klaster & 6 Fundamental Farq</a>
+    <a href="#all-banks">🏦 Barcha 35+1 Banklar Tahlili</a>
+    <a href="#roadmap">🗺️ «Yetak» Qarorlar Daraxti & Roadmap</a>
+    <a onclick="window.print()" class="btn-print">🖨️ PDF / Chop etish</a>
+  </nav>
+
+  <div class="container">
+
+    <!-- SECTION 1: KEY STATS & WHY ENTREPRENEURS GET REJECTED -->
+    <section id="stats">
+      <h2 class="section-title">📊 1. O‘zbekiston Bank Sektori va «Yetak» Hal Qiladigan Muammo</h2>
+      <p class="section-desc">Nima uchun tadbirkorlar bank eshigiga borganda rad javobi (otkaz) oladi va «Yetak» buni qanday o‘zgartiradi?</p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        <div class="stat-card">
+          <div class="num">35 ta</div>
+          <div class="label">Faol tijorat banklari (Markaziy bank reyestrida, 1 tasi yopilgan)</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" style="color: var(--accent);">80%</div>
+          <div class="label">Barcha banklarda so‘raladigan ma’lumot va bazaviy hujjatlar bir xilligi</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" style="color: var(--warning);">20%</div>
+          <div class="label">Bank klasteri va maxsus davlat dasturlariga xos unikal hujjatlar farqi</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" style="color: var(--purple);">5 ta</div>
+          <div class="label">Banklarning kredit berish siyosati (underwriting) bo‘yicha klasterlari</div>
+        </div>
+      </div>
+
+      <div class="alert alert-important">
+        <h4>🔥 Hakamlar (Jury) uchun 3 ta eng muhim «Insight» — Tadbirkor nega «otkaz» oladi?</h4>
+        <ol style="padding-left: 20px; margin-top: 8px;">
+          <li><strong>Rasmiy balans (1-2 shakl) vs Real Kassa («Qora daftar»):</strong> Davlat banklari (NBU, SQB, Asaka) tadbirkorning faqat Soliqqa topshirgan rasmiy hisobotiga (1 va 2-shakl) qaraydi. Agar tadbirkor bozorda savdo qilsa va rasmiy aylanmasi kichik bo‘lsa, davlat banki unga <strong>100% rad javobi</strong> beradi. Lekin <strong>Hamkorbank, Ipak Yo‘li Bank va Davr Bank</strong> maxsus kredit ekspertini do‘konga/ishxonaga yuborib, tadbirkorning <em>real (boshqaruv) kassasini va ombordagi tovar qoldig‘ini</em> joyida hisoblab, kredit ajratadi!</li>
+          <li><strong>Garovsiz kredit eshigini bilmaslik:</strong> Garovi yo‘q, lekin 1 yildan beri ishlayotgan tadbirkor oddiy bankka borsa 125% garov so‘raydi. Lekin <strong>BRB (PQ-306 dasturi)</strong> o‘quv kursida o‘qib sertifikat olsa — <strong>100 mln so‘mgacha qat’iy garovsiz</strong> oladi; yoki <strong>TBC Business (600 mln gacha), Ipak Yo‘li Online (200 mln gacha), Garant Online (100 mln gacha), Apex Bank (100 mln gacha)</strong> orqali bank aylanmasiga qarab garovsiz oladi.</li>
+          <li><strong>Yangi ochilgan biznes (0–6 oy) filtri:</strong> Kommersiya va xorijiy banklar (masalan, Ziraat — 3 yil, KDB — 2 yil, TBC — 6 oy) yangi tadbirkorga kredit bermaydi. Yangi boshlovchi faqat <strong>Xalq banki (`oilakredit.uz`), MKB, BRB, Aloqabank, Infinbank («Biznesga birinchi qadam»)</strong> yoki yuqori boshlang‘ich to‘lov (25–30%) bilan <strong>Davr Bank / Hamkorbank</strong> orqali kredit oladi.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- SECTION 2: 80/20 SIMILARITY FORMULA -->
+    <section id="similarity">
+      <h2 class="section-title">📐 2. Banklar O‘rtasida Hujjatlar va Arizalarning O‘xshashlik Foizi (80 / 20 Formulasi)</h2>
+      <p class="section-desc">
+        35 ta bankning talablari tahlil qilinganda, <strong>yig‘iladigan ma’lumotlar va ariza topshirish jarayonining 75% – 85% qismi barcha banklarda mutlaqo BIR XIL (Universal Baza)</strong>. Faqat <strong>15% – 25% qismigina</strong> tanlangan bank yoki dasturga qarab farq qiladi.
+      </p>
+
+      <div class="progress-bar-container">
+        <div class="pb-segment" style="width: 45%; background: #0284c7;">45% — Avtomatik va Huquqiy Baza (100% Bir xil)</div>
+        <div class="pb-segment" style="width: 35%; background: #10b981;">35% — Standart Loyiha & Garov Paketi (90% Bir xil)</div>
+        <div class="pb-segment" style="width: 20%; background: #f59e0b; color: #000;">20% — Bankka xos Unikal Talab</div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Qatlam</th>
+              <th>Ulushi (%)</th>
+              <th>Nimalar kiradi? (Ma’lumot va Hujjatlar)</th>
+              <th>35 ta Bank O‘rtasida O‘xshashligi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Avtomatik va Huquqiy Baza (Core Data)</strong></td>
+              <td><strong style="color: var(--primary); font-size: 1.2rem;">~45%</strong></td>
+              <td>
+                • Pasport / ID-karta (JSHSHIR / PINFL), MyID (Face-ID), ERI kaliti<br>
+                • Davlat ro‘yxatidan o‘tganlik Guvohnomasi (MChJ, YaTT, O‘zini o‘zi band qilish) va STIR (INN)<br>
+                • Tasdiqlangan Ustav va Rahbarni tayinlash buyrug‘i<br>
+                • Soliq hisobotlari: 1-shakl (Buxgalteriya balansi) va 2-shakl (Moliyaviy natijalar)<br>
+                • KATM kredit tarixi (skoring balli) hamda Soliq / MIBdan qarzdorlik yo‘qligi<br>
+                • Asosiy va ikkilamchi bank hisobraqamlari hamda POS-terminal/QR aylanmasi
+              </td>
+              <td><span class="cluster-tag c-1">100% BIR XIL</span><br><br>Barcha 35 ta bankda aynan shu yagona davlat integratsiyalari va huquqiy baza ishlatiladi.</td>
+            </tr>
+            <tr>
+              <td><strong>2. Standart Loyiha va Garov Paketi</strong></td>
+              <td><strong style="color: var(--accent); font-size: 1.2rem;">~35%</strong></td>
+              <td>
+                • Kredit buyurtmanomasi (Ariza-anketa: summa, muddat, maqsad)<br>
+                • Ta’sischilarning kredit olish va mulkni garovga qo‘yish haqidagi Bayonnomasi (Qarori)<br>
+                • Biznes-reja (TEO) va Pul oqimi (Cash-Flow) prognozi jadvali<br>
+                • Xarid shartnomasi (uskuna, xomashyo, avto yoki mulk oldi-sotdi kontrakti / invoys)<br>
+                • Faoliyat joyi hujjati (<code>ijara.soliq.uz</code> da ro‘yxatdan o‘tgan ijara shartnomasi yoki kadastr)<br>
+                • Garov paketi: Kadastr/Texpasport + Mustaqil baholovchi hisoboti (Otsenka) + Turmush o‘rtog‘ining notarial roziligi + Garov sug‘urta polisi
+              </td>
+              <td><span class="cluster-tag c-2">90% BIR XIL</span><br><br>Garovli biznes kredit beradigan ~28 ta bankda bir xil shablon (faqat ariza tepasidagi bank nomi o‘zgaradi).</td>
+            </tr>
+            <tr>
+              <td><strong>3. Bank yoki Dasturga xos Maxsus Talablar</strong></td>
+              <td><strong style="color: var(--warning); font-size: 1.2rem;">~20%</strong></td>
+              <td>
+                • <strong>BRB (PQ-306 — 100 mln garovsiz):</strong> «Kichik biznesga ko‘maklashish markazi» o‘quv sertifikati<br>
+                • <strong>Xalq banki (<code>oilakredit.uz</code>):</strong> Hokim yordamchisi tavsiyanomasi + <code>smart-market.uz</code> shartnomasi va elektron dalolatnoma<br>
+                • <strong>MKB / BRB / Aloqa / Trast («Biznesga birinchi qadam»):</strong> Kamida 1 BHM ijtimoiy soliq to‘langanligi kvitansiyasi<br>
+                • <strong>Hamkorbank / Ipak Yo‘li / Davr:</strong> Kredit eksperti bilan joyida tuziladigan Real kassa (boshqaruv hisoboti) va ombor qoldig‘i dalolatnomasi<br>
+                • <strong>SQB / Ipoteka / NBU:</strong> 2–3 ta muqobil yetkazib beruvchi narx taklifi (konkurentniy list), Ekologik ekspertiza xulosasi (ishlab chiqarish/qurilishda)<br>
+                • <strong>Ziraat / KDB / AAB / Saderat:</strong> Oxirgi 2–3 yillik zarar ko‘rmagan balans va tashqi savdo (import/eksport) kontrakti
+              </td>
+              <td><span class="cluster-tag c-3">FARQ QILADIGAN QISM</span><br><br>«Yetak»ning Rules Engine’i aynan shu 20% qismni tanlangan bankka qarab moslashtirib beradi.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>⚡ Onlayn va Raqamli Kreditlarda</h3>
+          <p style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-bottom: 8px;">95% Bir Xil</p>
+          <p class="bank-meta">TBC Business, Anorbank, Ipak Yo‘li Online, Garant Online, AVO, Uzum, Tenge Business — faqat 1-qatlam (JSHSHIR, STIR, ERI, MyID va hisobraqam/karta aylanmasi) ishlatiladi. Qog‘oz hujjatlar 0 ta.</p>
+        </div>
+        <div class="card">
+          <h3>🏢 Standart Tijorat Kreditlarida</h3>
+          <p style="font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">80–85% Bir Xil</p>
+          <p class="bank-meta">NBU, SQB, Asaka, Kapital, Infin, OFB, Trast, Hamkor va b. — tadbirkor bitta <strong>Universal Kredit Dosyesi</strong> tayyorlasa, 25+ ta bankning istalgan biriga topshira oladi.</p>
+        </div>
+        <div class="card">
+          <h3>🏛️ Davlat Imtiyozli Dasturlarida</h3>
+          <p style="font-size: 1.8rem; font-weight: 800; color: var(--warning); margin-bottom: 8px;">70% Baza + 30% Maxsus</p>
+          <p class="bank-meta"><code>oilakredit.uz</code>, PQ-306, «Biznesga birinchi qadam» — 70% standart shaxsiy/soliq ma’lumotlari + 30% maxsus sertifikat, hokim yordamchisi tavsiyasi yoki <code>smart-market.uz</code>.</p>
+        </div>
+      </div>
+
+      <div class="alert alert-success" style="margin-top: 20px;">
+        <h4>🎯 Pitch Deck uchun tayyor javob («Single Core Profile + Bank-Specific Add-ons»):</h4>
+        <p>«Yetak» tadbirkordan <strong>80% bazaviy ma’lumot va hujjatlarni 1 marta</strong> yig‘adi va tayyorlaydi (Universal Kredit Dosyesi). Qolgan <strong>20% qismida</strong> esa tanlangan bankka qarab (BRB bo‘lsa — o‘quv sertifikatiga, Xalq banki bo‘lsa — hokim yordamchisiga, Hamkorbank bo‘lsa — kassa tahliliga, SQB bo‘lsa — 3 ta muqobil shartnoma yig‘ishga) yetaklab boradi. Bitta bankdan rad javobi olsa ham, tadbirkorning 80% ishi tayyor turadi va 5 daqiqada ikkinchi mos bankka yo‘naltiriladi!</p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PROHIBITED PAPER DOCS & ELECTRONIC INTEGRATION -->
+    <section id="auto-docs">
+      <h2 class="section-title">🚫 3. Qonunchilik: Banklar Qog‘ozda So‘rashi TAQIQLANGAN Hujjatlar (Avtomatik Integratsiya)</h2>
+      <p class="section-desc">
+        «Elektron hukumat» va idoralararo integratsiya tufayli banklar JSHSHIR (PINFL) va STIR (INN) orqali quyidagi ma’lumotlarni <strong>1 soniyada avtomatik tortib oladi</strong> va ularni mijozdan qog‘ozda talab qilishi qonunan man etilgan:
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>🔄 Avtomatik Tortiladigan Ma’lumotlar</h3>
+          <ul>
+            <li><strong>Ish haqi va rasmiy daromadlar:</strong> Soliq qo‘mitasi va INPS bazasidan (oxirgi 6–12 oy).</li>
+            <li><strong>Korxonaning moliyaviy hisobotlari:</strong> Soliq bazasidagi elektron topshirilgan 1-shakl (Balans) va 2-shakl (Moliyaviy natijalar).</li>
+            <li><strong>Soliq va MIBdan qarzdorlik yo‘qligi haqida ma’lumotnoma:</strong> Soliq va Majburiy ijro byurosi bazasidan.</li>
+            <li><strong>Pensiya va nafaqa miqdori:</strong> Pensiya jamg‘armasi bazasidan.</li>
+            <li><strong>Kredit tarixi va skoring balli:</strong> KATM (Kredit-axborot tahliliy markazi — <code>infokredit.uz</code>) bazasidan.</li>
+            <li><strong>Yashash joyi (propiska) va oilaviy holat:</strong> IIV va FHDYO bazasidan.</li>
+            <li><strong>Mulk mavjudligi tekshiruvi:</strong> Kadastr va YHXBB bazalaridan.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>⚠️ Kredit Olishdan Oldingi 2 ta Majburiy Tekshiruv («Yetak» Pre-Check)</h3>
+          <div class="alert alert-danger" style="margin-top: 0;">
+            <h4>1. «Kredit bitimini tuzishga taqiq» (Self-Ban — my.gov.uz)</h4>
+            <p>Fuqarolar o‘zini firibgarlardan himoya qilish uchun <code>my.gov.uz</code> orqali kredit olishga taqiq qo‘yishi mumkin. Agar bu taqiq yoqilgan bo‘lsa, KATM avtomatik bloklaydi va hech qaysi bank kredit bera olmaydi. «Yetak» birinchi qadamda mijozga ushbu taqiqni tekshirishni eslatadi.</p>
+          </div>
+          <div class="alert alert-warning" style="margin-bottom: 0;">
+            <h4>2. Qarz yuki ko‘rsatkichi (QYK / DTI — 50% cheklovi)</h4>
+            <p>Markaziy bank talabiga ko‘ra, qarz oluvchining barcha kreditlari bo‘yicha oylik to‘lovlari uning tasdiqlangan o‘rtacha oylik daromadining <strong>50 foizidan</strong> oshib ketmasligi shart. Agar oshsa — hamqarz (kafil) qo‘shish yoki muddatni uzaytirish kerak.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: GENERAL CREDIT TYPES & AGGREGATORS / TELEGRAM BOTS -->
+    <section id="credit-types">
+      <h2 class="section-title">📑 4. Barcha Kredit Yo‘nalishlari Bo‘yicha Hujjatlar va Raqamli Platformalar</h2>
+      <p class="section-desc">Kredit maqsadiga qarab talab etiladigan hujjatlar to‘plami hamda O‘zbekistondagi asosiy veb-sayt va Telegram botlar ishlash prinsipi.</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>💳 A) Onlayn Mikroqarz va Kredit Kartalar</h3>
+          <p class="bank-meta" style="margin-bottom: 10px;"><em>50–100 mln so‘mgacha (Ilova, Veb-sayt yoki Bot orqali)</em></p>
+          <ul>
+            <li><strong>Pasport yoki ID-karta</strong> (seriya, raqam, JSHSHIR).</li>
+            <li><strong>MyID (Face-ID)</strong> video-identifikatsiya.</li>
+            <li><strong>Faol bank kartasi</strong> (Uzcard / Humo) va SMS-xabarnoma ulangan telefon raqami.</li>
+            <li><em>Garov, kafil va daromad ma’lumotnomasi talab qilinmaydi (avtomatik skoring).</em></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🎓 B) Iste’mol va Ta’lim Kreditlari</h3>
+          <p class="bank-meta" style="margin-bottom: 10px;"><em>Maishiy texnika, xizmatlar va OTM kontrakti uchun</em></p>
+          <ul>
+            <li><strong>Pasport yoki ID-karta</strong> (hamda kafil/birgalikda qarz oluvchi pasporti).</li>
+            <li><strong>Iste’mol krediti uchun:</strong> Do‘kon/diler bilan tuzilgan tovar/xizmat shartnomasi (Invoys).</li>
+            <li><strong>Ta’lim krediti uchun:</strong> OTM (universitet) bilan tuzilgan to‘lov-kontrakt shartnomasi (<code>talim-krediti.mf.uz</code>).</li>
+            <li><strong>Ta’minot:</strong> 3-shaxs kafilligi yoki kredit qaytmaslik xatarini sug‘urtalash polisi.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🚗 C) Avtokredit (Shaxsiy va Tijorat)</h3>
+          <p class="bank-meta" style="margin-bottom: 10px;"><em>Birlamchi avtosalon yoki ikkilamchi bozor</em></p>
+          <ul>
+            <li><strong>Pasport yoki ID-karta</strong> (biznes uchun + Guvohnoma).</li>
+            <li><strong>Birlamchi bozor:</strong> Rasmiy diler/avtosalon shartnomasi.</li>
+            <li><strong>Ikkilamchi bozor:</strong> Sotuvchi texpasporti nusxasi va Mustaqil baholovchi xulosasi.</li>
+            <li><strong>Boshlang‘ich badal kvitansiyasi</strong> (odatda 15%–30%).</li>
+            <li><strong>Garov va sug‘urta:</strong> Sotib olinayotgan avtoning o‘zi garovga olinadi + KASKO sug‘urtasi.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🏠 D) Ipoteka va Biznes-Ipoteka</h3>
+          <p class="bank-meta" style="margin-bottom: 10px;"><em>Uy-joy, do‘kon, ofis yoki ombor sotib olish</em></p>
+          <ul>
+            <li><strong>Pasport / ID-karta</strong> (va birgalikda qarz oluvchilar pasporti).</li>
+            <li><strong>Birlamchi bozor:</strong> Quruvchi (developer) bilan dastlabki shartnoma.</li>
+            <li><strong>Ikkilamchi bozor / Noturar joy:</strong> Sotuvchining kadastr hujjatlari + Mustaqil baholovchi hisoboti.</li>
+            <li><strong>Subsidiya xabarnomasi</strong> (agar davlat subsidiyasi bo‘lsa — <code>my.gov.uz</code>).</li>
+            <li><strong>Boshlang‘ich badal</strong> bank omonat hisobraqamida shakllantirilganligi ma’lumotnomasi.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🏭 E) Tadbirkorlik (Biznes) Kreditlari</h3>
+          <p class="bank-meta" style="margin-bottom: 10px;"><em>O‘zini o‘zi band qilgan, YaTT va MChJlar uchun</em></p>
+          <ul>
+            <li><strong>Huquqiy paket:</strong> Guvohnoma, Ustav, Direktor buyrug‘i, Ta’sischilar qarori (bayonnomasi).</li>
+            <li><strong>Moliyaviy paket:</strong> Biznes-reja (TEO), Cash-Flow jadvali, 1 va 2-shakl balans.</li>
+            <li><strong>Maqsadli shartnomalar:</strong> Uskuna/xomashyo shartnomasi va <code>ijara.soliq.uz</code> joy ijarasi.</li>
+            <li><strong>Garov paketi (125%):</strong> Kadastr/Texpasport, Baholash hisoboti, Notarial rozilik va Sug‘urta.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🤖 F) Veb-saytlar va Telegram Botlar Arxitekturasi</h3>
+          <p class="bank-meta" style="margin-bottom: 10px;"><em>Agregatorlar va bank botlari mijozdan nimani so‘raydi?</em></p>
+          <ul>
+            <li><strong>Asosiy platformalar:</strong> <code>bank.uz</code>, <code>depozit.uz</code>, <code>oilakredit.uz</code>, <code>smart-market.uz</code>, <code>infokredit.uz</code>, <code>ijara.soliq.uz</code>.</li>
+            <li><strong>Telegram botlar (Pre-scoring & Lead-gen):</strong>
+              <ol>
+                <li>Telefon raqami (OTP SMS-kod);</li>
+                <li>Pasport seriya-raqami + Tug‘ilgan sana (yoki JSHSHIR / STIR);</li>
+                <li>Kredit turi, summa va hudud (viloyat/tuman filialiga yo‘naltirish);</li>
+                <li>Oferta roziligi (KATM va Soliq bazasidan tekshirishga ruxsat).</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: 5 CLUSTERS & 6 FUNDAMENTAL DIFFERENCES -->
+    <section id="clusters-diff">
+      <h2 class="section-title">⚖️ 5. Banklar O‘rtasidagi 6 ta Fundamental Farq (5 ta Klaster Qiyosiy Jadvali)</h2>
+      <p class="section-desc">Nima uchun bitta bank tadbirkorga rad javobi bersa, ikkinchi bank kredit ajratadi? «Yetak» tadbirkorni aynan shu 5 ta klaster bo‘yicha saralaydi.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mezon</th>
+              <th>I. Davlat Dasturi Banklari<br><small>(BRB, Xalq, MKB, Agro, Turon)</small></th>
+              <th>II. Yirik Universal & Sanoat<br><small>(NBU, SQB, Asaka, Ipoteka, Aloqa)</small></th>
+              <th>III. Xususiy SME-Fokus<br><small>(Hamkor, Ipak Yo‘li, Kapital, Davr, Infin, OFB, Trast, AAB va b.)</small></th>
+              <th>IV. Raqamli (Fintech) Banklar<br><small>(TBC, Anor, Apex, AVO, Uzum, Open, Hayot)</small></th>
+              <th>V. Xorijiy Sho‘ba Banklar<br><small>(Tenge, Ziraat, KDB, Saderat)</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Asosiy mijoz portreti</strong></td>
+              <td>O‘zini o‘zi band qilganlar, boshlang‘ich YaTT/MChJ, hunarmand, dehqon, mahalla loyihalari</td>
+              <td>O‘rta va yirik ishlab chiqarish, eksportyorlar, xizmat ko‘rsatish, davlat loyihalari</td>
+              <td>Faol savdo, xizmat ko‘rsatish va kichik ishlab chiqarish (kamida 3–6 oy ishlagan)</td>
+              <td>Chakana savdo, marketpleys sotuvchilari, YaTT va o‘zini o‘zi band qilganlar</td>
+              <td>Import/eksport (Turkiya, Qozog‘iston, Koreya, Eron), qo‘shma korxonalar va YaTT (Tenge)</td>
+            </tr>
+            <tr>
+              <td><strong>2. Daromadni qanday tekshiradi?</strong></td>
+              <td>Soliq bazasi + <strong>Hokim yordamchisi tavsiyasi</strong> yoki <strong>O‘quv sertifikati</strong></td>
+              <td>Qat’iy <strong>rasmiy balans (1 va 2-shakl)</strong> va bank hisobraqami aylanmasi</td>
+              <td><strong>Boshqaruv hisoboti (real kassa / bozor daftari)</strong> + POS-terminal/QR aylanmasi</td>
+              <td>Faqat <strong>karta/hisobraqam aylanmasi</strong> va KATM skoring balli (avtomatik)</td>
+              <td>KDB/Ziraat: 2–3 yillik toza balans; Tenge: onlayn skoring + bank aylanmasi</td>
+            </tr>
+            <tr>
+              <td><strong>3. Garovga talab (LTV)</strong></td>
+              <td><strong>100 mln so‘mgacha garovsiz</strong> (PQ-306, <code>oilakredit.uz</code>) yoki sug‘urta polisi / 3-shaxs kafilligi</td>
+              <td>Yuqori likvidli garov (ko‘chmas mulk, yangi avto/uskuna), 125%–130% qoplama</td>
+              <td>Moslashuvchan: do‘kon, uy, avto, uskuna, tovar qoldig‘i (125%); 100–200 mln gacha garovsiz onlayn bor</td>
+              <td><strong>Garovsiz</strong> (skoring asosida 25 mln dan 600 mln so‘mgacha)</td>
+              <td>125–130% yuqori likvidli mulk yoki bank kafolati (Tenge’da onlayn garovsiz bor)</td>
+            </tr>
+            <tr>
+              <td><strong>4. Hujjatlar hajmi</strong></td>
+              <td>O‘rtacha, lekin davlat platformalari (<code>oilakredit.uz</code>, <code>smart-market.uz</code>, sertifikat) majburiy</td>
+              <td>Juda ko‘p (To‘liq TEO/Biznes-reja, ta’sischilar qarori, baholash, 3 ta muqobil kontrakt)</td>
+              <td>Kamroq («Ekspress» va avto/texnika kreditlarida biznes-reja talab qilinmaydi)</td>
+              <td>Minimal (Faqat Pasport/ID, MyID, ERI kaliti — qog‘oz hujjat yo‘q)</td>
+              <td>KDB/Ziraat’da juda qattiq korporativ paket; Tenge’da soddalashtirilgan</td>
+            </tr>
+            <tr>
+              <td><strong>5. Foiz stavkasi</strong></td>
+              <td><strong>14% – 20%</strong> (imtiyozli)<br><strong>21% – 27%</strong> (tijoriy)</td>
+              <td><strong>21% – 26%</strong> (so‘mda)<br><strong>9% – 14%</strong> (valyutada)</td>
+              <td><strong>20% – 30%</strong> (so‘mda)<br><strong>10% – 16%</strong> (valyutada)</td>
+              <td><strong>21% – 49%</strong> (eng tez, lekin yuqori foiz)</td>
+              <td>So‘mda <strong>22% – 26%</strong><br>Valyutada <strong>SOFR+marja (8–14%)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>6. Ko‘rib chiqish vaqti</strong></td>
+              <td>7 kundan 30 kungacha</td>
+              <td>10 kundan 30 kungacha (Modulli kreditda 1–3 kun)</td>
+              <td>1 kundan 5 kungacha</td>
+              <td><strong>5 daqiqadan 24 soatgacha</strong></td>
+              <td>Tenge: 1–3 kun;<br>KDB/Ziraat: 15–30 kun</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 6: ALL 35+1 BANKS INDIVIDUAL ANALYSIS -->
+    <section id="all-banks">
+      <h2 class="section-title">🏦 6. Barcha 35 ta Faol Tijorat Banki (+1 Yopilgan Bank) Bo‘yicha Bittalab Tahlil</h2>
+      <p class="section-desc">Har bir bankning kredit mahsulotlari, summasi, muddati, foizi va boshqa banklardan farq qiluvchi maxsus hujjat talablari. Qidiruv yoki klaster tugmalari orqali saralab ko‘rishingiz mumkin:</p>
+
+      <div class="filter-bar">
+        <input type="text" id="bankSearch" class="search-input" placeholder="🔍 Bank nomi, kredit turi yoki hujjat bo‘yicha qidirish (masalan: garovsiz, Hamkor, PQ-306, ipoteka)..." oninput="filterBanks()" />
+        <button class="filter-btn active" onclick="setCluster('all', this)">Barchasi (36)</button>
+        <button class="filter-btn" onclick="setCluster('c1', this)">I. Davlat Dasturi (5)</button>
+        <button class="filter-btn" onclick="setCluster('c2', this)">II. Yirik Universal (5)</button>
+        <button class="filter-btn" onclick="setCluster('c3', this)">III. Xususiy SME (14)</button>
+        <button class="filter-btn" onclick="setCluster('c4', this)">IV. Raqamli / Fintech (7)</button>
+        <button class="filter-btn" onclick="setCluster('c5', this)">V. Xorijiy Sho‘ba (4)</button>
+      </div>
+
+      <div class="bank-grid" id="bankGrid">
+
+        <!-- CLUSTER I: 1-5 -->
+        <div class="bank-card" data-cluster="c1">
+          <div class="bank-header">
+            <span class="bank-num">#1</span>
+            <div class="bank-title">Biznesni rivojlantirish banki (BRB / BDB)</div>
+            <span class="cluster-tag c-1">I. Davlat Dasturi</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> PQ-306 («Kichik biznesni uzluksiz qo‘llab-quvvatlash») va «Kichik biznesga ko‘maklashish markazlari» bosh operatori.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>PQ-306 dasturi:</em> 1.5 mlrd so‘mgacha (shundan <strong>100 mln so‘mgacha QAT’IY GAROVSIZ</strong>, 60 oygacha — kamida 1 yil ishlagan yoki 3+ ish o‘rni yaratganlarga).
+            <br>• <em>«Biznesga birinchi qadam»:</em> O‘zini o‘zi band qilganlarga 15 mln so‘mgacha (24%, 36 oy).
+            <br>• <em>«Yangi Biznes M-300» va «Smart Bank» liniyalari:</em> 300 mln – 5 mlrd so‘mgacha (23% dan).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            «Kichik biznesga ko‘maklashish markazi»da o‘qiganlik va biznes-reja himoya qilganlik haqida <strong>Maxsus Sertifikat</strong> + «Tadbirkorlikni rivojlantirish kompaniyasi» AJ portfel kafilligi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c1">
+          <div class="bank-header">
+            <span class="bank-num">#2</span>
+            <div class="bank-title">Xalq banki</div>
+            <span class="cluster-tag c-1">I. Davlat Dasturi</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> <code>oilakredit.uz</code> («Har bir oila — tadbirkor»), xotin-qizlar tadbirkorligi («Hamroh») va mahallabay ishlash bosh operatori.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>Oilaviy tadbirkorlik:</em> O‘zini o‘zi band qilganlarga 33 mln so‘mgacha (garovsiz), tadbirkorlarga 300 mln so‘mgacha (issiqxona, chorvachilik, tikuvchilik, hunarmandchilik).
+            <br>• Aylanma mablag‘ va mikrokreditlar.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Mahalladagi <strong>Hokim yordamchisi tavsiyanomasi</strong> + <strong><code>smart-market.uz</code> (elektron kooperatsiya portali)</strong> orqali tuzilgan shartnoma va tovar yetkazib berilganini tasdiqlovchi elektron dalolatnoma.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c1">
+          <div class="bank-header">
+            <span class="bank-num">#3</span>
+            <div class="bank-title">Mikrokreditbank (MKBANK)</div>
+            <span class="cluster-tag c-1">I. Davlat Dasturi</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> YaTTlar, hunarmandlar, kasanachilar va o‘zini o‘zi band qilgan shaxslarni mikromoliyalash.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Ishbilarmon sherik»:</em> Kamida 3 oy ishlagan savdo/ishlab chiqarish subyektlariga (YaTTga 500 mln, MChJga 1 mlrd so‘mgacha, 24 oy, 3–6 oy imtiyozli davr).
+            <br>• <em>«Biznesga birinchi qadam»:</em> O‘zini o‘zi band qilganlarga 50 mln so‘mgacha (21% dan, 24–84 oygacha!).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            O‘zini o‘zi band qilganlik guvohnomasi + <strong>Ijtimoiy soliq (kamida 1 BHM) to‘langanligi kvitansiyasi</strong> + Faoliyat joyi bo‘yicha <strong><code>ijara.soliq.uz</code> shartnomasi</strong> yoki kadastr.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c1">
+          <div class="bank-header">
+            <span class="bank-num">#4</span>
+            <div class="bank-title">Agrobank</div>
+            <span class="cluster-tag c-1">I. Davlat Dasturi</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Qishloq xo‘jaligi, fermerlar, dehqon xo‘jaliklari, oziq-ovqat qayta ishlash va hududlardagi kichik biznes.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Kichik biznes kreditlari: 50 mln so‘mdan bir necha mlrd so‘mgacha (1–5 yil, 2–6 oy imtiyozli davr, ~26% dan).
+            <br>• «Smart-kredit» (hisobraqam aylanmasiga qarab) va «Biznesga birinchi qadam» (5–15 mln so‘m, 25%).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Qishloq xo‘jaligi va agro-loyihalar uchun <strong>yer uchastkasiga bo‘lgan huquq hujjati (hokim qarori / ijara shartnomasi / kadastr)</strong> hamda agrotexnik xarita.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c1">
+          <div class="bank-header">
+            <span class="bank-num">#5</span>
+            <div class="bank-title">Turonbank</div>
+            <span class="cluster-tag c-1">I. Davlat Dasturi</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Bog‘dorchilik, issiqxona, gidroenergetika, xizmat ko‘rsatish va kichik tadbirkorlik.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«WELCOME»</em> (yangi o‘tgan mijozlar uchun), <em>«Ayollar tadbirkorligi»</em>, <em>«Tezkor Mikrokredit»</em> (aylanma mablag‘ uchun 12–36 oy, 23–28%).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Standart ta’sis paketi (Ustav, Guvohnoma, Rahbar va bosh hisobchi buyrug‘i, Ta’sischilar bayonnomasi), 1–2 shakl balans, TEO va 125% garov yoki sug‘urta polisi.
+          </div>
+        </div>
+
+        <!-- CLUSTER II: 6-10 -->
+        <div class="bank-card" data-cluster="c2">
+          <div class="bank-header">
+            <span class="bank-num">#6</span>
+            <div class="bank-title">O‘zmilliybank (NBU)</div>
+            <span class="cluster-tag c-2">II. Yirik Universal</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Xizmatlar sohasi (turizm, mehmonxona, ovqatlanish, servis), sanoat va yoshlar tadbirkorligi.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Imkoniyat», «Yuksalish», «Taraqqiyot»</em> (yirik investitsion va aylanma kreditlar, 23–27%).
+            <br>• <em>«Tezkor»</em> (modulli kredit — aylanmaga qarab) va Yoshlar startap liniyalari.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Standart kreditda to‘liq TEO, 1 va 2-shakl balans, sotib olinayotgan uskuna bo‘yicha <strong>muqobil tijorat takliflari (kontraktlar)</strong>. «Tezkor» modulli kreditida esa biznes-reja talab qilinmaydi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c2">
+          <div class="bank-header">
+            <span class="bank-num">#7</span>
+            <div class="bank-title">O‘zsanoatqurilishbank (SQB)</div>
+            <span class="cluster-tag c-2">II. Yirik Universal</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Sanoat, qurilish materiallari ishlab chiqarish, «Yashil» iqtisodiyot (quyosh panellari/energiya tejamkorlik) va o‘rta biznes.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Investitsion kreditlar (5–7 yilgacha), «Yashil» kreditlar, aylanma mablag‘ va savdoni moliyalashtirish (akkreditiv/kafolat).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Ishlab chiqarish va qurilish loyihalari uchun <strong>Ekologik ekspertiza xulosasi</strong>, loyiha-smeta hujjatlari (qurilish bo‘lsa), 1–2 shakl balans va 125% likvid garov.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c2">
+          <div class="bank-header">
+            <span class="bank-num">#8</span>
+            <div class="bank-title">Asakabank</div>
+            <span class="cluster-tag c-2">II. Yirik Universal</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Avtosanoat, mashinasozlik, farmatsevtika, yoshlar tadbirkorligi va tezkor modulli kreditlar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Modulli kreditlar»</em> (skoring va aylanma asosida tezkor), <em>«Biznes Standart»</em>.
+            <br>• Yoshlar tadbirkorligini qo‘llab-quvvatlash (2.5 mlrd so‘mgacha, 3–12 oy imtiyozli davr).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            «Modulli kredit»da biznes-reja (TEO) so‘ralmaydi — faqat ariza, ta’sis hujjatlari va avtomatik soliq/bank aylanmasi tekshiruvi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c2">
+          <div class="bank-header">
+            <span class="bank-num">#9</span>
+            <div class="bank-title">Ipoteka-bank (OTP Group)</div>
+            <span class="cluster-tag c-2">II. Yirik Universal</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Vengriyaning OTP Group boshqaruvidagi universal bank; kichik va o‘rta biznes (SME) hamda ipoteka/avtokredit.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Aylanma mablag‘ va asosiy vositalar kreditlari, tijorat ipotekasi, «Biznesga birinchi qadam».
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Boshqa banklardagi barcha hisobvaraqlar aylanmasi ma’lumotnomasi + sotib olinadigan uskuna/tovar bo‘yicha <strong>raqobatli taqqoslash jadvali (konkurentniy list — 2-3 ta narx taklifi)</strong> + TEO va 1–2 shakl.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c2">
+          <div class="bank-header">
+            <span class="bank-num">#10</span>
+            <div class="bank-title">Aloqabank</div>
+            <span class="cluster-tag c-2">II. Yirik Universal</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> IT va telekommunikatsiya, yoshlar startaplari, «Tadbirkor ayol» va modulli biznes kreditlar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Biznes uchun» modulli krediti</em> (biznes-rejasiz), <em>«Start-biznes»</em> (3–7 yilgacha), <em>«Tadbirkor ayol»</em>.
+            <br>• <em>«Biznesga birinchi qadam»:</em> Zoomrad ilovasi orqali 8–15 mln so‘mgacha (21%, 36–60 oy).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            «Biznes uchun» modulli kreditida biznes-reja talab etilmaydi; «Start-biznes» va investitsion kreditlarda garovning mustaqil baholash hisoboti va sug‘urta polisi majburiy.
+          </div>
+        </div>
+
+        <!-- CLUSTER III: 11-24 -->
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#11</span>
+            <div class="bank-title">Hamkorbank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> O‘zbekistonda kichik va o‘rta biznes (mikromoliyalash) bo‘yicha eng kuchli amaliy tajribaga ega #1 xususiy bank.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Biznes Start», «Biznes Comfort»:</em> 300 mln – 5 mlrd so‘mgacha, 7 yilgacha (18% – 28%).
+            <br>• Savdo va xizmat ko‘rsatish uchun ekspress mikrokreditlar.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Rasmiy soliq balansi kam bo‘lsa ham, kredit eksperti joyiga chiqib tadbirkorning <strong>real savdo daftarini (boshqaruv hisoboti), ombor qoldig‘ini va naqd pul oqimini (Cash-flow)</strong> o‘zi tahlil qiladi! Garov: 125–130%.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#12</span>
+            <div class="bank-title">Ipak Yo‘li Banki</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Kichik biznes uchun raqamli va gibrid («Ekspress») kreditlashda yetakchi xususiy bank.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>Onlayn biznes-kredit:</em> <strong>200 mln so‘mgacha, 12 oygacha, GAROVSIZ</strong> (bankda hisobraqami bor mijozlarga).
+            <br>• <em>«Biznes Ekspress» va Qayta tiklanuvchi kredit liniyasi:</em> $500,000 ekvivalentigacha, 3–5 yilgacha (6 oy imtiyozli).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            200 mln so‘mgacha onlayn kreditda <strong>garov va qog‘oz biznes-reja umuman so‘ralmaydi</strong> — faqat oxirgi oylardagi hisobraqam/terminal aylanmasi skoring qilinadi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#13</span>
+            <div class="bank-title">Kapitalbank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Yirik shaharlardagi savdo, import/eksport, logistika va o‘rta/yirik korporativ biznes.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Aylanma mablag‘ va Overdraft (18 oygacha), Asosiy kapital va uskunalar (10 mlrd so‘mgacha, 36–60 oygacha, 20–26%).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Yuqori likvidli garov (Toshkent va viloyat markazlaridagi ko‘chmas mulk yoki yangi transport) + 1 va 2-shakl balans + aniq Cash-flow (pul oqimi) prognozi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#14</span>
+            <div class="bank-title">Davr Bank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Kichik tadbirkorlar, bozor savdogarlari va tijorat transporti (yuk mashinasi, furgon, maxsus texnika) oluvchilar uchun eng tezkor bank.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Tijorat avtokreditlari va maxsus texnika krediti, kichik biznes aylanma va investitsiya kreditlari.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Tijorat avtokreditida rasmiy aylanma kam bo‘lsa ham, <strong>25–30% boshlang‘ich to‘lov</strong> qilinsa, sotib olinayotgan texnikaning o‘zini garovga olib, <strong>1–2 kunda minimal hujjat (Guvohnoma, Pasport, Avtosalon shartnomasi)</strong> bilan kredit beradi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#15</span>
+            <div class="bank-title">InfinBANK</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Savdo, xizmat ko‘rsatish, biznes-ipoteka va boshlang‘ich tadbirkorlar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Biznesga birinchi qadam»:</em> O‘zini o‘zi band qilganlarga 50 mln so‘mgacha (36 oy, 23–25%).
+            <br>• Biznes-ipoteka, mikrokreditlar va korporativ kredit liniyalari.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Biznes-ipotekada sotib olinayotgan noturar joyning o‘zi garov bo‘la oladi. Standart paket: Ariza, Ustav, Guvohnoma, Ta’sischilar qarori, 1–2 shakl balans, Baholash hisoboti va Sug‘urta polisi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#16</span>
+            <div class="bank-title">Orient Finans Bank (OFB)</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Savdo va xizmat ko‘rsatish korxonalarining aylanma mablag‘larini tezkor to‘ldirish.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«OFB Cash», «OFB Express», «OFB Ishonchli»:</em> 5 mlrd so‘mgacha, 36–60 oygacha, yillik 22–24% dan.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            «OFB Express» mahsulotida bankda faol aylanmasi bor mijozlar uchun soddalashtirilgan hujjatlar to‘plami va 2–3 kunlik tezkor ko‘rib chiqish amal qiladi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#17</span>
+            <div class="bank-title">Trastbank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Ulgurji va chakana savdo, «Ayol tadbirkor» va boshlang‘ich biznes.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Biznesga ilk qadam»:</em> O‘zini o‘zi band qilganlarga 30 mln so‘mgacha (25%, 36 oy — kafil, sug‘urta yoki avto garovi bilan).
+            <br>• <em>«Ayol tadbirkor» va savdo kreditlari:</em> 3 mlrd – 20 mlrd so‘mgacha (20–22%, 12–36 oy).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Savdo aylanmasi yuqori mijozlarga past foiz (20–22%) beradi, lekin garovga qo‘yiladigan avtotransport <strong>ishlab chiqarilganiga 5–7 yildan oshmagan bo‘lishi</strong> qat’iy talab qilinadi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#18</span>
+            <div class="bank-title">Asia Alliance Bank (AAB)</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Importyorlar (valyuta kreditlari), o‘rta biznes va YaTTlar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Biznes Standart»:</em> MChJga 5 mlrd, YaTTga 3 mlrd so‘mgacha, 60 oygacha (So‘mda 21–24%, USDda 13–16%, EURda 10–12%).
+            <br>• Biznes Overdraft, Biznes Ipoteka, Yoshlar va ayollar tadbirkorligi.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Xorijdan uskuna/tovar olib keluvchi kichik va o‘rta biznes uchun USD va EURda qulay liniyalari bor (tashqi savdo import kontrakti va baholangan 125% garov talab qilinadi).
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#19</span>
+            <div class="bank-title">Universalbank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Tijorat ko‘chmas mulki (Biznes-ipoteka), ayollar tadbirkorligi va Farg‘ona vodiysi / Toshkent kichik biznesi.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Business Ipoteka»:</em> 3 mlrd so‘mgacha, <strong>60–120 oygacha (10 yilgacha!)</strong>.
+            <br>• <em>«Business Woman»</em> va mikroqarzlar (20–100 mln so‘mgacha, 24–34%).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Do‘kon, ofis yoki ishlab chiqarish binosi sotib olish uchun <strong>10 yilgacha (120 oy)</strong> kredit beradigan kam sonli banklardan biri (oldi-sotdi shartnomasi, ta’sischilar bayonnomasi va 125% garov).
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#20</span>
+            <div class="bank-title">Garant bank (sobiq Savdogarbank)</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Kichik savdo korxonalari va onlayn skoring kreditlari.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Business Online»:</em> <strong>100 mln so‘mgacha garovsiz</strong> (hisobraqam aylanmasi asosida revolver liniya).
+            <br>• <em>«Biznes GO», «Biznes-Hamkor»:</em> 1 mlrd so‘m+, 12–60 oy, 25–28%.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            «Business Online» mahsulotida garov hujjatlari so‘ralmaydi — bankda asosiy/ikkilamchi hisobraqamda barqaror tushum va ijobiy kredit tarixi bo‘lishi yetarli.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#21</span>
+            <div class="bank-title">Poytaxt bank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Toshkent shahridagi kichik va o‘rta biznes hamda xizmat ko‘rsatish.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«MikroStart»:</em> 300 mln so‘mgacha (100 mln so‘mgacha qismi 3-shaxs kafilligi yoki sug‘urta polisi bilan).
+            <br>• <em>«Poytaxt Biznes»:</em> 5 mlrd so‘mgacha, 12–60 oy, 25.9% – 29.9%.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Kamida <strong>oxirgi 3 oylik bank hisobvarag‘i aylanmasi</strong>, 1 va 2-shakl balans hamda ta’sis hujjatlari (asosan Toshkent shahri tadbirkorlari uchun).
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#22</span>
+            <div class="bank-title">Madad Invest Bank</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Farg‘ona vodiysi va Toshkentdagi kichik tadbirkorlar, savdo va avtotransport.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«Business Active»</em> (asosiy vositalar va aylanma mablag‘), Investitsiyaviy kreditlar va avtokreditlar (so‘mda 28% dan va USDda).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Standart ta’sis va moliyaviy hujjatlar, xarid shartnomasi (invoys) hamda likvidli garov paketi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#23</span>
+            <div class="bank-title">Octobank (sobiq Ravnaq-bank)</div>
+            <span class="cluster-tag c-3">III. Xususiy SME</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Elektron tijorat (e-commerce), internet-ekvayring va tranzaksion biznes.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Masofaviy hisobraqam, korporativ kartalar, ekvayring va savdo aylanmalarini qisqa muddatli qo‘llab-quvvatlash.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            OneID va Octo-Mobile orqali onlayn identifikatsiya; uzoq muddatli sanoat kreditlaridan ko‘ra onlayn savdo ekvayringiga ixtisoslashgan.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c3">
+          <div class="bank-header">
+            <span class="bank-num">#24</span>
+            <div class="bank-title">Yevroosiyo Banki (Eurasia Bank)</div>
+            <span class="cluster-tag c-3">III. Xususiy / Tor segment</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Tor korporativ va hisob-kitob segmenti.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong> Ommaviy kichik biznes kreditlari bermaydi.</div>
+          <div class="unique-doc-box">
+            <strong>📄 «Yetak» uchun qoida:</strong> Kichik biznes va YaTTlarga ushbu bank tavsiya etilmaydi.
+          </div>
+        </div>
+
+        <!-- CLUSTER IV: 25-31 -->
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#25</span>
+            <div class="bank-title">TBC Bank (TBC Business)</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Kichik biznes va YaTTlar uchun 100% onlayn, qog‘ozbozliksiz va garovsiz kreditlash.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>TBC Business Onlayn Kredit:</em> 10 mln so‘mdan <strong>600 mln so‘mgacha, 3–36 oy, GAROVSIZ</strong> (33% – 38%).
+            <br>• Jismoniy shaxslar uchun onlayn mikroqarz (100 mln so‘mgacha).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            <strong>Qog‘oz hujjatlar 0 ta!</strong> Sharti: biznes kamida <strong>6 oydan beri faol</strong> bo‘lishi, TBC Business’da hisobraqam ochish va ilovada avtomatik skoringdan o‘tish.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#26</span>
+            <div class="bank-title">Anorbank</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> YaTT va MChJlar uchun masofaviy biznes kreditlar hamda jismoniy shaxslar uchun onlayn mikroqarz.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Yuridik shaxslar va YaTT uchun: <strong>500 mln so‘mgacha</strong>, 60 oygacha (bazaviy 21% dan o‘zgaruvchan stavka).
+            <br>• Onlayn mikroqarz va bo‘lib to‘lash kartalari: 100 mln so‘mgacha.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Universal shartnoma va ERI (elektron raqamli imzo) orqali masofaviy ariza; soliq va bank aylanmalari avtomatik tekshiriladi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#27</span>
+            <div class="bank-title">Apex Bank</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Tezkor garovsiz va garovli kichik biznes kreditlari hamda onlayn mikroqarzlar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>«SIMPLE» va «Biznes-progress start»:</em> <strong>100 mln so‘mgacha GAROVSIZ</strong>, 300 mln so‘mdan yuqorisi garov bilan (24% – 28%).
+            <br>• Onlayn mikroqarz: 100 mln so‘mgacha.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            100 mln so‘mgacha biznes kreditida garov hujjati so‘ralmaydi — faqat ta’sis hujjatlari, korxona qarori va moliyaviy hisobot kifoya.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#28</span>
+            <div class="bank-title">AVO Bank</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Jismoniy shaxslar va o‘zini o‘zi band qilganlar uchun mobil ilova orqali tezkor kredit limiti.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em>AVO Platinum kredit kartasi va Onlayn mikroqarz:</em> <strong>100 mln so‘mgacha, GAROVSIZ va KAFILSIZ</strong> (3–36 oy, 30 kungacha foizsiz imtiyozli davr, 34.9–49.9%).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Faqat Pasport/ID-karta va AVO ilovasida MyID identifikatsiya (5 daqiqada limit chiqadi).
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#29</span>
+            <div class="bank-title">Uzum Bank (Uzum Ekotizimi)</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Uzum Market sotuvchilari (sellerlar), mikro-tadbirkorlar va chakana mijozlar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Ilova orqali 25 mln so‘mgacha onlayn mikroqarz/limit; Uzum Market sotuvchilari uchun savdo aylanmasiga qarab aylanma mablag‘ moliyalashtiruvi.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Faqat biometrik identifikatsiya (MyID) va Uzum ekotizimidagi savdo/karta aylanmasi tarixi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#30</span>
+            <div class="bank-title">Open Bank (sobiq Smart Bank)</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Marketpleys, B2B/B2C bo‘lib to‘lash (rassrochka) va raqamli bank xizmatlari.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong> Hamkor sotuvchilar va xaridorlar uchun raqamli moliyalash va masofaviy hisobraqam.</div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            To‘liq elektron identifikatsiya (ERI va MyID).
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4">
+          <div class="bank-header">
+            <span class="bank-num">#31</span>
+            <div class="bank-title">Hayot Bank</div>
+            <span class="cluster-tag c-4">IV. Raqamli / Fintech</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Yuridik shaxslar, YaTT va o‘zini o‘zi band qilganlar uchun bepul hisobraqam va masofaviy kreditlash.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong> Onlayn mikroqarzlar va kichik biznesni masofaviy moliyalashtirish.</div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Pasport/ID-karta, STIR va ilova/sayt orqali onlayn ariza.
+          </div>
+        </div>
+
+        <!-- CLUSTER V: 32-35 + 36 CLOSED -->
+        <div class="bank-card" data-cluster="c5">
+          <div class="bank-header">
+            <span class="bank-num">#32</span>
+            <div class="bank-title">Tenge Bank (Halyk Group — Qozog‘iston)</div>
+            <span class="cluster-tag c-5">V. Xorijiy Sho‘ba</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Xorijiy banklar ichida YaTT va kichik biznesga eng yaqin va raqamlashgan bank.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• <em><code>Tenge Business</code> ilovasi orqali onlayn/ekspress kreditlar:</em> YaTT va kichik biznesga 36 oygacha (~25%).
+            <br>• Avtokredit, lizing va investitsion kreditlar.
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Pasport/ID-karta, <code>Tenge Business</code>da hisobvaraq hamda soliq va bank aylanmalari tekshiruvi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c5">
+          <div class="bank-header">
+            <span class="bank-num">#33</span>
+            <div class="bank-title">Ziraat Bank Uzbekistan (Turkiya)</div>
+            <span class="cluster-tag c-5">V. Xorijiy Sho‘ba</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> O‘zbekiston–Turkiya savdo-sanoat loyihalari, to‘qimachilik, qurilish va ishlab chiqarish.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Aylanma mablag‘ (18 oygacha revolver liniya) va Investitsiya kreditlari (7 yilgacha, UZS va xorijiy valyutada).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            <strong>Oxirgi 3 yil uchun moliyaviy hisobotlar (1 va 2-shakl balans)</strong> talab qilinadi! Yangi ochilgan kichik biznesga to‘g‘ri kelmaydi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c5">
+          <div class="bank-header">
+            <span class="bank-num">#34</span>
+            <div class="bank-title">KDB Bank Uzbekistan (Koreya)</div>
+            <span class="cluster-tag c-5">V. Xorijiy Sho‘ba</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Yirik korporatsiyalar, qo‘shma korxonalar va xalqaro kompaniyalar.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Aylanma mablag‘ (2 yilgacha) va Asosiy vositalar/lizing (5 yilgacha), UZS va USD (SOFR + marja).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            <strong>Ketma-ket 2 moliyaviy yil davomida zarar ko‘rgan kompaniyalarga kredit berish qat’iyan taqiqlangan.</strong> Oddiy YaTT va mikro-biznesga kredit bermaydi.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c5">
+          <div class="bank-header">
+            <span class="bank-num">#35</span>
+            <div class="bank-title">Saderat Bank Tashkent (Eron)</div>
+            <span class="cluster-tag c-5">V. Xorijiy Sho‘ba</span>
+          </div>
+          <div class="bank-meta"><strong>Fokus:</strong> Tashqi savdo (import-eksport) va ishlab chiqarishni rivojlantirish.</div>
+          <div class="bank-meta"><strong>Asosiy mahsulotlar:</strong>
+            <br>• Kontrakt asosida aylanma kapital (1–2 yil) va valyutadagi biznes kreditlar (12–60 oy, yillik 11–14%).
+          </div>
+          <div class="unique-doc-box">
+            <strong>📄 Boshqa banklardan farq qiluvchi hujjati:</strong>
+            Tashqi savdo kontraktlari (tovar/uskuna xarid shartnomasi), 1–2 shakl balans va 125% likvid garov.
+          </div>
+        </div>
+
+        <div class="bank-card" data-cluster="c4" style="opacity: 0.75;">
+          <div class="bank-header">
+            <span class="bank-num">#36</span>
+            <div class="bank-title">Yangi Bank (Litsenziyasi bekor qilingan)</div>
+            <span class="cluster-tag c-closed">Tugatilgan</span>
+          </div>
+          <div class="bank-meta"><strong>Holati:</strong> Markaziy bank tomonidan litsenziyasi chaqirib olingan va tugatish jarayonida.</div>
+          <div class="unique-doc-box">
+            <strong>⚠️ Eslatma:</strong> Yangi kredit va mikroqarzlar ajratmaydi. (BRBning «Yangi Biznes M-300» mahsuloti bilan adashtirmaslik kerak).
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 7: YETAK DECISION TREE & 3-LEVEL ROADMAP -->
+    <section id="roadmap">
+      <h2 class="section-title">🗺️ 7. «Yetak» Qoidalar Jadvali (Decision Matrix) va 3 Darajali Hujjatlar Yo‘l Xaritasi</h2>
+      <p class="section-desc">Tadbirkor «Yetak» agentiga kirganda, agent 5 ta savol orqali uni to‘g‘ri bank klasteriga va aniq hujjatlar yo‘l xaritasiga olib boradi:</p>
+
+      <div class="decision-step">
+        <div class="q">1-QADAM: Tadbirkorning yuridik maqomi qanaqa?</div>
+        <div class="decision-branches">
+          <div class="branch">
+            <span class="cond">👉 Ro‘yxatdan o‘tmagan yoki O‘zini o‘zi band qilgan:</span>
+            • Arzon/imtiyozli (14–21%) kerak bo‘lsa ➔ <span class="target">Xalq banki (oilakredit.uz), MKB, BRB, Aloqa, Infin, Trast («Biznesga birinchi qadam»)</span><br>
+            • Bugunoq tez va garovsiz kerak bo‘lsa ➔ <span class="target">TBC, Anorbank, AVO, Apex, Uzum (Onlayn mikroqarz 25–100 mln)</span>
+          </div>
+          <div class="branch">
+            <span class="cond">👉 YaTT yoki MChJ (Kamida 0–6 oy ishlagan, rasmiy balansi kam, lekin real savdosi/garovi bor):</span>
+            • Real kassa va ombor qoldig‘ini joyida hisoblaydigan banklar ➔ <span class="target">Hamkorbank, Ipak Yo‘li Bank, Davr Bank (Tijorat avto/ekspress)</span>
+          </div>
+          <div class="branch">
+            <span class="cond">👉 YaTT yoki MChJ (> 6–12 oy ishlagan, rasmiy oboroti bor, lekin GAROVI YO‘Q):</span>
+            • O‘quv sertifikati bilan 100 mln garovsiz ➔ <span class="target">BRB (PQ-306 dasturi)</span><br>
+            • Ilova va hisobraqam aylanmasi bilan (100–600 mln garovsiz) ➔ <span class="target">TBC Business, Ipak Yo‘li Online, Garant Online, Apex («SIMPLE»), Tenge Business</span>
+          </div>
+          <div class="branch">
+            <span class="cond">👉 MChJ (> 1–3 yil ishlagan, 1 va 2-shakl balansi foydada, 125% likvid garovi bor):</span>
+            • Yirik investitsiya, uskuna, ishlab chiqarish yoki biznes-ipoteka ➔ <span class="target">NBU, SQB, Asakabank, Ipoteka-bank, Kapitalbank, OFB, Universalbank (10 yil ipoteka), AAB, Ziraat</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin: 32px 0 16px; color: #fff; font-size: 1.35rem;">📋 Tadbirkor Tayyorlaydigan Hujjatlarning 3 Darajasi («Yetak» Roadmap Bosqichlari)</h3>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 4px solid var(--accent);">
+          <h3>🟢 1-Daraja: Boshlang‘ich / Onlayn (0 ta qog‘oz)</h3>
+          <p class="bank-meta" style="margin-bottom: 12px;"><em>Raqamli banklar va «Biznesga birinchi qadam» uchun</em></p>
+          <ol>
+            <li><strong><code>my.gov.uz</code>:</strong> «Kredit bitimini tuzishga taqiq» (Self-ban) o‘chirilganini tekshirish.</li>
+            <li><strong>Soliq ilovasi / Davlat xizmatlari:</strong> O‘zini o‘zi band qilish yoki YaTT guvohnomasini hamda ERI (elektron imzo) kalitini olish.</li>
+            <li><strong>Soliq ilovasi (Payme/Click):</strong> Kamida <strong>1 BHM ijtimoiy soliq</strong> to‘lash va kvitansiyani yuklab olish (MKB, BRB, Aloqa, Trast, Infin uchun).</li>
+            <li><strong>Mobil ilova:</strong> MyID (Face-ID) identifikatsiyadan o‘tish va ariza yuborish.</li>
+          </ol>
+        </div>
+
+        <div class="card" style="border-top: 4px solid var(--warning);">
+          <h3>🟡 2-Daraja: Imtiyozli Davlat Dasturlari</h3>
+          <p class="bank-meta" style="margin-bottom: 12px;"><em><code>oilakredit.uz</code> va PQ-306 (100 mln garovsiz) uchun</em></p>
+          <ol>
+            <li><strong>Yo‘nalish A (Oilaviy kredit — Xalq banki / MKB / Agro):</strong>
+              <br>• <code>oilakredit.uz</code> da ERI bilan ariza berish;
+              <br>• Mahalladagi <strong>Hokim yordamchisi</strong> joyiga chiqib o‘rganishi va ijobiy <strong>Tavsiyanoma</strong> berishi;
+              <br>• <code>smart-market.uz</code> dan ta’minotchi shartnomasini tanlash.
+            </li>
+            <li><strong>Yo‘nalish B (PQ-306 — BRB 100 mln garovsiz):</strong>
+              <br>• «Kichik biznesga ko‘maklashish markazi»da qisqa o‘quv kursida o‘qish;
+              <br>• Biznes-reja himoya qilib, <strong>Maxsus Sertifikat</strong> olish;
+              <br>• Sug‘urta polisi yoki «Tadbirkorlikni rivojlantirish kompaniyasi» portfel kafilligini rasmiylashtirish.
+            </li>
+          </ol>
+        </div>
+
+        <div class="card" style="border-top: 4px solid var(--primary);">
+          <h3>🔵 3-Daraja: Standart Bank Biznes Krediti (To‘liq Paket)</h3>
+          <p class="bank-meta" style="margin-bottom: 12px;"><em>Barcha tijorat banklarida yirik va garovli kreditlar uchun</em></p>
+          <ol>
+            <li><strong>Korporativ paket:</strong> Guvohnoma, Ustav, Direktor buyrug‘i + <strong>Ta’sischilarning kredit olish va garovga qo‘yish haqidagi Bayonnomasi (Qarori)</strong>.</li>
+            <li><strong>Moliyaviy paket:</strong> Soliqqa topshirilgan 1 va 2-shakl balans + <strong>Biznes-reja (TEO) va Cash-Flow jadvali</strong>.</li>
+            <li><strong>Maqsadli kontraktlar:</strong> Uskuna/tovar sotib olish shartnomasi (SQB/Ipoteka/NBU uchun 2–3 ta muqobil narx taklifi bilan) + <code>ijara.soliq.uz</code> joy ijarasi.</li>
+            <li><strong>Garov paketi (125%):</strong> Kadastr/Texpasport + Litsenziyalangan <strong>Mustaqil baholovchi hisoboti (Otsenka)</strong> + Mulkdor turmush o‘rtog‘ining <strong>Notarial roziligi</strong> + Garov sug‘urta polisi.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p><strong>«YETAK» Loyihasi uchun maxsus tayyorlandi</strong> • Umummilliy AI Xakaton (Toshkent, 2026) • Barcha 35 ta bank ma’lumotlari Markaziy bank (cbu.uz), Bank.uz, Depozit.uz va banklarning rasmiy saytlari asosida jamlandi.</p>
+  </footer>
+
+  <script>
+    let currentCluster = 'all';
+
+    function setCluster(cluster, btn) {
+      currentCluster = cluster;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterBanks();
+    }
+
+    function filterBanks() {
+      const q = document.getElementById('bankSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.bank-card');
+      cards.forEach(card => {
+        const matchCluster = (currentCluster === 'all') || (card.getAttribute('data-cluster') === currentCluster);
+        const matchText = card.innerText.toLowerCase().includes(q);
+        card.style.display = (matchCluster && matchText) ? 'flex' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
