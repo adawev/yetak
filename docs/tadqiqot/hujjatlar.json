@@ -1,0 +1,452 @@
+{
+  "_izoh": "Yetak tadqiqoti. Har mahsulotda 'manba' bor. null = manbada topilmadi. Batafsil: docs/QOIDALAR.md 4-bo'lim.",
+  "tekshirilgan_sana": "2026-11-18",
+  "hujjatlar": {
+    "ariza": {
+      "nom": "Kredit arizasi",
+      "qayerdan": "bank (shakl yoki ilova)",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "pasport": {
+      "nom": "Pasport yoki ID-karta",
+      "qayerdan": "tadbirkorda",
+      "onlayn": false,
+      "bank_ozi_oladi": false
+    },
+    "tasis": {
+      "nom": "Ta'sis hujjatlari (barcha tahrirlari)",
+      "qayerdan": "korxonada",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "tasischi_qarori": {
+      "nom": "Ta'sischilar / boshqaruv organining kredit olish haqida qarori (roziligi)",
+      "qayerdan": "korxona tuzadi",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "litsenziya": {
+      "nom": "Litsenziya yoki ruxsatnoma (faoliyat talab qilsa)",
+      "qayerdan": "license.gov.uz, my.gov.uz",
+      "onlayn": true,
+      "bank_ozi_oladi": false,
+      "manba": "https://buxgalter.uz/ru/publish/doc/text175602_kakie_licenzii_mojno_poluchit_cherez_epigu"
+    },
+    "faoliyat_joyi": {
+      "nom": "Faoliyat joyi hujjati (ijara guvohnomasi yoki mulk hujjati)",
+      "qayerdan": "ijara.soliq.uz (ijara) / my.gov.uz yoki DXM (mulk)",
+      "onlayn": true,
+      "bank_ozi_oladi": false,
+      "manba": "https://buxgalter.uz/oz/publish/doc/text175350_yuriqnoma_ijara_shartnomasi_e-ijara_da_qanday_ruyhatdan_utkaziladi"
+    },
+    "moliyaviy_hisobot": {
+      "nom": "Balans (1-shakl) va moliyaviy natijalar (2-shakl)",
+      "qayerdan": "soliq shaxsiy kabineti (ERI)",
+      "onlayn": true,
+      "bank_ozi_oladi": "ba'zan (SQB elektron oladi)",
+      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti"
+    },
+    "boshqa_bank_aylanma": {
+      "nom": "Boshqa banklardagi aylanma haqida ma'lumotnoma",
+      "qayerdan": "har bir bankdan",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "daromad_manbalari": {
+      "nom": "Daromad manbalari haqida ma'lumot (YaTT)",
+      "qayerdan": "tadbirkor",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "pul_oqimi": {
+      "nom": "Pul oqimi prognozi",
+      "qayerdan": "tadbirkor o'zi tuzadi",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "oldi_sotdi": {
+      "nom": "Oldi-sotdi shartnomasi yoki invoys",
+      "qayerdan": "sotuvchi",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "ozini_ozi_band": {
+      "nom": "O'zini o'zi band qilganlik ma'lumotnomasi (QR)",
+      "qayerdan": "«Soliq» mobil ilovasi",
+      "onlayn": true,
+      "narx": 0,
+      "bank_ozi_oladi": false,
+      "manba": "https://gov.uz/oz/soliq/news/view/36075"
+    },
+    "ijtimoiy_soliq": {
+      "nom": "Ijtimoiy soliq to'langanligi",
+      "qayerdan": "my3.soliq.uz yoki SoliqUZ ilovasi",
+      "onlayn": true,
+      "bank_ozi_oladi": false
+    },
+    "faoliyat_turlari_skrinshot": {
+      "nom": "«Soliq» ilovasi: «Mening faoliyat turlarim» skrinshoti",
+      "qayerdan": "«Soliq» ilovasi → Umumiy xizmatlar → O'zini o'zi band qilish → Mening faoliyat turlarim",
+      "onlayn": true,
+      "narx": 0,
+      "bank_ozi_oladi": false,
+      "manba": "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf"
+    },
+    "garov": {
+      "nom": "Garov / ta'minot hujjatlari",
+      "qayerdan": "mulk egasida",
+      "onlayn": null,
+      "bank_ozi_oladi": false
+    },
+    "baholovchi": {
+      "nom": "Mustaqil baholovchi hisoboti",
+      "qayerdan": "baholash tashkiloti (pullik)",
+      "onlayn": false,
+      "bank_ozi_oladi": false,
+      "manba": "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/"
+    },
+    "kafil_hujjatlari": {
+      "nom": "Kafil korxona: ta'sischilar roziligi, balans, ta'sis hujjatlari, aylanma",
+      "qayerdan": "kafil korxona",
+      "onlayn": null,
+      "bank_ozi_oladi": false,
+      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti"
+    },
+    "kredit_tarixi": {
+      "nom": "Kredit tarixi",
+      "qayerdan": "KATM — my.gov.uz, KATM ilovasi, portal.infokredit.uz",
+      "onlayn": true,
+      "narx_izoh": "yiliga 1 marta bepul",
+      "bank_ozi_oladi": true,
+      "manba": "https://buxgalter.uz/oz/publish/doc/text171228_qanday_qilib_uydan_kredit_tarihini_tekshirish_mumkin_qadamma-qadam_yuriqnoma"
+    }
+  },
+  "mahsulotlar": [
+    {
+      "id": "kapitalbank_standart",
+      "bank": "Kapitalbank",
+      "nom": "Standart biznes krediti",
+      "manba": "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/",
+      "manba_holati": "matbuot (reklama)",
+      "kimga": {
+        "subyekt": [
+          "yuridik_shaxs",
+          "yatt"
+        ],
+        "faoliyat_oy_min": 6,
+        "faoliyat_izoh": "«odatda»",
+        "zarar_bilan_ishlamasin": true,
+        "kredit_tarixi": "salbiy bo'lmasin",
+        "shu_bankda_hisob": true
+      },
+      "summa_max_som": null,
+      "muddat_oy_max": null,
+      "foiz": null,
+      "garov_foiz_min": 125,
+      "hujjatlar": [
+        {
+          "hujjat": "ariza"
+        },
+        {
+          "hujjat": "tasis",
+          "shart": "yuridik_shaxs"
+        },
+        {
+          "hujjat": "tasischi_qarori",
+          "shart": "yuridik_shaxs"
+        },
+        {
+          "hujjat": "litsenziya",
+          "shart": "faoliyat talab qilsa"
+        },
+        {
+          "hujjat": "faoliyat_joyi"
+        },
+        {
+          "hujjat": "moliyaviy_hisobot",
+          "shart": "yuridik_shaxs"
+        },
+        {
+          "hujjat": "boshqa_bank_aylanma",
+          "shart": "yuridik_shaxs"
+        },
+        {
+          "hujjat": "daromad_manbalari",
+          "shart": "yatt"
+        },
+        {
+          "hujjat": "garov"
+        },
+        {
+          "hujjat": "baholovchi",
+          "shart": "garov bo'lsa"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "kredit_tarixi"
+      ]
+    },
+    {
+      "id": "sqb_tezkor_plus",
+      "bank": "SQB",
+      "nom": "Tezkor+",
+      "manba": "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti",
+      "manba_holati": "tasdiqlangan (bank sahifasi)",
+      "kimga": {
+        "subyekt": [
+          "yuridik_shaxs",
+          "yatt"
+        ],
+        "faoliyat_oy_min_summaga_qarab": [
+          {
+            "summa_usd_max": 50000,
+            "oy": 6
+          },
+          {
+            "summa_usd_max": 200000,
+            "oy": 12
+          },
+          {
+            "summa_usd_max": 500000,
+            "oy": 24
+          }
+        ],
+        "qarz_yuki_max_foiz": 100,
+        "qarz_yuki_max_foiz_200k_usd_dan_katta": 50,
+        "oxirgi_6_oy_har_oy_tushum": true,
+        "kechikish_90_kundan_ortiq": false,
+        "mulkdor_almashmagan_oy": 6
+      },
+      "summa_usd": [
+        7000,
+        500000
+      ],
+      "yatt_summa_max_som": 1000000000,
+      "muddat_oy_max": 36,
+      "imtiyozli_oy": 3,
+      "foiz": {
+        "som": 25,
+        "som_ish_orni_yaratilmasa": 31,
+        "valyuta": 12
+      },
+      "garov_foiz_min": 135,
+      "hujjatlar": [
+        {
+          "hujjat": "ariza"
+        },
+        {
+          "hujjat": "tasis"
+        },
+        {
+          "hujjat": "tasischi_qarori",
+          "shart": "xususiy korxonaga shart emas"
+        },
+        {
+          "hujjat": "garov"
+        },
+        {
+          "hujjat": "baholovchi",
+          "shart": "mulk garovga qo'yilsa"
+        },
+        {
+          "hujjat": "kafil_hujjatlari",
+          "shart": "kafillik berilsa"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "kredit_tarixi",
+        "moliyaviy_hisobot (elektron olsa)",
+        "mulkdor o'zgarishi (my.gov.uz, stat.uz)"
+      ]
+    },
+    {
+      "id": "hamkorbank_pq312",
+      "bank": "Hamkorbank",
+      "nom": "Kichik biznesga ko'mak (PQ-312)",
+      "manba": "https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf",
+      "manba_holati": "tasdiqlangan (kredit pasporti)",
+      "kimga": {
+        "subyekt": [
+          "kichik_biznes"
+        ],
+        "faoliyat_oy_min": 12,
+        "kredit_tarixi": "12 oyda kechikishlar jami <= 90 kun, so'ndirilmagan muddati o'tgan qarz yo'q, yoki tarix yo'q"
+      },
+      "summa_max_som": 300000000,
+      "garovsiz_qism_som": 100000000,
+      "muddat_oy_max": {
+        "asosiy_vosita": 84,
+        "aylanma": 36
+      },
+      "foiz_100mln_gacha": {
+        "hudud_5": 18,
+        "hudud_4": 19,
+        "hudud_3": 21,
+        "hudud_2": 23,
+        "hudud_1": 24
+      },
+      "taqiqlangan_maqsad": [
+        "eski qarzni yopish",
+        "qimor",
+        "alkogol",
+        "tamaki"
+      ],
+      "hujjatlar": [
+        {
+          "hujjat": "ariza"
+        },
+        {
+          "hujjat": "pul_oqimi"
+        },
+        {
+          "hujjat": "tasischi_qarori",
+          "shart": "yuridik_shaxs"
+        },
+        {
+          "hujjat": "oldi_sotdi"
+        },
+        {
+          "hujjat": "faoliyat_joyi",
+          "shart": "yoki kassa/terminal cheklari"
+        },
+        {
+          "hujjat": "garov",
+          "shart": "100 mln dan oshgan qismi"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "kichik biznes toifasi (my3.soliq.uz / integratsiya)",
+        "ro'yxat sanasi",
+        "12 oylik aylanma yoki patent to'lovi",
+        "kredit_tarixi"
+      ]
+    },
+    {
+      "id": "hamkorbank_biznesga_qadam",
+      "bank": "Hamkorbank",
+      "nom": "Biznesga qadam",
+      "manba": "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf",
+      "manba_holati": "tasdiqlangan (kredit pasporti)",
+      "kimga": {
+        "subyekt": [
+          "ozini_ozi_band"
+        ],
+        "yosh": [
+          21,
+          60
+        ],
+        "ozini_ozi_band_bolganiga_oy_max": 6,
+        "kredit_tarixi": "salbiy bo'lmasin",
+        "muddati_otgan_qarz": false
+      },
+      "summa_max_som": 100000000,
+      "muddat_oy_max": 36,
+      "foiz": {
+        "10mln_gacha": 25,
+        "10mln_dan_yuqori": 28
+      },
+      "garov": {
+        "10mln_gacha": "sug'urta polisi yoki rasmiy daromadli kafil",
+        "100mln_gacha": "depozit, noturar ko'chmas mulk, avto yoki tilla"
+      },
+      "hujjatlar": [
+        {
+          "hujjat": "ariza"
+        },
+        {
+          "hujjat": "pasport"
+        },
+        {
+          "hujjat": "oldi_sotdi",
+          "shart": "pul naqdsiz o'tkazilsa"
+        },
+        {
+          "hujjat": "ozini_ozi_band"
+        },
+        {
+          "hujjat": "ijtimoiy_soliq"
+        },
+        {
+          "hujjat": "faoliyat_turlari_skrinshot"
+        },
+        {
+          "hujjat": "garov"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "kredit_tarixi"
+      ]
+    },
+    {
+      "id": "mikrokreditbank_birinchi_qadam",
+      "bank": "Mikrokreditbank",
+      "nom": "Biznesga birinchi qadam",
+      "manba": "https://mkbank.uz/uz/private/crediting/biznesga-birinchi-qadam-mikroqarz/",
+      "manba_holati": "tasdiqlangan (bank sahifasi)",
+      "kimga": {
+        "subyekt": [
+          "ozini_ozi_band"
+        ],
+        "yosh": [
+          18,
+          55
+        ],
+        "rasmiy_daromadi_yoq": true,
+        "muddati_otgan_qarz": false,
+        "jami_qarz_max_som": 100000000
+      },
+      "summa_max_som": 50000000,
+      "muddat_oy": [
+        24,
+        84
+      ],
+      "foiz": 21,
+      "imtiyozli_oy": 6,
+      "garov_foiz_min": 125,
+      "garov_izoh": "kafillik yoki mulk (10 yildan eski bo'lmagan yengil avto)",
+      "hujjatlar": [
+        {
+          "hujjat": "pasport"
+        },
+        {
+          "hujjat": "ozini_ozi_band"
+        },
+        {
+          "hujjat": "garov"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "kredit_tarixi"
+      ]
+    },
+    {
+      "id": "ipakyoli_onlayn",
+      "bank": "Ipak Yo'li",
+      "nom": "Tadbirkorlar uchun onlayn kredit",
+      "manba": "https://en.ipakyulibank.uz/legal/credit/online-loan-for-business",
+      "manba_holati": "tasdiqlangan (bank sahifasi)",
+      "kimga": {
+        "subyekt": [
+          "yatt"
+        ],
+        "oxirgi_12_oy_aylanma": true,
+        "shu_bankda_hisob": true
+      },
+      "summa_max_som": 200000000,
+      "muddat_oy_max": 12,
+      "foiz": 30,
+      "garov_foiz_min": 0,
+      "hujjatlar": [
+        {
+          "hujjat": "ariza",
+          "shart": "ilovada"
+        }
+      ],
+      "bank_ozi_tekshiradi": [
+        "12 oylik aylanma (avtomatik)",
+        "kredit_tarixi"
+      ]
+    }
+  ]
+}
