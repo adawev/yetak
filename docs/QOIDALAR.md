@@ -58,6 +58,74 @@ Bank aynan nimani so'raydi (bitta bank misolida). Qaysi biri davlat tizimidan av
 
 **Asosiy topilma:** davlat banklari qarz oluvchidan **102 ta hujjat** so'raydi; shundan **53 tasi (≈52%)** onlayn tizimlarda allaqachon bor ma'lumotni takrorlaydi, **22 tasi (≈22%)** kreditga umuman aloqasiz — [Spot, 22.10.2026](https://www.spot.uz/oz/2026/10/22/loans-redundancy/) (matbuot). 500 mln so'mgacha kreditlarda biznes-rejani olib tashlash taklif qilingan (o'sha manba).
 
+### 4.0. Hujjatlar jadvali: 5 bank, 6 mahsulot (eng muhim qism)
+
+**Ustunlar (mahsulot → manba):**
+- **KAP** — Kapitalbank, standart biznes krediti (YuSh = yuridik shaxs, YaTT) → [Spot / Kapitalbank](https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/) (reklama)
+- **SQB** — SQB «Tezkor+» (kichik biznes) → [sqb.uz](https://sqb.uz/uz/business/small-business-credits/tezkor-krediti)
+- **HAM-312** — Hamkorbank «Kichik biznesga ko'mak» (PQ-312, 1 yildan ortiq ishlagan) → [kredit pasporti](https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf)
+- **HAM-Q** — Hamkorbank «Biznesga qadam» (yangi o'zini o'zi band qilgan) → [kredit pasporti](https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf)
+- **MKB** — Mikrokreditbank «Biznesga birinchi qadam» → [mkbank.uz](https://mkbank.uz/uz/private/crediting/biznesga-birinchi-qadam-mikroqarz/)
+- **IPAK** — Ipak Yo'li onlayn kredit (YaTT) → [ipakyulibank.uz](https://en.ipakyulibank.uz/legal/credit/online-loan-for-business)
+
+Belgilar: ✅ so'raydi · ⚙️ bank o'zi bazadan oladi · ➕ faqat ma'lum holatda · — ro'yxatda yo'q · ? manbada aytilmagan
+
+#### A. Tadbirkor o'zi olib keladigan hujjatlar
+
+| Hujjat | KAP | SQB | HAM-312 | HAM-Q | MKB | IPAK | Necha bank so'raydi |
+|---|---|---|---|---|---|---|---|
+| Kredit arizasi | ✅ | ✅ | ✅ | ✅ | ? | ✅ (ilovada) | **5/6 — umumiy** |
+| Garov / ta'minot hujjatlari | ✅ | ✅ | ➕ 100 mln dan oshgan qismi | ➕ 10 mln dan oshsa (pastda — sug'urta yoki kafil) | ✅ 125% kafillik yoki mulk | — garovsiz | **5/6 — umumiy** |
+| Pasport / ID-karta | ? | ? | ? | ✅ | ✅ | ? | 2/6 |
+| Ta'sis hujjatlari (barcha tahrirlari) | ✅ YuSh | ✅ | — | — | — | — | 2/6 (faqat YuSh) |
+| Ta'sischilar / boshqaruv organi roziligi (qarori) | ✅ YuSh (+ rahbar buyrug'i) | ✅ (xususiy korxonaga shart emas) | ✅ YuSh | — | — | — | **3/6 — YuSh uchun umumiy** |
+| Faoliyat joyi hujjati (mulk yoki ijara) | ✅ | — | ✅ yoki joydagi kassa/terminal cheklari | — | — | — | 2/6 |
+| Litsenziya / ruxsatnoma (faoliyat talab qilsa) | ✅ | — | — | — | — | — | 1/6 |
+| Moliyaviy hisobot: balans (1-shakl) + moliyaviy natijalar (2-shakl), batafsil | ✅ YuSh | ➕ faqat kafil korxona uchun; bank elektron olsa kerak emas | — | — | — | — | 1–2/6 |
+| Boshqa banklardagi aylanma haqida ma'lumotnoma | ✅ YuSh | ➕ faqat kafil uchun | — | — | — | ⚙️ | 1–2/6 |
+| Daromad manbalari haqida ma'lumot | ✅ YaTT | — | — | — | — | — | 1/6 |
+| Pul oqimi prognozi | ✅ (tavsiya) | — | ✅ | — | — | — | 2/6 |
+| Oldi-sotdi shartnomasi (nima sotib olinadi) | — | — | ✅ | ➕ pul naqdsiz o'tkazilsa | — | — | 2/6 |
+| O'zini o'zi band qilganlik guvohnomasi | — | — | — | ✅ | ✅ | — | 2/6 |
+| Ijtimoiy soliq to'langanligi | — | — | — | ✅ | — | — | 1/6 |
+| Soliq ilovasidan skrinshot: «Mening faoliyat turlarim» | — | — | — | ✅ | — | — | 1/6 |
+| Mustaqil baholovchi hisoboti (garov uchun) | ✅ | ✅ | ? | ? | ? | — | 2/6 |
+| Uchinchi shaxs mulki garovda: o'sha korxona ta'sischilari roziligi + ta'sis hujjatlari | — | ➕ | — | — | — | — | 1/6 |
+| Kafil korxona: ta'sischilar roziligi, balans, ta'sis hujjatlari, aylanma | — | ➕ kafillik berilsa | — | — | — | — | 1/6 |
+| «Loyihaga qarab boshqa hujjatlar» | ? | ✅ | ✅ | — | — | — | ochiq qoldirilgan |
+
+#### B. Bank o'zi tekshiradigan narsalar (tadbirkordan hujjat shart emas)
+
+| Nima | Qayerdan | Kim | Manba |
+|---|---|---|---|
+| Kredit tarixi | Kredit byurosi (KATM) | hamma banklar | [Kun.uz / MB](https://kun.uz/news/2022/05/25/mb-tijorat-banklari-nega-koplab-fuqarolarning-kredit-sorovlarini-rad-etayotganini-tushuntirdi) |
+| Kichik biznes toifasi, ro'yxatdan o'tgan sana, faoliyat bor-yo'qligi | my3.soliq.uz yoki TRK bilan integratsiya; patent to'lovi; 12 oylik hisob aylanmasi | HAM-312 | [Hamkorbank pasporti](https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf) |
+| Balans va moliyaviy natijalar (1–2 shakl) | soliq bazasi (elektron) | SQB (agar elektron olsa — qog'oz so'ramaydi) | [sqb.uz](https://sqb.uz/uz/business/small-business-credits/tezkor-krediti) |
+| Oxirgi 12 oy aylanma | bank ilovasi, avtomatik | IPAK | [ipakyulibank.uz](https://en.ipakyulibank.uz/legal/credit/online-loan-for-business) |
+| Mulkdor almashganmi | my.gov.uz, stat.uz, ihamkor.uz | SQB | [sqb.uz](https://sqb.uz/uz/business/small-business-credits/tezkor-krediti) |
+| Kompaniya kredit tarixi | YIDXP — tadbirkor o'zi oldindan olishi mumkin | KAP | [Spot](https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/) |
+
+#### C. Bank siyosatiga xos talablar (hujjat emas, shart)
+
+| Shart | KAP | SQB | HAM-312 | HAM-Q | MKB | IPAK |
+|---|---|---|---|---|---|---|
+| Faoliyat muddati | odatda ≥ 6 oy | ≥ 6 oy (50 ming $ gacha), ≥ 12 oy (200 ming $ gacha), ≥ 24 oy (500 ming $ gacha) | ≥ 1 yil | aksincha: o'zini o'zi band bo'lib ro'yxatdan o'tganiga **≤ 6 oy** | o'zini o'zi band, rasmiy daromadi yo'q | oxirgi 12 oyda aylanma |
+| Shu bankda hisob raqam | majburiy | oxirgi 6 oyda har oy tushum | — | — | — | majburiy |
+| Kredit tarixi | salbiy bo'lmasin | KATM'da «qoniqarsiz/shubhali/umidsiz» yo'q; 60 oyda 90 kundan ortiq kechikish yo'q | 12 oyda kechikishlar jami ≤ 90 kun yoki tarix yo'q | salbiy bo'lmasin | muddati o'tgan qarz yo'q, jami qarz ≤ 100 mln | ? |
+| Qarz yuki | ? | ≤ 100% (200 ming $ dan katta kreditda ≤ 50%) | — | — | — | ? |
+| Garov | ≥ 125% | ≥ 135% (bog'liq shaxsga 140%) | 100 mln dan oshgan qismi | 10 mln gacha — sug'urta yoki kafil; 100 mln gacha — to'liq garov | ≥ 125% | yo'q |
+| Yosh | — | — | — | 21–60 | 18–55 | — |
+| Boshqa | zarar bilan ishlamasin | 6 oyda (yirikda 12 oy) mulkdor almashmagan; ijro ishi yo'q; o'z binosi yo'q savdo/xizmatga ≤ 100 ming $ | maqsad: eski qarzni yopish, qimor, alkogol, tamaki — taqiq | — | — | faqat YaTT, faqat so'm |
+
+#### D. Xulosa: Yetak tadbirkordan nimani so'rashi kerak (taklif, jamoa tasdiqlashi kerak)
+
+1. **Bir marta, hamma bank uchun:** STIR/JSHSHIR, pasport/ID, elektron imzo yoki MyID, ariza ma'lumotlari (summa, muddat, maqsad), garov haqida ma'lumot (bormi, nima, qancha turadi). Bu jadvaldagi 5/6 bankni qoplaydi.
+2. **Yuridik shaxsga qo'shimcha:** ta'sis hujjatlari va ta'sischilar qarori (3/6 bank so'raydi).
+3. **Faqat tanlangan bankka:** litsenziya va daromad ma'lumoti (KAP), pul oqimi prognozi va oldi-sotdi shartnomasi (HAM-312), soliq ilovasi skrinshoti va ijtimoiy soliq to'lovi (HAM-Q), baholovchi hisoboti (KAP, SQB).
+4. **So'ramaslik kerak, bank o'zi oladi:** kredit tarixi, soliq hisobotlari (SQB va HAM-312 elektron oladi), hisob aylanmasi (IPAK).
+
+Bu jadvaldan agent tadbirkor holatiga qarab bankni ham tanlay oladi: yangi o'zini o'zi band → HAM-Q yoki MKB; 1 yildan ortiq ishlagan, garovi yo'q → HAM-312 (100 mln gacha garovsiz) yoki IPAK (YaTT); garovi bor → KAP yoki SQB.
+
 ### 4.1. Kapitalbank — yuridik shaxs (standart to'plam)
 
 | Hujjat | Kim beradi | Avtomatik olinadimi | Manba |
