@@ -109,18 +109,18 @@ function RuxsatYoq({ rol, f }: { rol: Rol; f: Foydalanuvchi }) {
   const yol = location.pathname
   return (
     <main className="flex h-full items-center justify-center p-4">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 text-center shadow-sm">
-        <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-primary">
+      <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 text-center">
+        <span className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-border">
           <LockKeyhole size={22} />
         </span>
-        <h1 className="font-display text-xl font-semibold">Bu oyna {KIMGA[rol]} uchun</h1>
+        <h1 className="text-xl font-semibold">Bu oyna {KIMGA[rol]} uchun</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Siz <b className="text-foreground">{f.ism}</b> — {ROL_NOMI[f.rol]} sifatida kirgansiz.
         </p>
         <button
           type="button"
           onClick={() => void chiqish().then(() => nav(`/login?next=${encodeURIComponent(yol)}`))}
-          className="mt-5 min-h-11 w-full rounded-lg bg-primary font-medium text-white"
+          className="mt-5 min-h-11 w-full rounded-lg bg-foreground font-medium text-background"
         >
           {ROL_NOMI[rol][0].toUpperCase() + ROL_NOMI[rol].slice(1)} akkaunti bilan kirish
         </button>

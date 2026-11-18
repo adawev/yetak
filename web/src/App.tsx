@@ -1,5 +1,6 @@
 import { ChartPie, Inbox, LogIn, LogOut, MessageCircleMore, type LucideIcon } from 'lucide-react'
-import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { Ikon } from '@/components/Ikon'
 import { AuthProvider, Himoya, useAuth } from '@/lib/auth'
 import Admin from '@/pages/Admin'
@@ -21,21 +22,40 @@ function MenyuIkon({ to, nom, belgi: Belgi }: { to: string; nom: string; belgi: 
   )
 }
 
+const NOMLAR: [RegExp, string][] = [
+  [/^\/chat/, 'Suhbat'],
+  [/^\/login/, 'Kirish'],
+  [/^\/register/, "Ro'yxatdan o'tish"],
+  [/^\/bank\/./, 'Ariza'],
+  [/^\/bank/, 'Arizalar'],
+  [/^\/admin/, 'Boshqaruv'],
+]
+
+/** Brauzer yorlig'idagi nom sahifaga qarab o'zgaradi. */
+function SahifaNomi() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const nom = NOMLAR.find(([r]) => r.test(pathname))?.[1]
+    document.title = nom ? `${nom} · Yetak` : "Yetak — kreditga tayyor bo'lib boring"
+  }, [pathname])
+  return null
+}
+
 function Sarlavha() {
   const { f, chiqish } = useAuth()
   const nav = useNavigate()
   return (
-    <header className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2">
+    <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4 sm:px-6">
       <Link to="/" className="flex items-center gap-2" aria-label="Yetak — bosh sahifa">
         <picture>
           <source srcSet="/yetak-mark-dark.svg" media="(prefers-color-scheme: dark)" />
-          <img src="/yetak-mark.svg" alt="" className="h-7 w-7" />
+          <img src="/yetak-mark.svg" alt="" className="h-6 w-6" />
         </picture>
-        <span className="font-display text-xl font-bold tracking-tight">Yetak</span>
+        <span className="text-lg font-bold tracking-tight">Yetak</span>
       </Link>
 
       <nav className="ml-auto flex items-center gap-2" aria-label="Asosiy menyu">
-        <div className="flex items-center gap-0.5 rounded-full border border-border bg-card p-1 shadow-sm">
+        <div className="flex items-center gap-1">
           {(!f || f.rol === 'tadbirkor') && <MenyuIkon to="/chat" nom="Suhbat" belgi={MessageCircleMore} />}
           {f?.rol === 'bank' && <MenyuIkon to="/bank" nom="Arizalar" belgi={Inbox} />}
           {f?.rol === 'admin' && <MenyuIkon to="/admin" nom="Hisobot va banklar" belgi={ChartPie} />}
@@ -47,7 +67,7 @@ function Sarlavha() {
             <span
               title={f.ism}
               aria-label={f.ism}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft font-display font-semibold text-primary"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-sm font-semibold"
             >
               {f.ism.trim().charAt(0).toUpperCase()}
             </span>
@@ -79,6 +99,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <div className="flex h-dvh flex-col">
+          <SahifaNomi />
           <Sarlavha />
           <div className="min-h-0 flex-1">
             <Routes>
