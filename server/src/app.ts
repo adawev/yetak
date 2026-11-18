@@ -127,7 +127,13 @@ export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
         profil: s.profil,
         bajarilgan: s.bajarilgan,
       });
-      s.xabarlar.push(yangiXabar, { kim: "agent", matn: j.matn, vaqt: new Date().toISOString() });
+      s.xabarlar.push(yangiXabar, {
+        kim: "agent",
+        matn: j.matn,
+        vaqt: new Date().toISOString(),
+        ...(j.bloklar?.length ? { bloklar: j.bloklar } : {}),
+        ...(j.manbalar?.length ? { manbalar: j.manbalar } : {}),
+      });
       s.profil = j.profil;
       s.tugmalar = j.tugmalar;
       store.saqlash(s);

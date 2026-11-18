@@ -7,7 +7,7 @@ Node + TypeScript (Hono). API shakli: `docs/ARXITEKTURA.md`. Turlar: `shared/typ
 ```
 cd server
 yarn install
-ANTHROPIC_API_KEY=... yarn dev     # http://localhost:8787
+yarn dev                           # http://localhost:8787 (kalit: server/.env da ANTHROPIC_API_KEY=...)
 yarn test                          # qoidalar va API sinovlari (Claude chaqirilmaydi)
 ```
 

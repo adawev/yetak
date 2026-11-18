@@ -75,10 +75,32 @@ export interface Natija {
   hisob: Hisob;
 }
 
+/**
+ * Chat ichidagi boy blok. Agent qaysi blokni ko'rsatishni tanlaydi,
+ * raqamlarni server profil va rules.ts dan qo'yadi.
+ * `hukm` va `yol_xaritasi` sessiyaning joriy `natija` sidan chiziladi.
+ */
+export type Blok =
+  | { tur: "summa"; sarlavha: string; qiymat: number }
+  | { tur: "pul_oqimi"; tushum: number; xarajat: number; foyda: number; tolov: number }
+  | { tur: "garov"; bor: number; kerak: number }
+  | { tur: "hukm" }
+  | { tur: "yol_xaritasi" }
+  | { tur: "atama"; atama: string; izoh: string };
+
+/** Agent javobi tayangan manba (Claude citations). `parcha` — manbadan aynan keltirilgan matn. */
+export interface Iqtibos {
+  nom: string;
+  url: string;
+  parcha?: string;
+}
+
 export interface Xabar {
   kim: "agent" | "tadbirkor";
   matn: string;
   vaqt: string; // ISO
+  bloklar?: Blok[];
+  manbalar?: Iqtibos[];
 }
 
 /** Sessiyaning to'liq ko'rinishi (GET /api/sessions/:id va xabar javobi). */

@@ -2,8 +2,9 @@
 // Hech narsa hisoblamaydi: hisob va hukm rules.ts dan keladi.
 
 import Anthropic from "@anthropic-ai/sdk";
-import type { Natija, Profil, Xabar } from "../../shared/types";
+import type { Blok, Iqtibos, Natija, Profil, Xabar } from "../../shared/types";
 import { config } from "./config";
+import { KORPUS } from "./korpus.generated";
 import { profilniTozalash } from "./profil";
 import { baholash, yetishmayotgan } from "./rules";
 
@@ -17,6 +18,10 @@ export interface AgentJavob {
   matn: string;
   tugmalar: string[];
   profil: Profil;
+  /** Chatda ko'rsatiladigan bloklar; raqamlar profil va rules.ts dan. */
+  bloklar?: Blok[];
+  /** Javob tayangan manbalar (Claude citations). */
+  manbalar?: Iqtibos[];
 }
 
 export interface Agent {
@@ -49,7 +54,15 @@ Vazifang:
 3. Hamma maydon to'lganda tizim natijani o'zi hisoblaydi (hukm, topilmalar, yo'l xaritasi) va profilni_saqlash javobida qaytaradi. Sen uni oddiy tilda tushuntirasan: hukm, eng muhim 1–2 sabab, birinchi qadam.
 4. Keyin tadbirkorga yo'l xaritasini bajarishda yordam berasan: savollariga javob berasan, qadamni tushuntirasan.
 
-Har bir javobni javob_berish asbobi bilan yakunla. Oddiy matn yozma. Agar shu javobda profilni_saqlash chaqirgan bo'lsang, avval uning natijasini ol, keyin javob_berish chaqir.
+Javob shakli:
+- Tadbirkorga javobni oddiy matn qilib yoz. Agar profilni_saqlash chaqirsang, avval uning natijasini ol, keyin javob yoz.
+- tugmalar va korsatish asboblarini javob matnidan OLDIN chaqir.
+- korsatish: raqam yoki natijani tushuntirayotganda mos blokni ko'rsat — tadbirkor rasm va diagrammani matndan yaxshiroq tushunadi. Summa aytilganda tasdiqlash uchun "kredit_summa" yoki "oylik_tushum"; natija chiqqanda "hukm" va "yol_xaritasi"; pul oqimi yoki garov haqida gapirganda "pul_oqimi", "garov". Bank atamasi birinchi marta chiqqanda "atama" bilan qisqa izoh ber. Har javobda shart emas — faqat foydali bo'lsa.
+
+Manbalar (hujjatlar):
+- Suhbat boshida Yetak jamoasi tekshirgan hujjatlar berilgan. Davlat dasturi, bank talabi, garov, kafolat, mikrokredit, hujjatlar haqida gapirsang — faqat shu hujjatlarga tayan va ulardan iqtibos keltir. Tizim iqtibosni tadbirkorga manba sifatida ko'rsatadi.
+- Hujjatlarda yo'q narsani o'zingdan qo'shma: "Buni hali aniqlay olmadik." Hujjatda "tasdiqlanmagan", "matbuot", "UNVERIFIED" deb yozilgan bo'lsa — buni tadbirkorga ham ayt.
+- Hujjatlardagi tadqiqot raqamlarini tadbirkorning shaxsiy hisobiga aralashtirma: uning hisobi faqat <holat> dagi natijadan.
 
 Qat'iy qoidalar:
 - Hisoblama. Hech qanday raqamni o'zing hisoblama, qo'shma, bo'lma, foiz chiqarma. To'lov, foyda, garov, stavka, summa — faqat <holat> ichidagi natijadan, aynan o'zgartirmasdan ol.
@@ -110,24 +123,111 @@ const TOOLS: Anthropic.Beta.BetaTool[] = [
     },
   },
   {
-    name: "javob_berish",
-    description: "Tadbirkorga javob yuboradi. Har bir javob shu asbob bilan yakunlanadi.",
+    name: "tugmalar",
+    description: "Shu javob ostida chiqadigan 0–4 ta tez javob tugmasi. Javob matnidan oldin chaqiring.",
     strict: true,
     input_schema: {
       type: "object",
       properties: {
-        matn: { type: "string", description: "Tadbirkorga xabar, o'zbekcha." },
-        tugmalar: {
-          type: "array",
-          items: { type: "string" },
-          description: "0–4 ta tez javob tugmasi.",
-        },
+        tugmalar: { type: "array", items: { type: "string" } },
       },
-      required: ["matn", "tugmalar"],
+      required: ["tugmalar"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "korsatish",
+    description:
+      "Javob bilan birga chatda karta yoki diagramma ko'rsatadi. Raqamlarni tizim profil va natijadan o'zi qo'yadi. Javob matnidan oldin chaqiring.",
+    strict: true,
+    input_schema: {
+      type: "object",
+      properties: {
+        bloklar: {
+          type: "array",
+          items: {
+            type: "string",
+            enum: ["kredit_summa", "oylik_tushum", "pul_oqimi", "garov", "hukm", "yol_xaritasi"],
+          },
+        },
+        atama: nullable({
+          type: "object",
+          properties: {
+            atama: { type: "string" },
+            izoh: { type: "string", description: "Bir gapli oddiy izoh, raqamsiz." },
+          },
+          required: ["atama", "izoh"],
+          additionalProperties: false,
+        }),
+      },
+      required: ["bloklar", "atama"],
       additionalProperties: false,
     },
   },
 ];
+
+/** RAG: korpus hujjatlari suhbat boshida, citations yoqilgan va keshlanadi. */
+function hujjatlar(): Anthropic.Beta.BetaContentBlockParam[] {
+  return KORPUS.map((h, i) => ({
+    type: "document" as const,
+    source: { type: "text" as const, media_type: "text/plain" as const, data: h.matn },
+    title: h.nom,
+    citations: { enabled: true },
+    ...(i === KORPUS.length - 1 ? { cache_control: { type: "ephemeral" as const } } : {}),
+  }));
+}
+
+/** Agent tanlagan bloklarni profil va natijadagi raqamlar bilan to'ldiradi. */
+export function bloklarniYasash(
+  kirish: unknown,
+  profil: Profil,
+  natija: Natija | null,
+): { bloklar: Blok[]; yoq: string[] } {
+  const k = kirish as { bloklar?: unknown; atama?: { atama?: unknown; izoh?: unknown } | null };
+  const bloklar: Blok[] = [];
+  const yoq: string[] = [];
+  const tanlov = Array.isArray(k?.bloklar) ? k.bloklar : [];
+  for (const t of tanlov) {
+    if (t === "kredit_summa" && profil.kredit_summa != null)
+      bloklar.push({ tur: "summa", sarlavha: "Kerakli summa", qiymat: profil.kredit_summa });
+    else if (t === "oylik_tushum" && profil.oylik_tushum != null)
+      bloklar.push({ tur: "summa", sarlavha: "Oylik tushum", qiymat: profil.oylik_tushum });
+    else if (t === "pul_oqimi" && natija && profil.oylik_tushum != null && profil.oylik_xarajat != null)
+      bloklar.push({
+        tur: "pul_oqimi",
+        tushum: profil.oylik_tushum,
+        xarajat: profil.oylik_xarajat,
+        foyda: natija.hisob.oylik_foyda,
+        tolov: natija.hisob.oylik_tolov,
+      });
+    else if (t === "garov" && natija && profil.garov_qiymati != null)
+      bloklar.push({ tur: "garov", bor: profil.garov_qiymati, kerak: natija.hisob.kerakli_garov });
+    else if ((t === "hukm" || t === "yol_xaritasi") && natija) bloklar.push({ tur: t });
+    else yoq.push(String(t));
+  }
+  const a = k?.atama;
+  if (a && typeof a.atama === "string" && typeof a.izoh === "string" && a.atama.trim() && a.izoh.trim())
+    bloklar.push({ tur: "atama", atama: a.atama.trim().slice(0, 60), izoh: a.izoh.trim().slice(0, 240) });
+  return { bloklar, yoq };
+}
+
+/** Javob matni va citations'dan manbalarni yig'adi. */
+export function matnVaManbalar(content: Anthropic.Beta.BetaContentBlock[]): { matn: string; manbalar: Iqtibos[] } {
+  let matn = "";
+  const manbalar: Iqtibos[] = [];
+  for (const b of content) {
+    if (b.type !== "text") continue;
+    matn += b.text;
+    for (const c of b.citations ?? []) {
+      const iq = c as { cited_text?: string; document_index?: number };
+      const h = iq.document_index != null ? KORPUS[iq.document_index] : undefined;
+      if (!h || !iq.cited_text) continue;
+      const parcha = iq.cited_text.trim().slice(0, 500);
+      if (!manbalar.some((m) => m.parcha === parcha)) manbalar.push({ nom: h.nom, url: h.url, parcha });
+    }
+  }
+  return { matn: matn.trim(), manbalar: manbalar.slice(0, 4) };
+}
 
 function natijaQisqa(n: Natija | null) {
   if (!n) return null;
@@ -159,7 +259,7 @@ function holatMatni(profil: Profil, bajarilgan: string[]) {
 /** Saqlangan xabarlardan API suhbatini tuzadi. Oxirgi tadbirkor xabariga joriy holat qo'shiladi. */
 function suhbatniTuzish(k: AgentKirish): Anthropic.Beta.BetaMessageParam[] {
   const msgs: Anthropic.Beta.BetaMessageParam[] = [
-    { role: "user", content: "(Tadbirkor Yetak sahifasini ochdi.)" },
+    { role: "user", content: [...hujjatlar(), { type: "text", text: "(Tadbirkor Yetak sahifasini ochdi.)" }] },
   ];
   k.xabarlar.forEach((x, i) => {
     const role = x.kim === "agent" ? "assistant" : "user";
@@ -176,7 +276,7 @@ function suhbatniTuzish(k: AgentKirish): Anthropic.Beta.BetaMessageParam[] {
       const eski =
         typeof avvalgi.content === "string"
           ? [{ type: "text" as const, text: avvalgi.content }]
-          : (avvalgi.content as Anthropic.Beta.BetaTextBlockParam[]);
+          : (avvalgi.content as Anthropic.Beta.BetaContentBlockParam[]);
       avvalgi.content = [...eski, ...content];
     } else {
       msgs.push({ role, content });
@@ -185,27 +285,39 @@ function suhbatniTuzish(k: AgentKirish): Anthropic.Beta.BetaMessageParam[] {
   return msgs;
 }
 
-function javobniTekshirish(kirish: unknown): { matn: string; tugmalar: string[] } | null {
-  const k = kirish as { matn?: unknown; tugmalar?: unknown };
-  if (typeof k?.matn !== "string" || !k.matn.trim()) return null;
-  const tugmalar = Array.isArray(k.tugmalar)
-    ? k.tugmalar
-        .filter((t): t is string => typeof t === "string" && t.trim().length > 0)
-        .map((t) => t.trim().slice(0, 60))
+function tugmalarniTekshirish(kirish: unknown): string[] {
+  const t = (kirish as { tugmalar?: unknown })?.tugmalar;
+  return Array.isArray(t)
+    ? t
+        .filter((x): x is string => typeof x === "string" && x.trim().length > 0)
+        .map((x) => x.trim().slice(0, 60))
         .slice(0, 4)
     : [];
-  return { matn: k.matn.trim().slice(0, 4000), tugmalar };
 }
 
-const MAX_QADAM = 5;
+const MAX_QADAM = 6;
 
 export class ClaudeAgent implements Agent {
-  private client = new Anthropic({ timeout: 60_000, maxRetries: 2 });
+  private client: Anthropic;
+
+  /** `client` — sinovlarda soxta mijoz berish uchun. */
+  constructor(client?: Anthropic) {
+    this.client = client ?? new Anthropic({ timeout: 60_000, maxRetries: 2 });
+  }
 
   async javob(k: AgentKirish): Promise<AgentJavob> {
     const msgs = suhbatniTuzish(k);
     let profil: Profil = { ...k.profil };
-    let natijaBor = baholash(profil, k.bajarilgan) !== null;
+    let tugmalar: string[] = [];
+    const bloklar: Blok[] = [];
+    const matnlar: string[] = [];
+    const manbalar: Iqtibos[] = [];
+
+    const yakun = (): AgentJavob => {
+      const matn = matnlar.join("\n\n").trim().slice(0, 4000);
+      if (!matn) throw new AgentXatosi("Agent javob tayyorlay olmadi. Xabaringizni qayta yuboring.", 502);
+      return { matn, tugmalar, profil, bloklar, manbalar: manbalar.slice(0, 4) };
+    };
 
     for (let qadam = 0; qadam < MAX_QADAM; qadam++) {
       const javob = await this.sorov(msgs);
@@ -220,48 +332,39 @@ export class ClaudeAgent implements Agent {
       const toollar = javob.content.filter(
         (b): b is Anthropic.Beta.BetaToolUseBlock => b.type === "tool_use",
       );
-      if (toollar.length === 0) {
-        // Model asbobsiz matn yozdi — matnni javob sifatida olamiz.
-        const matn = javob.content
-          .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === "text")
-          .map((b) => b.text)
-          .join("\n")
-          .trim();
-        if (matn) return { matn, tugmalar: [], profil };
-        throw new AgentXatosi("Agent javob tayyorlay olmadi. Xabaringizni qayta yuboring.", 502);
+      // Profil saqlanayotgan qadamdagi matn — natijani ko'rmasdan yozilgan, olinmaydi.
+      if (!toollar.some((t) => t.name === "profilni_saqlash")) {
+        const m = matnVaManbalar(javob.content);
+        if (m.matn) matnlar.push(m.matn);
+        for (const iq of m.manbalar) if (!manbalar.some((x) => x.parcha === iq.parcha)) manbalar.push(iq);
       }
+      if (javob.stop_reason !== "tool_use" || toollar.length === 0) return yakun();
 
       msgs.push({ role: "assistant", content: javob.content });
       const natijalar: Anthropic.Beta.BetaToolResultBlockParam[] = [];
-      let natijaYangi = false;
-      let yakuniy: { matn: string; tugmalar: string[] } | null = null;
 
       for (const t of toollar.filter((t) => t.name === "profilni_saqlash")) {
         profil = { ...profil, ...profilniTozalash(t.input) };
-        const yangi = baholash(profil, k.bajarilgan);
-        if (!natijaBor && yangi) natijaYangi = true;
-        natijalar.push({
-          type: "tool_result",
-          tool_use_id: t.id,
-          content: holatMatni(profil, k.bajarilgan),
-        });
+        natijalar.push({ type: "tool_result", tool_use_id: t.id, content: holatMatni(profil, k.bajarilgan) });
       }
       for (const t of toollar.filter((t) => t.name !== "profilni_saqlash")) {
-        if (t.name === "javob_berish" && !natijaYangi) {
-          yakuniy = javobniTekshirish(t.input);
+        if (t.name === "tugmalar") {
+          tugmalar = tugmalarniTekshirish(t.input);
+          natijalar.push({ type: "tool_result", tool_use_id: t.id, content: "Tugmalar qo'yildi." });
+        } else if (t.name === "korsatish") {
+          const y = bloklarniYasash(t.input, profil, baholash(profil, k.bajarilgan));
+          for (const b of y.bloklar) {
+            const kalit = b.tur === "summa" ? `summa:${b.sarlavha}` : b.tur;
+            const i = bloklar.findIndex((x) => (x.tur === "summa" ? `summa:${x.sarlavha}` : x.tur) === kalit);
+            if (i >= 0) bloklar[i] = b;
+            else bloklar.push(b);
+          }
           natijalar.push({
             type: "tool_result",
             tool_use_id: t.id,
-            content: yakuniy ? "Yuborildi." : "Xato: matn bo'sh. Qayta chaqiring.",
-            ...(yakuniy ? {} : { is_error: true }),
-          });
-        } else if (t.name === "javob_berish") {
-          natijalar.push({
-            type: "tool_result",
-            tool_use_id: t.id,
-            content:
-              "Yuborilmadi: natija hozir tayyor bo'ldi. Avval yuqoridagi natijani o'qing, keyin uni tushuntirib javob_berish'ni qayta chaqiring.",
-            is_error: true,
+            content: y.yoq.length
+              ? `Ko'rsatildi. Ma'lumot hali yo'qligi uchun ko'rsatilmadi: ${y.yoq.join(", ")}.`
+              : "Ko'rsatildi.",
           });
         } else {
           natijalar.push({
@@ -272,11 +375,9 @@ export class ClaudeAgent implements Agent {
           });
         }
       }
-
-      if (yakuniy) return { ...yakuniy, profil };
-      if (natijaYangi) natijaBor = true;
       msgs.push({ role: "user", content: natijalar });
     }
+    if (matnlar.length) return yakun();
     throw new AgentXatosi("Agent javobni yakunlay olmadi. Xabaringizni qayta yuboring.", 502);
   }
 

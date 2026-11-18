@@ -8,7 +8,12 @@
     "build": "tsc --noEmit && esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/index.js",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "korpus": "node scripts/korpus.mjs",
+    "predev": "node scripts/korpus.mjs",
+    "prebuild": "node scripts/korpus.mjs",
+    "pretypecheck": "node scripts/korpus.mjs",
+    "pretest": "node scripts/korpus.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.9.0",

@@ -43,6 +43,18 @@ Hukm, topilmalar, qadamlar, hisob — `natija` ichida, profil 12 maydonning hamm
 
 Turlar: `shared/types.ts`.
 
+Agent xabari (`Xabar`, `kim: "agent"`) qo'shimcha maydonlari:
+
+- `bloklar` — chatdagi kartalar: `summa`, `pul_oqimi`, `garov`, `hukm`, `yol_xaritasi`, `atama`. Agent qaysisini ko'rsatishni tanlaydi (`korsatish` asbobi), raqamlarni server profil va `rules.ts` dan qo'yadi.
+- `manbalar` — javob tayangan manbalar: `{ nom, url, parcha }`. Claude citations'dan olinadi.
+
+## RAG (manbalar)
+
+- Korpus: `docs/QOIDALAR.md` va `docs/tadqiqot/02_kob_moliya_kredit.md` dagi «1.2 Kredit olish» bo'limi. Ro'yxat: `server/scripts/korpus.mjs`.
+- `yarn dev` / `build` / `test` oldidan korpus `server/src/korpus.generated.ts` ga yoziladi (serverga faqat `dist/index.js` boradi).
+- Hujjatlar suhbat boshida `document` bloki bo'lib, citations yoqilgan va keshlanadi. Agent dastur va shartlar haqida faqat shulardan gapiradi.
+- Korpusga faqat tekshirilgan manba qo'shiladi. Yangi hujjat: `korpus.mjs` dagi `HUJJATLAR` ga bir qator.
+
 Xabar yuborish 5–20 soniya olishi mumkin (agent o'ylaydi). Web kutish holatini ko'rsatadi.
 
 ## Web sahifalari
