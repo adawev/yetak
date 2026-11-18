@@ -301,7 +301,7 @@ export function baholash(
     qadamlar.push({
       kalit: "kredit_tarixi",
       sarlavha: "Eski qarzlarni to'liq yoping",
-      izoh: "Kechikkan to'lovlarni yoping va bankdan kredit tarixingiz haqida ma'lumot so'rang.",
+      izoh: "Kechikkan to'lovlarni yoping va kredit tarixingizni my.gov.uz da «Kredit tarixini olish» orqali tekshiring.",
       manba: MANBALAR.kapitalbank,
     });
   } else if (p.kredit_tarixi === "yoq") {
@@ -440,7 +440,7 @@ export function baholash(
       ? "Siz aytgan raqamlarga ko'ra, asosiy talablarga javob berasiz. Endi hujjatlar kerak. Qarorni bank qiladi."
       : mosYol.mos === "mos"
         ? `Siz aytgan raqamlarga ko'ra, mos bank topildi: ${yol}. Endi hujjatlar kerak. Qarorni bank qiladi.`
-        : `Siz aytgan raqamlarga ko'ra, eng yaqin bank: ${yol}. Ba'zi shartlarni bankdan aniqlash kerak («?» belgili). Endi hujjatlar kerak.`;
+        : `Siz aytgan raqamlarga ko'ra, eng yaqin bank: ${yol}. «?» belgili shartlarni bank ko'rib chiqishda tekshiradi. Hujjatlarni Yetak bilan tayyorlaymiz.`;
   }
 
   if (hukm !== "olmang") {
@@ -449,7 +449,7 @@ export function baholash(
         ? {
             kalit: "ariza",
             sarlavha: `Hujjatlar tayyor bo'lgach, ${mosYol.bank}ga ariza bering`,
-            izoh: "Bitta PDF papkani «Hujjatlar» bo'limidan yuklab oling va bankka olib boring. Arizani o'zingiz berasiz.",
+            izoh: "Roziligingiz bilan Yetak papkani bankka yuboradi. Bankka faqat imzoga borasiz.",
             manba: mosYol.manba,
           }
         : {

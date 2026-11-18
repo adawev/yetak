@@ -10,6 +10,7 @@ import { papkadaBormi, papkaYasash } from "./hujjatlar";
 import { kabinetYollari } from "./kabinet";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { papkaPdf } from "./papka-pdf";
+import { qoralamaBormi, qoralamaSahifa } from "./qoralamalar";
 import { natijaHisobla } from "./natija";
 import { kreditTolovi, savolJarayoni } from "./rules";
 import { XotiraFaylOmbor, type FaylOmbor, type Sessiya, type Store } from "./store";
@@ -361,26 +362,35 @@ export function appYaratish({
         const data = fayllar.oqi(s.id, h.kalit);
         return data ? [{ kalit: h.kalit, nom: h.nom, tur: h.fayl!.tur, data }] : [];
       });
-    // Pul oqimi qoralamasi: raqamlarni kod hisoblaydi (natija.hisob), AI emas.
+    // Qoralamalar: raqamlarni kod hisoblaydi, AI emas. Foiz va to'lov — tanlangan bank taklifidan (kartadagi bilan bir xil).
     // Hukm hali chiqmagan bo'lsa ham (to'rt raqam yetarli) — papkadagi «qoralama» belgisi bilan bir xil shart.
     const p = s.profil;
+    const taklif = mahsulotlarniMoslash(p).find((m) => m.kalit === papka.mahsulot.kalit)?.taklif ?? null;
+    const ism = papka.hujjatlar.find((h) => h.fayl?.tekshiruv?.egasi)?.fayl?.tekshiruv?.egasi ?? null;
+    const kirish = { profil: p, bank: papka.mahsulot.bank, mahsulot: papka.mahsulot.nom, taklif, ism };
+    const qoralamalar = papka.hujjatlar
+      .filter((h) => h.qoralama && !h.fayl && h.kalit !== "pul_oqimi" && qoralamaBormi(h.kalit, p))
+      .map((h) => qoralamaSahifa(h.kalit as "ariza" | "tasischi_qarori" | "daromad_manbalari", kirish));
     const pulOqimi =
       p.oylik_tushum != null && p.oylik_xarajat != null && p.kredit_summa != null && p.kredit_muddat_oy != null
         ? {
             oylik_tushum: p.oylik_tushum,
             oylik_xarajat: p.oylik_xarajat,
-            ...kreditTolovi(p.kredit_summa, p.kredit_muddat_oy),
+            ...(taklif
+              ? { oylik_tolov: taklif.oylik_tolov, yillik_stavka: taklif.foiz_max }
+              : kreditTolovi(p.kredit_summa, p.kredit_muddat_oy)),
             muddat_oy: p.kredit_muddat_oy,
             summa: p.kredit_summa,
           }
         : undefined;
-    if (!ruyxat.length && !pulOqimi) return xato(c, 409, "Hali hech qanday hujjat yuklanmagan.");
+    if (!ruyxat.length && !pulOqimi && !qoralamalar.length) return xato(c, 409, "Hali hech qanday hujjat yuklanmagan.");
     const pdf = await papkaPdf({
       papka,
       profil: s.profil,
       fayllar: ruyxat,
       sana: new Date().toISOString().slice(0, 10),
       pulOqimi,
+      qoralamalar,
     });
     return new Response(new Blob([pdf as BlobPart]), {
       headers: {

@@ -109,6 +109,7 @@ export default function Chat() {
     holat: h,
     amallar: s.hujjatAmallari,
     onYubor: yubor,
+    onRozilik: (r: boolean) => void s.rozilikBer(r),
     yangi: i >= (boshlangich.current ?? 0),
     oxirgiHujjatlar: i === oxirgiHujjatlar,
   })

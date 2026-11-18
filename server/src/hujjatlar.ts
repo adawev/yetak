@@ -5,6 +5,7 @@
 import manbaJson from "../../docs/tadqiqot/hujjatlar.json";
 import type { MahsulotMoslik, OlishYoli, Papka, PapkaHujjat, Profil, YuklanganFayl } from "../../shared/types";
 import { matnTozala } from "./papka-pdf";
+import { QORALAMA_MATNI, qoralamaBormi } from "./qoralamalar";
 
 interface JsonHujjat {
   nom: string;
@@ -28,12 +29,12 @@ const jsonMahsulot = (kalit: string) => MANBA.mahsulotlar.find((m) => m.id === k
 /** Ariza berishdan oldin har kim o'zi tekshirib oladigan hujjat (bank ham tekshiradi). */
 const TAVSIYA = ["kredit_tarixi"] as const;
 
-const PUL_OQIMI_QORALAMA =
-  "Yetak siz aytgan raqamlardan qoralama tayyorladi — papka PDF ida bor. Bank shakli bo'lsa, unga ko'chiring.";
-
 /** Pul oqimi qoralamasi uchun kerakli raqamlar to'liqmi. */
-export const pulOqimiQoralamaBor = (p: Profil): boolean =>
-  p.oylik_tushum != null && p.oylik_xarajat != null && p.kredit_summa != null && p.kredit_muddat_oy != null;
+export const pulOqimiQoralamaBor = (p: Profil): boolean => qoralamaBormi("pul_oqimi", p);
+
+/** Hujjat tayyormi: tekshiruvdan o'tgan fayl yoki (fayl yuklanmagan bo'lsa) Yetak tayyorlagan qoralama. */
+export const hujjatTayyormi = (h: PapkaHujjat): boolean =>
+  h.fayl ? h.fayl.tekshiruv?.holat === "mos" : !!h.qoralama;
 
 /**
  * Hujjat shartini profilga qarab o'qiydi.
@@ -146,7 +147,7 @@ export function papkaYasash(
       tavsiya: false,
       olish: h.olish ?? j?.olish ?? null,
       fayl: fayllar[h.hujjat] ?? null,
-      qoralama: h.hujjat === "pul_oqimi" && pulOqimiQoralamaBor(p) ? PUL_OQIMI_QORALAMA : null,
+      qoralama: qoralamaBormi(h.hujjat, p) ? QORALAMA_MATNI[h.hujjat] : null,
     });
   }
   for (const k of TAVSIYA) {
@@ -197,7 +198,7 @@ export function papkaYasash(
   return {
     mahsulot: { kalit: tanlangan.kalit, bank: tanlangan.bank, nom: tanlangan.nom },
     hujjatlar,
-    tayyor: olibBoriladi.filter((h) => h.fayl?.tekshiruv?.holat === "mos").length,
+    tayyor: olibBoriladi.filter(hujjatTayyormi).length,
     jami: olibBoriladi.length,
     ogohlantirishlar: ismlarniSolishtirish(hujjatlar),
   };

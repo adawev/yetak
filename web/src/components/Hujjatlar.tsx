@@ -71,7 +71,7 @@ function Chip({ children }: { children: ReactNode }) {
 
 function Yoriqnoma({ olish }: { olish: OlishYoli | null }) {
   if (!olish) {
-    return <p className="text-sm text-muted-foreground">Bu hujjat haqida bank xodimidan so'rang: «Bu hujjatni qayerdan olaman?»</p>
+    return <p className="text-sm text-muted-foreground">Bu hujjatni rasmga olib yuklang — Yetak tekshirib, papkaga qo'shadi.</p>
   }
   return (
     <div className="space-y-2 text-sm">
@@ -135,6 +135,7 @@ function Yoriqnoma({ olish }: { olish: OlishYoli | null }) {
 
 function Belgi({ h, tekshirilmoqda }: { h: PapkaHujjat; tekshirilmoqda: boolean }) {
   if (tekshirilmoqda) return <Loader2 size={20} className="mt-0.5 shrink-0 animate-spin text-muted-foreground" />
+  if (!h.fayl && h.qoralama) return <FileCheck size={20} className="mt-0.5 shrink-0 text-success" />
   if (!h.fayl) return <Circle size={20} className="mt-0.5 shrink-0 text-muted-foreground" />
   const t = h.fayl.tekshiruv
   if (!t) return <CircleAlert size={20} className="mt-0.5 shrink-0 text-muted-foreground" />
@@ -171,8 +172,20 @@ function Natija({ h }: { h: PapkaHujjat }) {
   )
 }
 
-function Hujjat({ h, a, boshidanOchiq = false }: { h: PapkaHujjat; a: HujjatAmallari; boshidanOchiq?: boolean }) {
-  const [ochiq, setOchiq] = useState(boshidanOchiq)
+function Hujjat({
+  h,
+  a,
+  boshidanOchiq = false,
+  pdfUrl,
+}: {
+  h: PapkaHujjat
+  a: HujjatAmallari
+  boshidanOchiq?: boolean
+  /** Yetak qoralamasini ko'rish uchun papka PDF havolasi */
+  pdfUrl?: string
+}) {
+  const [ochiq, setOchiq] = useState(boshidanOchiq && !h.qoralama)
+  const yetakniki = !!h.qoralama && !h.fayl
   const input = useRef<HTMLInputElement>(null)
   const tekshirilmoqda = !!a.yuklanayotgan[h.kalit]
   const xato = a.xatolar[h.kalit]
@@ -205,10 +218,9 @@ function Hujjat({ h, a, boshidanOchiq = false }: { h: PapkaHujjat; a: HujjatAmal
         </div>
       </div>
 
-      {h.qoralama && !h.fayl && !tekshirilmoqda && (
-        <p className="mt-2 flex items-start gap-1.5 rounded-md bg-success/10 px-2.5 py-2 text-sm text-success">
-          <FileCheck size={16} className="mt-0.5 shrink-0" />
-          {h.qoralama}
+      {yetakniki && !tekshirilmoqda && (
+        <p className="mt-2 rounded-md bg-success/10 px-2.5 py-2 text-sm text-success">
+          <span className="font-semibold">Yetak tayyorladi.</span> {h.qoralama}
         </p>
       )}
       {tekshirilmoqda && (
@@ -232,16 +244,27 @@ function Hujjat({ h, a, boshidanOchiq = false }: { h: PapkaHujjat; a: HujjatAmal
           className="hidden"
           onChange={(e) => tanla(e.target.files?.[0])}
         />
+        {yetakniki && pdfUrl && (
+          <a
+            href={pdfUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:opacity-90"
+          >
+            <FileText size={16} />
+            Ko'rish (PDF)
+          </a>
+        )}
         <button
           type="button"
           disabled={tekshirilmoqda}
           onClick={() => input.current?.click()}
           className={`inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-medium disabled:opacity-50 ${
-            h.fayl ? 'border border-border hover:bg-foreground/5' : 'bg-primary text-primary-foreground hover:opacity-90'
+            h.fayl || yetakniki ? 'border border-border hover:bg-foreground/5' : 'bg-primary text-primary-foreground hover:opacity-90'
           }`}
         >
           <Upload size={16} />
-          {h.fayl ? 'Qayta yuklash' : 'Yuklash'}
+          {h.fayl ? 'Qayta yuklash' : yetakniki ? 'Imzolanganini yuklash' : 'Yuklash'}
         </button>
         {h.fayl && (
           <button
@@ -259,7 +282,7 @@ function Hujjat({ h, a, boshidanOchiq = false }: { h: PapkaHujjat; a: HujjatAmal
           aria-expanded={ochiq}
           className="ml-auto inline-flex min-h-9 items-center gap-1 text-xs font-medium underline underline-offset-2"
         >
-          Qanday olinadi
+          {yetakniki ? 'Nima qilish kerak' : 'Qanday olinadi'}
           <ChevronDown size={14} className={ochiq ? 'rotate-180' : ''} />
         </button>
       </div>
@@ -390,21 +413,21 @@ export function HujjatlarPapka({ holat, amallar }: { holat: SessiyaHolati; amall
       )}
 
       {olibBoriladi.length > 0 && (
-        <Guruh sarlavha="Olib borasiz" izoh="Bank so'raydi. Yuklab qo'ysangiz, papkaga qo'shiladi.">
+        <Guruh sarlavha="Kerakli hujjatlar" izoh="Yetak tayyorlaganlarini tekshirib imzolaysiz, qolganini rasmga olib yuklaysiz.">
           {olibBoriladi.map((h) => (
-            <Hujjat key={h.kalit} h={h} a={amallar} />
+            <Hujjat key={h.kalit} h={h} a={amallar} pdfUrl={papkaPdfUrl(holat.id)} />
           ))}
         </Guruh>
       )}
       {tavsiya.length > 0 && (
         <Guruh sarlavha="Oldindan tekshiring" izoh="Bank so'ramasligi mumkin, lekin arizadan oldin o'zingiz ko'rib qo'ygan yaxshi.">
           {tavsiya.map((h) => (
-            <Hujjat key={h.kalit} h={h} a={amallar} />
+            <Hujjat key={h.kalit} h={h} a={amallar} pdfUrl={papkaPdfUrl(holat.id)} />
           ))}
         </Guruh>
       )}
       {bankOzi.length > 0 && (
-        <Guruh sarlavha="Bank o'zi oladi" izoh="Olib borish shart emas.">
+        <Guruh sarlavha="Bank o'zi oladi" izoh="Sizdan kerak emas — bank davlat tizimidan o'zi oladi.">
           {bankOzi.map((h) => (
             <li key={h.kalit} className="flex items-start gap-2 rounded-lg border border-border px-3 py-2 text-sm">
               <Check size={16} className="mt-0.5 shrink-0 text-success" />
@@ -453,15 +476,26 @@ const tayyormi = (h: PapkaHujjat) => h.fayl?.tekshiruv?.holat === 'mos' || (!h.f
  * Chatdagi hujjatlar — bitta-bitta: tepada bank va jarayon, navbatdagi hujjat ochiq turadi
  * (qanday olish + yuklash), qolganlari qisqa qator. Bosilgan qator navbatdagi bo'ladi.
  */
-export function HujjatQadamlari({ holat, amallar }: { holat: SessiyaHolati; amallar: HujjatAmallari }) {
+export function HujjatQadamlari({
+  holat,
+  amallar,
+  onRozilik,
+}: {
+  holat: SessiyaHolati
+  amallar: HujjatAmallari
+  onRozilik?: (rozi: boolean) => void
+}) {
   const p = holat.papka
-  const kerak = (p?.hujjatlar ?? []).filter((h) => !h.bank_ozi_oladi)
+  const hammasi = (p?.hujjatlar ?? []).filter((h) => !h.bank_ozi_oladi)
+  const yetak = hammasi.filter((h) => h.qoralama && !h.fayl)
+  const kerak = hammasi.filter((h) => !(h.qoralama && !h.fayl))
   const birinchi = kerak.find((h) => !tayyormi(h))?.kalit ?? null
   const [tanlangan, setTanlangan] = useState<string | null>(null)
   if (!p) return null
   const joriy = tanlangan ?? birinchi
   const foiz = p.jami ? (p.tayyor / p.jami) * 100 : 0
   const pdfBor = p.hujjatlar.some((h) => h.fayl || h.qoralama)
+  const pdf = papkaPdfUrl(holat.id)
 
   return (
     <div className="kirish space-y-3 rounded-2xl border border-border bg-card p-4">
@@ -482,10 +516,37 @@ export function HujjatQadamlari({ holat, amallar }: { holat: SessiyaHolati; amal
         />
       </div>
 
+      {yetak.length > 0 && (
+        <div className="rounded-xl bg-success/10 p-3">
+          <p className="text-sm font-semibold text-success">Yetak tayyorladi — {yetak.length} ta</p>
+          <p className="text-xs text-muted-foreground">Sizning javoblaringizdan to'ldirildi. Tekshirib, imzolaysiz.</p>
+          <ul className="mt-2 space-y-1">
+            {yetak.map((h) =>
+              h.kalit === joriy ? (
+                <Hujjat key={h.kalit} h={h} a={amallar} pdfUrl={pdf} boshidanOchiq />
+              ) : (
+                <li key={h.kalit}>
+                  <button
+                    type="button"
+                    onClick={() => setTanlangan(h.kalit)}
+                    className="flex min-h-10 w-full items-center gap-2.5 rounded-lg px-1 text-left text-sm hover:bg-foreground/5"
+                  >
+                    <FileCheck size={18} className="shrink-0 text-success" />
+                    <span className="min-w-0 flex-1">{h.nom}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">imzo kerak</span>
+                  </button>
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+      )}
+
+      {kerak.length > 0 && <p className="pt-1 text-sm font-semibold">Sizdan kerak — rasmga olib yuklang</p>}
       <ol className="space-y-1">
         {kerak.map((h, i) =>
           h.kalit === joriy ? (
-            <Hujjat key={h.kalit} h={h} a={amallar} boshidanOchiq />
+            <Hujjat key={h.kalit} h={h} a={amallar} pdfUrl={pdf} boshidanOchiq />
           ) : (
             <li key={h.kalit}>
               <button
@@ -510,15 +571,39 @@ export function HujjatQadamlari({ holat, amallar }: { holat: SessiyaHolati; amal
 
       {pdfBor && (
         <a
-          href={papkaPdfUrl(holat.id)}
+          href={pdf}
           target="_blank"
           rel="noreferrer"
           className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border px-4 text-sm font-medium hover:bg-foreground/5"
         >
           <Download size={16} />
-          Papkani yuklab olish (PDF)
+          Papkani ko'rish (PDF)
         </a>
       )}
+
+      {onRozilik &&
+        (holat.bank_roziligi ? (
+          <div className="rounded-xl bg-success/10 p-3 text-sm">
+            <p className="font-semibold text-success">Papka {p.mahsulot.bank} ga yuborildi</p>
+            <p className="text-muted-foreground">Bank xodimi papkangizni ko'radi. Bankka faqat imzoga borasiz.</p>
+            <button type="button" onClick={() => onRozilik(false)} className="mt-1 text-xs text-muted-foreground underline">
+              Rozilikni qaytarib olish
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-1.5">
+            <button
+              type="button"
+              onClick={() => onRozilik(true)}
+              className="min-h-12 w-full rounded-xl bg-primary px-4 text-[15px] font-semibold text-white hover:opacity-90"
+            >
+              Papkani {p.mahsulot.bank} ga yuborish
+            </button>
+            <p className="text-center text-xs text-muted-foreground">
+              Roziligingiz bilan bank xodimi papkani ko'radi. Bankka faqat imzoga borasiz.
+            </p>
+          </div>
+        ))}
     </div>
   )
 }

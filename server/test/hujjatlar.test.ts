@@ -70,8 +70,11 @@ describe("papkaYasash", () => {
     const toliq: Profil = { ...mchj, oylik_tushum: 50 * MLN, oylik_xarajat: 30 * MLN };
     const p = yasash(toliq, "hamkorbank_pq312")!;
     const po = p.hujjatlar.find((h) => h.kalit === "pul_oqimi")!;
-    expect(po.qoralama).toContain("qoralama tayyorladi");
-    expect(p.hujjatlar.filter((h) => h.kalit !== "pul_oqimi").every((h) => h.qoralama === null)).toBe(true);
+    expect(po.qoralama).toContain("Yetak");
+    const QORALAMALI = ["pul_oqimi", "ariza", "tasischi_qarori", "daromad_manbalari"];
+    expect(p.hujjatlar.filter((h) => !QORALAMALI.includes(h.kalit)).every((h) => h.qoralama === null)).toBe(true);
+    expect(p.hujjatlar.find((h) => h.kalit === "ariza")!.qoralama).toContain("Yetak");
+    expect(p.hujjatlar.find((h) => h.kalit === "tasischi_qarori")!.qoralama).toContain("Yetak");
     const yoq = yasash({ ...toliq, oylik_xarajat: undefined }, "hamkorbank_pq312")!;
     expect(yoq.hujjatlar.find((h) => h.kalit === "pul_oqimi")!.qoralama).toBeNull();
   });
@@ -81,19 +84,19 @@ describe("papkaYasash", () => {
     expect(eri(true)).toBeUndefined();
     expect(eri(undefined)).toBeUndefined();
   });
-  it("tayyor/jami: faqat olib boriladigan va 'mos' hujjatlar sanaladi", () => {
+  it("tayyor/jami: olib boriladiganlar; tayyor — 'mos' fayl yoki (fayl yo'q bo'lsa) Yetak qoralamasi", () => {
     const bosh = yasash(mchj, "hamkorbank_pq312")!;
     const olib = bosh.hujjatlar.filter((h) => !h.bank_ozi_oladi && !h.tavsiya);
     expect(bosh.jami).toBe(olib.length);
-    expect(bosh.tayyor).toBe(0);
-    const [a, b, c] = olib;
+    expect(bosh.tayyor).toBe(olib.filter((h) => h.qoralama).length);
+    const [a, b, c] = olib.filter((h) => !h.qoralama);
     const p = yasash(mchj, "hamkorbank_pq312", {
       [a.kalit]: fayl("mos"),
       [b.kalit]: fayl("muammo"),
       [c.kalit]: { ...fayl("mos"), tekshiruv: null },
       kredit_tarixi: fayl("mos"), // tavsiya — sanalmaydi
     })!;
-    expect(p.tayyor).toBe(1);
+    expect(p.tayyor).toBe(1 + olib.filter((h) => h.qoralama).length);
     expect(p.jami).toBe(olib.length);
   });
   it("noto'g'ri tanlov — birinchi (eng mos) mahsulotga qaytadi", () => {

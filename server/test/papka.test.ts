@@ -4,6 +4,7 @@ import { appYaratish, faylTuri } from "../src/app";
 import { NAMUNALAR } from "../src/namunalar";
 import { PDFDocument } from "pdf-lib";
 import { matnTozala, papkaPdf } from "../src/papka-pdf";
+import { qoralamaSahifa } from "../src/qoralamalar";
 import { papkaYasash } from "../src/hujjatlar";
 import { mahsulotlarniMoslash } from "../src/mahsulotlar";
 import { XotiraFaylOmbor, XotiraStore } from "../src/store";
@@ -52,7 +53,9 @@ describe("hujjat yuklash", () => {
     const x = h.papka!.hujjatlar.find((q) => q.kalit === "ariza")!;
     expect(x.fayl?.tur).toBe("image/png");
     expect(x.fayl?.tekshiruv).toEqual(MOS);
-    expect(h.papka!.tayyor).toBe(1);
+    // Ariza: tekshiruvdan o'tgan fayl tayyor; qolgan tayyorlari — Yetak qoralamalari
+    const qoralamalar = h.papka!.hujjatlar.filter((q) => !q.bank_ozi_oladi && !q.tavsiya && !q.fayl && q.qoralama).length;
+    expect(h.papka!.tayyor).toBe(1 + qoralamalar);
   });
 
   it(".txt png nomi bilan — 422", async () => {
@@ -82,7 +85,9 @@ describe("hujjat yuklash", () => {
     const x = h.papka!.hujjatlar.find((q) => q.kalit === "ariza")!;
     expect(x.fayl).not.toBeNull();
     expect(x.fayl!.tekshiruv).toBeNull();
-    expect(h.papka!.tayyor).toBe(0);
+    // Tekshirilmagan fayl qoralamani bosib ketadi — ariza tayyor sanalmaydi
+    const qoralamalar = h.papka!.hujjatlar.filter((q) => !q.bank_ozi_oladi && !q.tavsiya && !q.fayl && q.qoralama).length;
+    expect(h.papka!.tayyor).toBe(qoralamalar);
   });
 
   it("tekshiruvchi yo'q (kalit yo'q) — fayl saqlanadi", async () => {
@@ -120,6 +125,18 @@ describe("papka.pdf", () => {
     const oddiy = await sahifa();
     const bilan = await sahifa({ oylik_tushum: 50_000_000, oylik_xarajat: 30_000_000, oylik_tolov: 4_000_000, yillik_stavka: 24, muddat_oy: 36, summa: 100_000_000 });
     expect(bilan).toBe(oddiy + 1);
+  });
+
+  it("Yetak qoralamalari (ariza, qaror) — har biri alohida sahifa; ariza bank taklifidagi to'lov bilan", async () => {
+    const profil = { shakl: "mchj" as const, faoliyat: "non sexi", faoliyat_oy: 24, kredit_summa: 100_000_000, kredit_muddat_oy: 36, maqsad: "uskuna", oylik_tushum: 50_000_000, oylik_xarajat: 30_000_000, garov_qiymati: 0, kredit_tarixi: "yaxshi" as const };
+    const papka = papkaYasash(profil, mahsulotlarniMoslash(profil), undefined, {})!;
+    const kirish = { profil, bank: "Hamkorbank", mahsulot: "Kichik biznesga ko'mak", taklif: { foiz_min: 18, foiz_max: 24, oylik_tolov: 3_923_000 } };
+    const ariza = qoralamaSahifa("ariza", kirish);
+    expect(ariza.qatorlar.find(([n]) => n === "Taxminiy oylik to'lov")![1]).toContain("3 923 000");
+    expect(qoralamaSahifa("ariza", { ...kirish, ism: "Aliyev Vali" }).qatorlar[0][1]).toBe("Aliyev Vali");
+    const sahifa = async (q: ReturnType<typeof qoralamaSahifa>[]) =>
+      (await PDFDocument.load(await papkaPdf({ papka, profil, fayllar: [], sana: "2026-11-18", qoralamalar: q }))).getPageCount();
+    expect(await sahifa([ariza, qoralamaSahifa("tasischi_qarori", kirish)])).toBe((await sahifa([])) + 2);
   });
 
   it("fayl yo'q, lekin profil to'liq — pul oqimi qoralamasi bilan 200; sessiya yo'q — 404", async () => {

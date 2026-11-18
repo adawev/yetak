@@ -25,6 +25,8 @@ export interface ChatImkon {
   holat: SessiyaHolati
   amallar: HujjatAmallari
   onYubor: (matn: string) => void
+  /** Papkani bankka yuborish roziligi */
+  onRozilik: (rozi: boolean) => void
   /** Xabar hozir keldi (sahifa ochilgandan keyin) — animatsiya bilan */
   yangi: boolean
   /** Bu xabar — hujjatlar blokli oxirgi xabar (faqat u jonli) */
@@ -310,7 +312,7 @@ export function BlokKorsat({
     )
   }
   if (chat && blok.tur === 'hujjatlar' && chat.oxirgiHujjatlar) {
-    return <HujjatQadamlari holat={chat.holat} amallar={chat.amallar} />
+    return <HujjatQadamlari holat={chat.holat} amallar={chat.amallar} onRozilik={chat.onRozilik} />
   }
   switch (blok.tur) {
     case 'summa':

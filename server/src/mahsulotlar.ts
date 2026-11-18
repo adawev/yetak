@@ -53,7 +53,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
                 : { matn: `${somda(s - mln(100))} uchun garov kerak — garov yo'q`, holat: "yoq" };
       return [
         p.shakl === "ozini_band"
-          ? nomalum("Kichik tadbirkorlik subyekti (o'zini o'zi band qilgan mos kelishini bankdan so'rang)")
+          ? nomalum("Kichik tadbirkorlik subyekti (o'zini o'zi band qilganga — bank ko'rib chiqishda aniqlaydi)")
           : tekshir("Kichik tadbirkorlik subyekti (YaTT yoki MChJ)", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
         tekshir("Kamida 1 yil faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 12),
         tekshir("Kredit tarixi ijobiy yoki umuman yo'q", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
@@ -176,7 +176,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
         tekshir("Kamida 6 oy faoliyat (summa katta bo'lsa — ko'proq)", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
         p.shakl === "yatt"
           ? tekshir("YaTT uchun summa 1 mlrd gacha", s, () => s! <= mln(1000))
-          : nomalum("Summa chegarasi dollarda belgilangan — bankdan aniqlang"),
+          : nomalum("Summa chegarasi dollarda — bank kurs bo'yicha hisoblaydi"),
         tekshir("Muddat 36 oygacha", p.kredit_muddat_oy, () => p.kredit_muddat_oy! <= 36),
         tekshir(
           "Garov summaning 135% idan kam emas",

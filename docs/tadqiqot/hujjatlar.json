@@ -8,12 +8,12 @@
       "onlayn": null,
       "bank_ozi_oladi": false,
       "olish": {
-        "qayerda": "bankning o'zida — ariza shaklini bank beradi (onlayn kreditda — bank ilovasida)",
+        "qayerda": "Yetak to'ldiradi — papka PDF ida",
         "qidiruv": null,
         "qadamlar": [
-          "Bank filialiga yoki bank ilovasining biznes bo'limiga kiring",
-          "Biznes krediti uchun ariza shaklini so'rang",
-          "Yetak hisoblagan summa, muddat va maqsadni yozing — imzoni o'zingiz qo'yasiz"
+          "Yetak arizani suhbatdagi javoblaringizdan to'ldirdi — PDF da tekshiring",
+          "Ism va STIR qatorini to'ldiring (pasport yuklasangiz, ism o'zi tushadi)",
+          "Imzolang; MChJ bo'lsa — muhr"
         ],
         "vaqt": null,
         "narx": null,
@@ -67,12 +67,12 @@
       "onlayn": null,
       "bank_ozi_oladi": false,
       "olish": {
-        "qayerda": "korxona o'zi yozadi (ta'sischilar yig'ilishi qarori)",
+        "qayerda": "Yetak qaror matnini tayyorlaydi — papka PDF ida",
         "qidiruv": null,
         "qadamlar": [
-          "Ta'sischilar yig'ilishini o'tkazing",
-          "Qarorga yozing: qaysi bankdan, qancha summa, qancha muddatga, nima maqsadda; garov bo'lsa — qaysi mulk",
-          "Hamma ta'sischilar imzolaydi, korxona muhri bosiladi"
+          "Yetak qaror matnini tayyorladi: bank, summa, muddat, maqsad, ta'minot",
+          "Korxona nomi va ta'sischilar ismini yozing",
+          "Ta'sischilar imzolaydi, muhr bosiladi — rasmga olib yuklang"
         ],
         "vaqt": null,
         "narx": null,
@@ -170,11 +170,11 @@
       "onlayn": null,
       "bank_ozi_oladi": false,
       "olish": {
-        "qayerda": "o'zingiz yozasiz (qayerdan qancha tushum keladi)",
+        "qayerda": "Yetak to'ldiradi — papka PDF ida",
         "qidiruv": null,
         "qadamlar": [
-          "Qayerdan pul tushishini yozing: savdo, xizmat, ijara va h.k.",
-          "Har biriga oyiga taxminan qancha tushishini yozing — Yetakka aytgan raqamlaringiz bilan bir xil bo'lsin",
+          "Yetak siz aytgan tushum va xarajatdan to'ldirdi",
+          "Boshqa daromadingiz bo'lsa — qo'shing",
           "Imzolang"
         ],
         "vaqt": null,
@@ -190,11 +190,12 @@
       "onlayn": null,
       "bank_ozi_oladi": false,
       "olish": {
-        "qayerda": "o'zingiz tuzasiz — bankda shakli bo'lsa, shuni so'rang",
+        "qayerda": "Yetak tuzadi — papka PDF ida",
         "qidiruv": null,
         "qadamlar": [
-          "Yetak buni siz aytgan raqamlardan o'zi tuzadi — papka PDF ida bor",
-          "Bankning o'z shakli bo'lsa — raqamlarni o'shanga ko'chiring"
+          "Yetak siz aytgan raqamlardan 12 oylik jadval tuzdi",
+          "Raqamlarni tekshiring — farq bo'lsa, chatda ayting, qayta hisoblaymiz",
+          "Imzolang"
         ],
         "vaqt": null,
         "narx": null,
@@ -316,8 +317,7 @@
         "qidiruv": null,
         "qadamlar": [
           "Garov mulkingizni baholash tashkilotiga baholating (o'zingiz tanlaysiz)",
-          "Bankdan qaysi baholovchilarni qabul qilishini oldindan so'rang",
-          "Hisobotni olib, papkaga yuklang"
+          "Hisobotni rasmga olib yuklang — Yetak o'qib, papkaga qo'shadi"
         ],
         "vaqt": null,
         "narx": "pullik",
@@ -337,8 +337,8 @@
         "qidiruv": null,
         "qadamlar": [
           "Kafil bo'ladigan korxona rahbari bilan kelishing",
-          "Undan so'rang: ta'sischilar roziligi (qaror), oxirgi balans, ta'sis hujjatlari, aylanma ma'lumotnomasi",
-          "Hujjatlarni rasmga olib papkaga yuklang"
+          "Undan oling: ta'sischilar roziligi (qaror), oxirgi balans, ta'sis hujjatlari, aylanma ma'lumotnomasi",
+          "Rasmga olib yuklang — Yetak tekshirib, papkaga qo'shadi"
         ],
         "vaqt": null,
         "narx": null,

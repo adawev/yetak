@@ -114,7 +114,7 @@ function EngYaxshi({ m }: { m: MahsulotMoslik }) {
           <p className="text-sm">{m.nom}</p>
         </div>
         <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${MOS[m.mos].rang}`}>
-          {m.mos === 'qisman' ? 'Bankdan aniqlang' : MOS[m.mos].matn}
+          {m.mos === 'qisman' ? 'Bank tekshiradi' : MOS[m.mos].matn}
         </span>
       </div>
       <div className="mt-2 grid grid-cols-2 gap-2">

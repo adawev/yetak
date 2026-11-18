@@ -3,6 +3,7 @@
 
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { Papka, Profil } from "../../shared/types";
+import type { QoralamaSahifa } from "./qoralamalar";
 import { biznesToifasi, somda } from "./rules";
 
 const A4: [number, number] = [595.28, 841.89];
@@ -99,7 +100,7 @@ function pulOqimiSahifa(w: Yozuvchi, qalin: PDFFont, font: PDFFont, po: PulOqimi
   w.yangiSahifa();
   w.qator("Pul oqimi prognozi (qoralama)", { size: 18, bold: true });
   w.qator(
-    "Tadbirkor aytgan o'rtacha oylik raqamlar asosida. Mavsumiy o'zgarish hisobga olinmagan. Yakuniy shaklni bank beradi.",
+    "Tadbirkor aytgan o'rtacha oylik raqamlar asosida, Yetak tuzdi. Mavsumiy o'zgarish hisobga olinmagan. Imzolanmaguncha qoralama.",
     { size: 9.5, rang: kulrang },
   );
   w.bosh(10);
@@ -128,12 +129,33 @@ function pulOqimiSahifa(w: Yozuvchi, qalin: PDFFont, font: PDFFont, po: PulOqimi
   );
 }
 
+/** Yetak to'ldirgan hujjat sahifasi: sarlavha, maydonlar jadvali, imzo joylari. */
+function qoralamaChiz(w: Yozuvchi, q: QoralamaSahifa) {
+  const kulrang: [number, number, number] = [0.42, 0.45, 0.5];
+  w.yangiSahifa();
+  w.qator("YETAK TAYYORLADI - QORALAMA", { size: 9, bold: true, rang: [0.85, 0.45, 0.1] });
+  w.qator(q.sarlavha, { size: 18, bold: true });
+  w.qator(q.izoh, { size: 9.5, rang: kulrang });
+  w.bosh(12);
+  for (const [nom, qiymat] of q.qatorlar) {
+    w.qator(nom, { size: 9, rang: kulrang });
+    w.qator(qiymat, { size: 11, chekinish: 8 });
+    w.bosh(4);
+  }
+  w.bosh(18);
+  for (const i of q.imzo) {
+    w.qator(`${i}: ______________________________`, { size: 10.5 });
+    w.bosh(10);
+  }
+}
+
 export async function papkaPdf(k: {
   papka: Papka;
   profil: Profil;
   fayllar: PapkaFayli[];
   sana: string;
   pulOqimi?: PulOqimiKirish;
+  qoralamalar?: QoralamaSahifa[];
 }): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   doc.setTitle(matnTozala(`Kredit hujjatlari papkasi - ${k.papka.mahsulot.bank}`));
@@ -169,13 +191,15 @@ export async function papkaPdf(k: {
   w.bosh(14);
 
   w.qator("Hujjatlar", { size: 13, bold: true });
-  w.qator(`Olib boriladigan hujjatlar: ${k.papka.tayyor} / ${k.papka.jami} tasi tekshiruvdan o'tgan`, { size: 10, rang: kulrang });
+  w.qator(`Kerakli hujjatlar: ${k.papka.jami} ta, ${k.papka.tayyor} tasi tayyor (Yetak tayyorlagan qoralamalar va tekshiruvdan o'tgan fayllar)`, { size: 10, rang: kulrang });
   w.bosh(4);
   for (const h of k.papka.hujjatlar) {
     const belgi = h.bank_ozi_oladi
       ? "[bank]"
       : !h.fayl
-        ? "[ yo'q ]"
+        ? h.qoralama
+          ? "[Yetak tayyorladi]"
+          : "[ yo'q ]"
         : h.fayl.tekshiruv?.holat === "mos"
           ? "[+ bor]"
           : h.fayl.tekshiruv
@@ -195,6 +219,7 @@ export async function papkaPdf(k: {
     { size: 9, rang: kulrang },
   );
 
+  for (const q of k.qoralamalar ?? []) qoralamaChiz(w, q);
   if (k.pulOqimi) pulOqimiSahifa(w, qalin, font, k.pulOqimi);
 
   for (const f of k.fayllar) {
