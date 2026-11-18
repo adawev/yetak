@@ -1,7 +1,8 @@
-import { Loader2, RotateCcw } from 'lucide-react'
+import { RotateCcw } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChatImkon } from '@/components/bloklar'
 import { Kiritish, Kutish, Tugmalar, XabarPufak, XatoBanner } from '@/components/chat'
+import { ChatSkelet } from '@/components/Skelet'
 import { HujjatlarPapka, hujjatlarHodisasi, PAPKA_ID } from '@/components/Hujjatlar'
 import { Panel } from '@/components/Panel'
 import { useSessiya } from '@/hooks/useSessiya'
@@ -87,7 +88,7 @@ export default function Chat() {
     return (
       <div className="grid h-full place-items-center p-4">
         {s.yuklanmoqda ? (
-          <Loader2 className="animate-spin text-muted-foreground" />
+          <ChatSkelet />
         ) : (
           <div className="max-w-sm space-y-3 text-center">
             <p>{s.xato ?? 'Suhbatni ochib bo‘lmadi.'}</p>
@@ -148,7 +149,7 @@ export default function Chat() {
       <section className={`${yorliq !== 'suhbat' ? 'hidden' : 'flex'} min-h-0 flex-1 flex-col`}>
         <div ref={ruyxat} className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5" aria-live="polite">
           {h.xabarlar.map((x, i) => (
-            <div key={`${x.vaqt}-${i}`} data-xabar={i} className="scroll-mt-3">
+            <div key={`${x.vaqt}-${i}`} data-xabar={i} className={`scroll-mt-3 ${i >= (boshlangich.current ?? 0) ? 'kirish' : ''}`}>
               <XabarPufak
                 xabar={x}
                 natija={h.natija}

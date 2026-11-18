@@ -33,7 +33,7 @@ function Hujjat({ yetak, children }: { yetak: boolean; children: string }) {
 /** Bank hujjatiga o'xshash varaqa: Yetak natijasining qisqa ko'rinishi. */
 function Varaqa() {
   return (
-    <figure className="rounded-xl border border-border bg-card text-[15px]">
+    <figure className="kirish rounded-xl border border-border bg-card text-[15px] shadow-[0_1px_0_0_var(--border),0_24px_48px_-24px_color-mix(in_srgb,var(--foreground)_18%,transparent)]" style={{ animationDelay: "180ms" }}>
       <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <p className="font-semibold">Kredit papkasi</p>
         <p className="text-sm text-muted-foreground">Namuna</p>
@@ -93,14 +93,14 @@ export default function Bosh() {
       {/* Kirish */}
       <section className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_440px] lg:items-center lg:gap-16 lg:py-24">
         <div>
-          <h1 className="max-w-xl text-4xl leading-[1.1] font-semibold sm:text-5xl lg:text-[3.4rem]">
+          <h1 className="kirish max-w-xl text-4xl leading-[1.1] font-semibold sm:text-5xl lg:text-[3.4rem]">
             Kredit hujjatlaringizni bankka qatnamasdan tayyorlang
           </h1>
-          <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
+          <p className="kirish mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
             Yetak biznesingizga mos bankni topadi, arizani va boshqa hujjatlarni javoblaringizdan to'ldiradi, papkani bankka
             yuboradi. Hujjat yig'ib bankka qatnamaysiz. Tadbirkor uchun bepul.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="kirish mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               to="/chat"
               className="inline-flex min-h-12 items-center rounded-lg bg-primary px-6 text-lg font-medium text-white transition-opacity hover:opacity-90"

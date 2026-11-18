@@ -64,6 +64,40 @@ h1, h2, h3, .font-display {
   outline-offset: 2px;
 }
 
+/* Scroll — mavzu ranglarida, ingichka (oq standart panel qorong'i rejimda chiqmasin) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground) 45%, transparent) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 40%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: color-mix(in srgb, var(--muted-foreground) 65%, transparent); }
+*::-webkit-scrollbar-corner { background: transparent; }
+
+/* Tugma bosilganda sezilsin */
+button:not(:disabled):active, a[href]:active { transform: translateY(0.5px); }
+
+/* Yuklanish skeleti */
+@keyframes yetak-skelet {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.skelet {
+  border-radius: 8px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--foreground) 6%, transparent) 25%,
+    color-mix(in srgb, var(--foreground) 11%, transparent) 50%,
+    color-mix(in srgb, var(--foreground) 6%, transparent) 75%);
+  background-size: 200% 100%;
+  animation: yetak-skelet 1.4s ease-in-out infinite;
+}
+
 /* Chat: yangi blok yumshoq chiqadi */
 @keyframes yetak-kirish {
   from { opacity: 0; transform: translateY(8px); }
@@ -71,5 +105,6 @@ h1, h2, h3, .font-display {
 }
 .kirish { animation: yetak-kirish 0.35s ease-out both; }
 @media (prefers-reduced-motion: reduce) {
-  .kirish { animation: none; }
+  .kirish, .skelet { animation: none; }
+  html { scroll-behavior: auto; }
 }

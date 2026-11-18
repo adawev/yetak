@@ -1,7 +1,8 @@
 // Bank oynasi: rozilik bergan, tekshirilgan tadbirkorlar. Raqamlar serverdan (rules.ts va kabinet.ts).
 // Bu yerda faqat ko'rsatish uchun nisbatlar: foyda ÷ to'lov va garov ÷ kerakli garov.
 import { SHAKL_QISQA, yuridikShaxs, type ArizaHolati, type BankArizasiHolat, type BankHisobi, type Hukm, type Papka, type Profil } from '@shared/types'
-import { ArrowLeft, Check, ChevronRight, Circle, Download, Inbox, Loader2, RotateCcw, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, Circle, Download, Inbox, RotateCcw, TriangleAlert } from 'lucide-react'
+import { SahifaSkelet } from '@/components/Skelet'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { GarovBlok, HukmBlok, PulOqimiBlok, YolXaritasiBlok } from '@/components/bloklar'
@@ -116,7 +117,7 @@ function useYukla<T>(yukla: () => Promise<T>) {
 }
 
 function Holat({ xato, onQayta }: { xato: string | null; onQayta: () => void }) {
-  if (!xato) return <Loader2 className="mx-auto mt-10 animate-spin text-muted-foreground" />
+  if (!xato) return <SahifaSkelet />
   return (
     <div className="mt-10 space-y-3 text-center">
       <p>{xato}</p>

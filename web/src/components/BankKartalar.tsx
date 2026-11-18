@@ -23,7 +23,7 @@ export function BankLogo({ bank, olcham = 40 }: { bank: string; olcham?: number 
   }
   return (
     <span className="grid shrink-0 place-items-center overflow-hidden rounded-xl border border-border bg-white" style={uslub}>
-      <img src={b.logo} alt="" className="h-[70%] w-[70%] object-contain" onError={() => setXato(true)} />
+      <img src={b.logo} alt="" loading="lazy" decoding="async" className="h-[70%] w-[70%] object-contain" onError={() => setXato(true)} />
     </span>
   )
 }

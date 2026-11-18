@@ -2,6 +2,7 @@
 // Hamma raqamni server hisoblaydi; bu yerda faqat chiziladi.
 import type { AdminHisobot, HamkorBank, Hukm, Shartnoma } from '@shared/types'
 import { Building2, ChartColumn, Loader2, Plus, RotateCcw, UserPlus } from 'lucide-react'
+import { SahifaSkelet } from '@/components/Skelet'
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { QAROR } from '@/components/Qaror'
 import { Korsatkich, Korsatkichlar, SahifaSarlavha, Tablar, tugma } from '@/components/ui'
@@ -371,7 +372,7 @@ export default function Admin() {
 
       {xato && <p className="mb-3 rounded-lg bg-destructive/10 p-3 text-destructive">{xato}</p>}
       {!hisobot || !banklar ? (
-        !xato && <Loader2 className="mx-auto mt-10 animate-spin text-muted-foreground" />
+        !xato && <SahifaSkelet />
       ) : bolim === 'hisobot' ? (
         <Hisobot h={hisobot} />
       ) : (

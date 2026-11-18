@@ -1,13 +1,17 @@
 import { ChartPie, Inbox, LogIn, LogOut, MessageCircleMore, type LucideIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { Ikon } from '@/components/Ikon'
 import { AuthProvider, Himoya, useAuth } from '@/lib/auth'
-import Admin from '@/pages/Admin'
-import Bank, { BankAriza } from '@/pages/Bank'
+import { ChatSkelet, SahifaSkelet } from '@/components/Skelet'
 import Bosh from '@/pages/Bosh'
-import Chat from '@/pages/Chat'
-import Kirish from '@/pages/Kirish'
+
+// Bosh sahifa darhol; qolganlari kerak bo'lganda yuklanadi (birinchi ochilish tezroq).
+const Chat = lazy(() => import('@/pages/Chat'))
+const Kirish = lazy(() => import('@/pages/Kirish'))
+const Bank = lazy(() => import('@/pages/Bank'))
+const BankAriza = lazy(() => import('@/pages/Bank').then((m) => ({ default: m.BankAriza })))
+const Admin = lazy(() => import('@/pages/Admin'))
 
 /** Menyudagi bitta ikonka: faol bo'lsa to'q sariq doira. Nomi — tooltip va ekran o'quvchi uchun. */
 function MenyuIkon({ to, nom, belgi: Belgi }: { to: string; nom: string; belgi: LucideIcon }) {
@@ -95,6 +99,11 @@ function Sarlavha() {
 }
 
 export default function App() {
+  // Bosh sahifa chizilgach chatni oldindan yuklab qo'yamiz — «Biznesim haqida yozish» bosilganda kutish bo'lmasin.
+  useEffect(() => {
+    const t = setTimeout(() => void import('@/pages/Chat'), 1200)
+    return () => clearTimeout(t)
+  }, [])
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -104,12 +113,12 @@ export default function App() {
           <div className="min-h-0 flex-1">
             <Routes>
               <Route path="/" element={<Bosh />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/login" element={<Kirish />} />
-              <Route path="/register" element={<Kirish royxat />} />
-              <Route path="/bank" element={<Himoya rol="bank"><Bank /></Himoya>} />
-              <Route path="/bank/:id" element={<Himoya rol="bank"><BankAriza /></Himoya>} />
-              <Route path="/admin" element={<Himoya rol="admin"><Admin /></Himoya>} />
+              <Route path="/chat" element={<Suspense fallback={<ChatSkelet />}><Chat /></Suspense>} />
+              <Route path="/login" element={<Suspense fallback={null}><Kirish /></Suspense>} />
+              <Route path="/register" element={<Suspense fallback={null}><Kirish royxat /></Suspense>} />
+              <Route path="/bank" element={<Himoya rol="bank"><Suspense fallback={<SahifaSkelet />}><Bank /></Suspense></Himoya>} />
+              <Route path="/bank/:id" element={<Himoya rol="bank"><Suspense fallback={<SahifaSkelet />}><BankAriza /></Suspense></Himoya>} />
+              <Route path="/admin" element={<Himoya rol="admin"><Suspense fallback={<SahifaSkelet />}><Admin /></Suspense></Himoya>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>
