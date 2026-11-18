@@ -1,10 +1,10 @@
 // Admin panel: hisobot (voronka, hukmlar, kunlik, banklar) va hamkor banklarni boshqarish.
 // Hamma raqamni server hisoblaydi; bu yerda faqat chiziladi.
 import type { AdminHisobot, HamkorBank, Hukm, Shartnoma } from '@shared/types'
-import { Building2, ChartColumn, ChartPie, Landmark, Loader2, Plus, RotateCcw, UserPlus } from 'lucide-react'
+import { Building2, ChartColumn, Loader2, Plus, RotateCcw, UserPlus } from 'lucide-react'
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react'
-import { Karta } from '@/components/bloklar'
 import { QAROR } from '@/components/Qaror'
+import { Korsatkich, Korsatkichlar, SahifaSarlavha, Tablar, tugma } from '@/components/ui'
 import { api } from '@/lib/api'
 import { qisqaSom } from '@/lib/format'
 
@@ -22,23 +22,12 @@ const HUKM: Record<Hukm, { matn: string; rang: string }> = {
 const maydon = 'mt-1 block min-h-10 w-full rounded-lg border border-border bg-card px-3 outline-none focus:border-primary'
 const xatoMatn = (e: unknown) => (e instanceof Error ? e.message : 'Nimadir xato ketdi.')
 
-function Sarlavha({ belgi, children }: { belgi: ReactNode; children: ReactNode }) {
-  return (
-    <h2 className="mb-2 flex items-center gap-1.5 font-display text-lg font-semibold">
-      {belgi}
-      {children}
-    </h2>
-  )
+function Sarlavha({ children }: { belgi?: ReactNode; children: ReactNode }) {
+  return <h2 className="mb-5 font-semibold">{children}</h2>
 }
 
-function Raqam({ nom, qiymat, izoh }: { nom: string; qiymat: string; izoh?: string }) {
-  return (
-    <Karta>
-      <p className="text-xs text-muted-foreground">{nom}</p>
-      <p className="font-display text-2xl font-semibold tabular-nums">{qiymat}</p>
-      {izoh && <p className="text-xs text-muted-foreground">{izoh}</p>}
-    </Karta>
-  )
+function Bolim({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <section className={`rounded-xl border border-border bg-card p-5 ${className}`}>{children}</section>
 }
 
 function Hisobot({ h }: { h: AdminHisobot }) {
@@ -53,35 +42,38 @@ function Hisobot({ h }: { h: AdminHisobot }) {
   const kunEng = Math.max(1, ...h.kunlik.map((k) => k.soni))
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-        <Raqam nom="Tadbirkorlar (ro'yxatdan o'tgan)" qiymat={String(h.foydalanuvchilar.tadbirkor)} />
-        <Raqam nom="Suhbatlar" qiymat={String(h.suhbatlar.jami)} izoh={`${h.suhbatlar.tugallangan} tasi tekshiruvdan o'tgan`} />
-        <Raqam nom="Berilgan kreditlar" qiymat={String(h.jami.berilgan_kredit)} izoh={`${qisqaSom(h.jami.berilgan_summa)} so'm`} />
-        <Raqam nom="Yetak daromadi" qiymat={`${qisqaSom(h.jami.daromad)} so'm`} izoh="Banklar komissiyasi" />
-      </div>
+    <div className="space-y-6">
+      <Korsatkichlar>
+        <Korsatkich nom="Tadbirkorlar" qiymat={h.foydalanuvchilar.tadbirkor} izoh="ro'yxatdan o'tgan" />
+        <Korsatkich nom="Suhbatlar" qiymat={h.suhbatlar.jami} izoh={`${h.suhbatlar.tugallangan} tasi tekshiruvdan o'tgan`} />
+        <Korsatkich nom="Berilgan kreditlar" qiymat={h.jami.berilgan_kredit} izoh={`${qisqaSom(h.jami.berilgan_summa)} so'm`} />
+        <Korsatkich nom="Yetak daromadi" qiymat={`${qisqaSom(h.jami.daromad)} so'm`} izoh="banklar komissiyasi" />
+      </Korsatkichlar>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Karta>
+        <Bolim>
           <Sarlavha belgi={<ChartColumn size={18} />}>Voronka</Sarlavha>
           <div className="space-y-2">
-            {voronka.map(([nom, n]) => (
-              <div key={nom} className="grid grid-cols-[120px_minmax(0,1fr)] items-center gap-2 text-sm">
+            {voronka.map(([nom, n], i) => (
+              <div key={nom} className="grid grid-cols-[120px_minmax(0,1fr)_44px] items-center gap-2 text-sm">
                 <span className="text-muted-foreground">{nom}</span>
                 <div
-                  className="flex h-7 items-center rounded bg-primary/80 px-2 text-xs font-semibold text-white tabular-nums"
+                  className={`flex h-7 items-center rounded px-2 text-xs font-semibold tabular-nums ${i === 3 ? 'bg-primary text-white' : 'bg-foreground text-background'}`}
                   style={{ width: `${Math.max(10, (n / engKop) * 100)}%` }}
                 >
                   {n}
                 </div>
+                <span className="text-right text-xs text-muted-foreground tabular-nums">
+                  {i === 0 ? '' : `${voronka[0][1] ? Math.round((n / voronka[0][1]) * 100) : 0}%`}
+                </span>
               </div>
             ))}
           </div>
-        </Karta>
+        </Bolim>
 
-        <Karta>
+        <Bolim>
           <Sarlavha belgi={<ChartColumn size={18} />}>Hukmlar</Sarlavha>
-          <div className="flex h-7 overflow-hidden rounded">
+          <div className="flex h-2 overflow-hidden rounded-full">
             {(Object.keys(HUKM) as Hukm[]).map((k) =>
               h.suhbatlar.hukmlar[k] ? (
                 <div
@@ -108,15 +100,15 @@ function Hisobot({ h }: { h: AdminHisobot }) {
             {h.kunlik.map((k) => (
               <div key={k.sana} className="flex flex-1 flex-col items-center gap-1">
                 <span className="text-xs tabular-nums">{k.soni || ''}</span>
-                <div className="w-full rounded-t bg-primary/70" style={{ height: `${(k.soni / kunEng) * 64 + 2}px` }} />
+                <div className="w-full rounded-t-sm bg-foreground/80" style={{ height: `${(k.soni / kunEng) * 64 + 2}px` }} />
                 <span className="text-[10px] text-muted-foreground">{k.sana.slice(8)}.{k.sana.slice(5, 7)}</span>
               </div>
             ))}
           </div>
-        </Karta>
+        </Bolim>
       </div>
 
-      <Karta className="overflow-x-auto">
+      <Bolim className="overflow-x-auto">
         <Sarlavha belgi={<Building2 size={18} />}>Banklar bo'yicha</Sarlavha>
         {h.banklar.length === 0 ? (
           <p className="text-sm text-muted-foreground">Hali hamkor bank yo'q. «Banklar» bo'limida qo'shing.</p>
@@ -157,7 +149,7 @@ function Hisobot({ h }: { h: AdminHisobot }) {
             </tbody>
           </table>
         )}
-      </Karta>
+      </Bolim>
     </div>
   )
 }
@@ -206,7 +198,7 @@ function YangiBank({ onQoshildi }: { onQoshildi: () => void }) {
             ))}
           </select>
         </label>
-        <button type="submit" disabled={band} className="flex min-h-10 items-center justify-center gap-1 rounded-lg bg-primary px-4 font-medium text-white">
+        <button type="submit" disabled={band} className="flex min-h-10 items-center justify-center gap-1 rounded-lg bg-foreground px-4 font-medium text-background">
           {band ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />} Qo'shish
         </button>
       </div>
@@ -252,7 +244,7 @@ function BankKarta({ b, onYangi }: { b: HamkorBank; onYangi: (b: HamkorBank) => 
   return (
     <li className="rounded-lg border border-border bg-card p-3">
       <div className="flex flex-wrap items-center gap-2">
-        <p className="min-w-0 flex-1 font-display text-lg font-semibold">{b.nom}</p>
+        <p className="min-w-0 flex-1 text-lg font-semibold">{b.nom}</p>
         <select
           aria-label="Shartnoma holati"
           className="min-h-9 rounded-lg border border-border bg-card px-2 text-sm"
@@ -289,7 +281,7 @@ function BankKarta({ b, onYangi }: { b: HamkorBank; onYangi: (b: HamkorBank) => 
           <ul>
             {b.xodimlar.map((x) => (
               <li key={x.id} className="tabular-nums">
-                {x.ism} · +{x.telefon}
+                {x.ism}, +{x.telefon}
               </li>
             ))}
           </ul>
@@ -311,7 +303,7 @@ function BankKarta({ b, onYangi }: { b: HamkorBank; onYangi: (b: HamkorBank) => 
             required
           />
           <div className="flex gap-2 sm:col-span-3">
-            <button type="submit" disabled={band} className="flex min-h-10 items-center gap-1 rounded-lg bg-primary px-3 text-sm font-medium text-white">
+            <button type="submit" disabled={band} className="flex min-h-10 items-center gap-1 rounded-lg bg-foreground px-3 text-sm font-medium text-background">
               {band && <Loader2 size={14} className="animate-spin" />} Xodim ochish
             </button>
             <button type="button" className="min-h-10 rounded-lg border border-border px-3 text-sm" onClick={() => setOchiq(false)}>
@@ -354,29 +346,27 @@ export default function Admin() {
   }, [yukla])
 
   return (
-    <main className="mx-auto h-full max-w-5xl overflow-y-auto p-4">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h1 className="font-display text-2xl font-bold">Admin panel</h1>
-          <p className="text-sm text-muted-foreground">Tadbirkor uchun bepul · daromad — hamkor banklar komissiyasi</p>
-        </div>
-        <button type="button" onClick={yukla} aria-label="Yangilash" title="Yangilash" className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground">
-          <RotateCcw size={17} />
-        </button>
-      </div>
-
-      <div className="mb-4 flex gap-1">
-        {(['hisobot', 'banklar'] as const).map((b) => (
-          <button
-            key={b}
-            type="button"
-            onClick={() => setBolim(b)}
-            className={`flex min-h-10 items-center gap-1.5 rounded-full px-4 text-sm font-medium ${bolim === b ? 'bg-primary text-white shadow-sm' : 'border border-border bg-card'}`}
-          >
-            {b === 'hisobot' ? <ChartPie size={16} /> : <Landmark size={16} />}
-            {b === 'hisobot' ? 'Hisobot' : `Banklar${banklar ? ` · ${banklar.length}` : ''}`}
+    <main className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-6xl p-4 sm:p-6">
+      <SahifaSarlavha
+        nom="Boshqaruv"
+        izoh="Tadbirkor uchun bepul. Daromad — hamkor banklar komissiyasi."
+        amal={
+          <button type="button" onClick={yukla} className={tugma.sokin}>
+            <RotateCcw size={15} /> Yangilash
           </button>
-        ))}
+        }
+      />
+
+      <div className="mb-8">
+        <Tablar
+          qiymat={bolim}
+          onTanla={setBolim}
+          royxat={[
+            { kalit: 'hisobot', nom: 'Hisobot' },
+            { kalit: 'banklar', nom: 'Hamkor banklar', soni: banklar?.length },
+          ]}
+        />
       </div>
 
       {xato && <p className="mb-3 rounded-lg bg-destructive/10 p-3 text-destructive">{xato}</p>}
@@ -394,6 +384,7 @@ export default function Admin() {
           </ul>
         </div>
       )}
+      </div>
     </main>
   )
 }

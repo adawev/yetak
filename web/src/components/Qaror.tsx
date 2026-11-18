@@ -3,24 +3,22 @@
 import type { ArizaHolati, BankArizasiHolat } from '@shared/types'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
-import { Karta } from '@/components/bloklar'
+import { Nuqta, tugma as T, maydon as M, type Ton } from '@/components/ui'
 import { api } from '@/lib/api'
 import { som, vaqt } from '@/lib/format'
 
-export const QAROR: Record<ArizaHolati, { matn: string; rang: string }> = {
-  yangi: { matn: 'Yangi', rang: 'bg-primary-soft text-primary' },
-  korilmoqda: { matn: "Ko'rilmoqda", rang: 'bg-warning/15 text-warning' },
-  berildi: { matn: 'Kredit berildi', rang: 'bg-success/15 text-success' },
-  rad: { matn: 'Rad etildi', rang: 'bg-destructive/15 text-destructive' },
+export const QAROR: Record<ArizaHolati, { matn: string; ton: Ton }> = {
+  yangi: { matn: 'Yangi', ton: 'primary' },
+  korilmoqda: { matn: "Ko'rilmoqda", ton: 'warning' },
+  berildi: { matn: 'Kredit berildi', ton: 'success' },
+  rad: { matn: 'Rad etildi', ton: 'destructive' },
 }
 
 export function QarorYorliq({ holat }: { holat: ArizaHolati }) {
   const q = QAROR[holat]
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ${q.rang}`}>{q.matn}</span>
+  return <Nuqta ton={q.ton}>{q.matn}</Nuqta>
 }
 
-const tugma = 'min-h-10 rounded-lg border border-border px-3 text-sm font-medium hover:bg-foreground/5 disabled:opacity-50'
-const maydon = 'mt-1 block min-h-10 w-full rounded-lg border border-border bg-card px-3 outline-none focus:border-primary'
 
 export function QarorPanel({
   ariza,
@@ -58,90 +56,102 @@ export function QarorPanel({
   }
 
   return (
-    <Karta>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="text-sm text-muted-foreground">Bank qarori</p>
+    <section className="rounded-xl border border-border bg-card">
+      <div className="flex items-center justify-between gap-2 border-b border-border px-5 py-3.5">
+        <h2 className="font-semibold">Bank qarori</h2>
         <QarorYorliq holat={q.holat} />
       </div>
+      <div className="p-5">
+        {q.holat === 'berildi' && q.summa != null && (
+          <dl className="mb-4 space-y-2 text-sm">
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Berilgan summa</dt>
+              <dd className="font-semibold tabular-nums">{som(q.summa)}</dd>
+            </div>
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Yetak komissiyasi</dt>
+              <dd className="font-semibold tabular-nums">{som(q.komissiya ?? 0)}</dd>
+            </div>
+          </dl>
+        )}
+        {q.holat === 'rad' && q.sabab && (
+          <p className="mb-4 border-l-2 border-destructive pl-3 text-sm">
+            <span className="text-muted-foreground">Sabab: </span>
+            {q.sabab}
+          </p>
+        )}
 
-      {q.holat === 'berildi' && q.summa != null && (
-        <div className="mb-2 grid grid-cols-2 gap-2 text-sm">
-          <div className="rounded-md bg-success/10 p-2">
-            <p className="text-xs text-muted-foreground">Berilgan summa</p>
-            <p className="font-semibold tabular-nums">{som(q.summa)}</p>
+        {rejim === null && (
+          <div className="grid gap-2">
+            <button type="button" className={T.asosiy} disabled={band} onClick={() => setRejim('berildi')}>
+              Kredit berildi
+            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                className={T.ikkinchi}
+                disabled={band || q.holat === 'korilmoqda'}
+                onClick={() => void saqla('korilmoqda')}
+              >
+                Ko'rib chiqish
+              </button>
+              <button type="button" className={T.ikkinchi} disabled={band} onClick={() => setRejim('rad')}>
+                Rad etish
+              </button>
+            </div>
           </div>
-          <div className="rounded-md bg-primary-soft p-2">
-            <p className="text-xs text-muted-foreground">Yetak komissiyasi</p>
-            <p className="font-semibold tabular-nums">{som(q.komissiya ?? 0)}</p>
-          </div>
-        </div>
-      )}
-      {q.holat === 'rad' && q.sabab && <p className="mb-2 rounded-md bg-destructive/10 p-2 text-sm">Sabab: {q.sabab}</p>}
-      {q.holat !== 'yangi' && <p className="mb-2 text-xs text-muted-foreground">Yangilangan: {vaqt(q.yangilangan)}</p>}
+        )}
 
-      {rejim === null && (
-        <div className="flex flex-wrap gap-2">
-          {q.holat === 'yangi' && (
-            <button type="button" className={tugma} disabled={band} onClick={() => void saqla('korilmoqda')}>
-              Ko'rib chiqyapman
-            </button>
-          )}
-          <button type="button" className={`${tugma} text-success`} disabled={band} onClick={() => setRejim('berildi')}>
-            Kredit berildi
-          </button>
-          <button type="button" className={`${tugma} text-destructive`} disabled={band} onClick={() => setRejim('rad')}>
-            Rad etish
-          </button>
-        </div>
-      )}
+        {rejim === 'berildi' && (
+          <form
+            className="space-y-3"
+            onSubmit={(e) => {
+              e.preventDefault()
+              void saqla('berildi')
+            }}
+          >
+            <label className="block text-sm font-medium">
+              Berilgan summa, mln so'm
+              <input className={`${M} mt-1.5`} inputMode="decimal" value={mln} onChange={(e) => setMln(e.target.value)} required />
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button type="button" className={T.ikkinchi} onClick={() => setRejim(null)}>
+                Bekor
+              </button>
+              <button type="submit" disabled={band} className={T.asosiy}>
+                {band && <Loader2 size={16} className="animate-spin" />} Tasdiqlash
+              </button>
+            </div>
+          </form>
+        )}
 
-      {rejim === 'berildi' && (
-        <form
-          className="space-y-2"
-          onSubmit={(e) => {
-            e.preventDefault()
-            void saqla('berildi')
-          }}
-        >
-          <label className="block text-sm">
-            Berilgan summa, mln so'm
-            <input className={maydon} inputMode="decimal" value={mln} onChange={(e) => setMln(e.target.value)} required />
-          </label>
-          <div className="flex gap-2">
-            <button type="submit" disabled={band} className="flex min-h-10 items-center gap-1 rounded-lg bg-success px-3 text-sm font-medium text-white">
-              {band && <Loader2 size={14} className="animate-spin" />} Tasdiqlash
-            </button>
-            <button type="button" className={tugma} onClick={() => setRejim(null)}>
-              Bekor
-            </button>
-          </div>
-        </form>
-      )}
+        {rejim === 'rad' && (
+          <form
+            className="space-y-3"
+            onSubmit={(e) => {
+              e.preventDefault()
+              void saqla('rad')
+            }}
+          >
+            <label className="block text-sm font-medium">
+              Rad sababi
+              <textarea className={`${M} mt-1.5 py-2`} rows={3} value={sabab} onChange={(e) => setSabab(e.target.value)} required />
+              <span className="mt-1 block text-sm font-normal text-muted-foreground">Tadbirkor shunga qarab tuzatadi.</span>
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button type="button" className={T.ikkinchi} onClick={() => setRejim(null)}>
+                Bekor
+              </button>
+              <button type="submit" disabled={band} className={T.asosiy}>
+                {band && <Loader2 size={16} className="animate-spin" />} Rad etish
+              </button>
+            </div>
+          </form>
+        )}
 
-      {rejim === 'rad' && (
-        <form
-          className="space-y-2"
-          onSubmit={(e) => {
-            e.preventDefault()
-            void saqla('rad')
-          }}
-        >
-          <label className="block text-sm">
-            Rad sababi — tadbirkor shunga qarab tuzatadi
-            <textarea className={`${maydon} py-2`} rows={3} value={sabab} onChange={(e) => setSabab(e.target.value)} required />
-          </label>
-          <div className="flex gap-2">
-            <button type="submit" disabled={band} className="flex min-h-10 items-center gap-1 rounded-lg bg-destructive px-3 text-sm font-medium text-white">
-              {band && <Loader2 size={14} className="animate-spin" />} Rad etish
-            </button>
-            <button type="button" className={tugma} onClick={() => setRejim(null)}>
-              Bekor
-            </button>
-          </div>
-        </form>
-      )}
-
-      {xato && <p className="mt-2 text-sm text-destructive">{xato}</p>}
-    </Karta>
+        {q.holat !== 'yangi' && <p className="mt-4 text-sm text-muted-foreground">Yangilangan {vaqt(q.yangilangan)}</p>}
+        {xato && <p className="mt-3 text-sm text-destructive">{xato}</p>}
+      </div>
+    </section>
   )
 }

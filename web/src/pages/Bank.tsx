@@ -1,21 +1,72 @@
+// Bank oynasi: rozilik bergan, tekshirilgan tadbirkorlar. Raqamlar serverdan (rules.ts va kabinet.ts).
+// Bu yerda faqat ko'rsatish uchun nisbatlar: foyda ÷ to'lov va garov ÷ kerakli garov.
 import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Profil } from '@shared/types'
 import { ArrowLeft, ChevronRight, Inbox, Loader2, RotateCcw } from 'lucide-react'
-import { QAROR, QarorPanel, QarorYorliq } from '@/components/Qaror'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { GarovBlok, HukmBlok, Karta, PulOqimiBlok, YolXaritasiBlok } from '@/components/bloklar'
+import { GarovBlok, HukmBlok, PulOqimiBlok, YolXaritasiBlok } from '@/components/bloklar'
+import { QAROR, QarorPanel, QarorYorliq } from '@/components/Qaror'
+import { Korsatkich, Korsatkichlar, Nuqta, SahifaSarlavha, Tablar, tugma, type Ton } from '@/components/ui'
 import { api } from '@/lib/api'
 import { qisqaSom, som, vaqt } from '@/lib/format'
 
-const HUKM_YORLIQ: Record<Hukm, { matn: string; rang: string }> = {
-  tayyor: { matn: 'Tayyor', rang: 'bg-success/15 text-success' },
-  hali_emas: { matn: 'Hali emas', rang: 'bg-warning/15 text-warning' },
-  olmang: { matn: 'Olmang', rang: 'bg-foreground/10 text-foreground' },
+const HUKM_YORLIQ: Record<Hukm, { matn: string; ton: Ton }> = {
+  tayyor: { matn: 'Tayyor', ton: 'success' },
+  hali_emas: { matn: 'Hali emas', ton: 'warning' },
+  olmang: { matn: 'Olmang', ton: 'muted' },
 }
 
 function HukmYorliq({ hukm }: { hukm: Hukm }) {
   const h = HUKM_YORLIQ[hukm]
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ${h.rang}`}>{h.matn}</span>
+  return <Nuqta ton={h.ton}>{h.matn}</Nuqta>
+}
+
+const SHAKL: Record<NonNullable<Profil['shakl']>, string> = {
+  yatt: 'YaTT',
+  mchj: 'MChJ',
+  ozini_band: "O'zini o'zi band",
+  norasmiy: "Ro'yxatdan o'tmagan",
+}
+const TARIX: Record<NonNullable<Profil['kredit_tarixi']>, string> = {
+  yaxshi: 'Ijobiy',
+  yomon: 'Salbiy',
+  yoq: "Kredit olmagan",
+}
+
+/** Foyda oylik to'lovni necha marta qoplaydi. 1 dan kam — to'lovga yetmaydi. */
+function qoplash(a: BankArizasiHolat): number | null {
+  const { oylik_foyda, oylik_tolov } = a.natija.hisob
+  return oylik_tolov > 0 ? oylik_foyda / oylik_tolov : null
+}
+const qoplashRang = (k: number) => (k < 1 ? 'text-destructive' : k < 1.2 ? 'text-warning' : 'text-success')
+
+/** Garov kerakli garovning necha foizi. Garov kerak bo'lmasa null. */
+function garovFoiz(a: BankArizasiHolat): number | null {
+  const kerak = a.natija.hisob.kerakli_garov
+  if (!kerak) return null
+  return Math.round(((a.profil.garov_qiymati ?? 0) / kerak) * 100)
+}
+
+function Qoplash({ a }: { a: BankArizasiHolat }) {
+  const k = qoplash(a)
+  if (k == null) return <span className="text-muted-foreground">—</span>
+  return <span className={`font-semibold tabular-nums ${qoplashRang(k)}`}>×{k.toFixed(1)}</span>
+}
+
+function Garov({ a }: { a: BankArizasiHolat }) {
+  const f = garovFoiz(a)
+  if (f == null) return <span className="text-success">kerak emas</span>
+  return (
+    <span className="flex items-center gap-2">
+      <span className="h-1 w-12 overflow-hidden rounded-full bg-border">
+        <span
+          className={`block h-full rounded-full ${f >= 100 ? 'bg-success' : 'bg-warning'}`}
+          style={{ width: `${Math.min(100, f)}%` }}
+        />
+      </span>
+      <span className="tabular-nums">{f}%</span>
+    </span>
+  )
 }
 
 /** Ma'lumotni yuklash: yuklanmoqda / xato / tayyor. */
@@ -34,27 +85,6 @@ function useYukla<T>(yukla: () => Promise<T>) {
   return { data, xato, qayta }
 }
 
-function Hisob({ h }: { h: BankHisobi }) {
-  const qatorlar: [string, string][] = [
-    ['Arizalar', String(h.jami)],
-    ['Kredit berildi', String(h.holatlar.berildi)],
-    ['Berilgan summa', `${qisqaSom(h.berilgan_summa)} so'm`],
-    [`Komissiya (${h.bank.komissiya_foiz}%)`, `${qisqaSom(h.komissiya)} so'm`],
-  ]
-  return (
-    <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-      {qatorlar.map(([k, v]) => (
-        <Karta key={k}>
-          <p className="text-xs text-muted-foreground">{k}</p>
-          <p className="font-display text-xl font-semibold tabular-nums">{v}</p>
-        </Karta>
-      ))}
-    </div>
-  )
-}
-
-const FILTR: (ArizaHolati | 'hammasi')[] = ['hammasi', 'yangi', 'korilmoqda', 'berildi', 'rad']
-
 function Holat({ xato, onQayta }: { xato: string | null; onQayta: () => void }) {
   if (!xato) return <Loader2 className="mx-auto mt-10 animate-spin text-muted-foreground" />
   return (
@@ -67,6 +97,19 @@ function Holat({ xato, onQayta }: { xato: string | null; onQayta: () => void }) 
   )
 }
 
+function Hisob({ h }: { h: BankHisobi }) {
+  return (
+    <Korsatkichlar>
+      <Korsatkich nom="Yangi arizalar" qiymat={h.holatlar.yangi} izoh={`jami ${h.jami}`} />
+      <Korsatkich nom="Ko'rib chiqilmoqda" qiymat={h.holatlar.korilmoqda} />
+      <Korsatkich nom="Kredit berildi" qiymat={h.holatlar.berildi} izoh={`${qisqaSom(h.berilgan_summa)} so'm`} />
+      <Korsatkich nom="Yetak komissiyasi" qiymat={`${qisqaSom(h.komissiya)} so'm`} izoh={`${h.bank.komissiya_foiz}% berilgan summadan`} />
+    </Korsatkichlar>
+  )
+}
+
+const FILTR: (ArizaHolati | 'hammasi')[] = ['hammasi', 'yangi', 'korilmoqda', 'berildi', 'rad']
+
 export default function Bank() {
   const { data, xato, qayta } = useYukla(api.arizalar)
   const hisob = useYukla(api.bankHisob)
@@ -78,105 +121,154 @@ export default function Bank() {
   const royxat = (data ?? []).filter((a) => filtr === 'hammasi' || a.qaror.holat === filtr)
 
   return (
-    <main className="mx-auto h-full max-w-4xl overflow-y-auto p-4">
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <div>
-          <h1 className="font-display text-2xl font-bold">{hisob.data?.bank.nom ?? 'Bank oynasi'}</h1>
-          <p className="text-sm text-muted-foreground">Ma'lumotini ko'rsatishga rozilik bergan, tekshirilgan tadbirkorlar</p>
-        </div>
-        <button type="button" onClick={yangila} aria-label="Yangilash" title="Yangilash" className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground">
-          <RotateCcw size={17} />
-        </button>
-      </div>
+    <main className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-6xl p-4 sm:p-6">
+        <SahifaSarlavha
+          nom={hisob.data?.bank.nom ?? 'Arizalar'}
+          izoh="Rozilik bergan va Yetak tekshiruvidan o'tgan tadbirkorlar"
+          amal={
+            <button type="button" onClick={yangila} className={tugma.sokin}>
+              <RotateCcw size={15} /> Yangilash
+            </button>
+          }
+        />
 
-      {hisob.data && <Hisob h={hisob.data} />}
+        {hisob.data && <Hisob h={hisob.data} />}
 
-      {!data ? (
-        <Holat xato={xato} onQayta={qayta} />
-      ) : (
-        <>
-          <div className="mb-3 flex gap-1 overflow-x-auto">
-            {FILTR.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFiltr(f)}
-                className={`min-h-9 shrink-0 rounded-full px-3 text-sm ${filtr === f ? 'bg-foreground text-background' : 'border border-border'}`}
-              >
-                {f === 'hammasi' ? 'Hammasi' : QAROR[f].matn}
-                <span className="ml-1 tabular-nums opacity-70">
-                  {f === 'hammasi' ? data.length : data.filter((a) => a.qaror.holat === f).length}
-                </span>
-              </button>
-            ))}
+        {!data ? (
+          <Holat xato={xato} onQayta={qayta} />
+        ) : (
+          <div className="mt-10">
+            <Tablar
+              qiymat={filtr}
+              onTanla={setFiltr}
+              royxat={FILTR.map((f) => ({
+                kalit: f,
+                nom: f === 'hammasi' ? 'Hammasi' : QAROR[f].matn,
+                soni: f === 'hammasi' ? data.length : data.filter((a) => a.qaror.holat === f).length,
+              }))}
+            />
+
+            {royxat.length === 0 ? (
+              <div className="flex flex-col items-center gap-2 px-4 py-14 text-center text-muted-foreground">
+                <Inbox size={32} />
+                <p>
+                  {data.length === 0
+                    ? "Hozircha ariza yo'q. Tadbirkor chatda rozilik bergach, shu yerda chiqadi."
+                    : "Bu holatda ariza yo'q."}
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Kompyuter: jadval */}
+                <table className="hidden w-full border-b border-border text-sm md:table">
+                  <thead className="text-left text-sm text-muted-foreground">
+                    <tr className="border-b border-border">
+                      <th className="py-3 pr-3 font-normal">Tadbirkor</th>
+                      <th className="px-3 font-normal">Kredit</th>
+                      <th className="px-3 font-normal" title="Oylik foyda oylik to'lovni necha marta qoplaydi">
+                        Qoplash
+                      </th>
+                      <th className="px-3 font-normal">Garov</th>
+                      <th className="px-3 font-normal">Yetak bahosi</th>
+                      <th className="px-3 font-normal">Holat</th>
+                      <th className="px-3 font-normal">Sana</th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {royxat.map((a) => (
+                      <tr key={a.id} className="group">
+                        <td className="py-4 pr-3">
+                          <Link to={`/bank/${a.id}`} className="block font-medium hover:underline">
+                            {a.profil.faoliyat ?? 'Tadbirkor'}
+                          </Link>
+                          <span className="text-xs text-muted-foreground">
+                            {a.profil.shakl ? SHAKL[a.profil.shakl] : '—'}
+                            {a.profil.faoliyat_oy != null && `, ${a.profil.faoliyat_oy} oy`}
+                          </span>
+                        </td>
+                        <td className="px-3 tabular-nums">
+                          <span className="font-semibold">{a.profil.kredit_summa != null ? qisqaSom(a.profil.kredit_summa) : '—'}</span>
+                          <span className="block text-xs text-muted-foreground">
+                            {a.profil.kredit_muddat_oy != null ? `${a.profil.kredit_muddat_oy} oyga` : ''}
+                          </span>
+                        </td>
+                        <td className="px-3">
+                          <Qoplash a={a} />
+                        </td>
+                        <td className="px-3">
+                          <Garov a={a} />
+                        </td>
+                        <td className="px-3">
+                          <HukmYorliq hukm={a.natija.hukm} />
+                        </td>
+                        <td className="px-3">
+                          <QarorYorliq holat={a.qaror.holat} />
+                        </td>
+                        <td className="px-3 text-xs whitespace-nowrap text-muted-foreground tabular-nums">{vaqt(a.yangilangan)}</td>
+                        <td className="pr-3">
+                          <Link to={`/bank/${a.id}`} aria-label="Ochish" className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground group-hover:bg-foreground/5">
+                            <ChevronRight size={16} />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Telefon: kartalar */}
+                <ul className="divide-y divide-border border-b border-border md:hidden">
+                  {royxat.map((a) => (
+                    <li key={a.id}>
+                      <Link to={`/bank/${a.id}`} className="block py-4">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="truncate font-medium">{a.profil.faoliyat ?? 'Tadbirkor'}</p>
+                            <p className="text-sm text-muted-foreground tabular-nums">
+                              {a.profil.kredit_summa != null ? `${qisqaSom(a.profil.kredit_summa)} so'm` : '—'}
+                              {a.profil.kredit_muddat_oy != null && `, ${a.profil.kredit_muddat_oy} oy`}
+                            </p>
+                          </div>
+                          <QarorYorliq holat={a.qaror.holat} />
+                        </div>
+                        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                          <HukmYorliq hukm={a.natija.hukm} />
+                          <span className="flex items-center gap-1">
+                            Qoplash <Qoplash a={a} />
+                          </span>
+                          <span className="flex items-center gap-1">
+                            Garov <Garov a={a} />
+                          </span>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
-          {royxat.length === 0 ? (
-            <div className="mt-10 flex flex-col items-center gap-2 text-center text-muted-foreground">
-              <Inbox size={32} />
-              <p>
-                {data.length === 0
-                  ? "Hozircha ariza yo'q. Tadbirkor chatda rozilik bergach, shu yerda chiqadi."
-                  : "Bu holatda ariza yo'q."}
-              </p>
-            </div>
-          ) : (
-            <ul className="divide-y divide-border rounded-lg border border-border bg-card">
-              {royxat.map((a) => (
-                <li key={a.id}>
-                  <Link to={`/bank/${a.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-foreground/5">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium">{a.profil.faoliyat ?? 'Tadbirkor'}</p>
-                      <p className="text-sm text-muted-foreground tabular-nums">
-                        {a.profil.kredit_summa != null ? qisqaSom(a.profil.kredit_summa) + " so'm" : '—'} ·{' '}
-                        {vaqt(a.yangilangan)}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-1 sm:flex-row sm:items-center">
-                      <HukmYorliq hukm={a.natija.hukm} />
-                      <QarorYorliq holat={a.qaror.holat} />
-                    </div>
-                    <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
-      )}
+        )}
+        <p className="mt-4 max-w-3xl text-sm text-muted-foreground">
+          «Qoplash» — oylik foyda taxminiy oylik to'lovni necha marta qoplaydi. «Garov» — kerakli garovning necha foizi bor. Hisob
+          Yetak qoidalari bo'yicha, bank o'z baholashini qiladi.
+        </p>
+      </div>
     </main>
   )
 }
 
-const SHAKL: Record<NonNullable<Profil['shakl']>, string> = {
-  yatt: 'YaTT',
-  mchj: 'MChJ',
-  ozini_band: "O'zini o'zi band qilgan",
-  norasmiy: "Ro'yxatdan o'tmagan",
+function Malumot({ nom, qiymat }: { nom: string; qiymat: ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-border py-2 last:border-0">
+      <dt className="text-sm text-muted-foreground">{nom}</dt>
+      <dd className="text-right text-sm font-medium tabular-nums">{qiymat}</dd>
+    </div>
+  )
 }
-const TARIX: Record<NonNullable<Profil['kredit_tarixi']>, string> = {
-  yaxshi: 'Yaxshi',
-  yomon: 'Salbiy',
-  yoq: "Kredit olmagan",
-}
+
 const haYoq = (b?: boolean) => (b == null ? '—' : b ? 'Ha' : "Yo'q")
 const pul = (n?: number) => (n == null ? '—' : som(n))
-
-function profilQatorlari(p: Profil): [string, string][] {
-  return [
-    ['Faoliyat', p.faoliyat ?? '—'],
-    ['Shakl', p.shakl ? SHAKL[p.shakl] : '—'],
-    ['Faoliyat muddati', p.faoliyat_oy != null ? `${p.faoliyat_oy} oy` : '—'],
-    ['Oylik tushum', pul(p.oylik_tushum)],
-    ['Oylik xarajat', pul(p.oylik_xarajat)],
-    ['Kredit summasi', pul(p.kredit_summa)],
-    ['Muddat', p.kredit_muddat_oy != null ? `${p.kredit_muddat_oy} oy` : '—'],
-    ['Maqsad', p.maqsad ?? '—'],
-    ['Garov qiymati', pul(p.garov_qiymati)],
-    ['Kredit tarixi', p.kredit_tarixi ? TARIX[p.kredit_tarixi] : '—'],
-    ['Avval mikrokredit', haYoq(p.avval_mikrokredit)],
-    ['Elektron imzo', haYoq(p.eri_bor)],
-  ]
-}
 
 export function BankAriza() {
   const { id = '' } = useParams()
@@ -186,50 +278,82 @@ export function BankAriza() {
   const a = joriy ?? data
 
   return (
-    <main className="mx-auto h-full max-w-4xl overflow-y-auto p-4">
-      <Link to="/bank" className="mb-3 inline-flex min-h-9 items-center gap-1 text-sm text-muted-foreground">
-        <ArrowLeft size={16} /> Arizalar
-      </Link>
-      {!a ? (
-        <Holat xato={xato} onQayta={qayta} />
-      ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <h1 className="font-display text-2xl font-bold">{a.profil.faoliyat ?? 'Tadbirkor'}</h1>
-              <HukmYorliq hukm={a.natija.hukm} />
+    <main className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-6xl p-4 sm:p-6">
+        <Link to="/bank" className="mb-6 inline-flex min-h-9 items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft size={16} /> Arizalar
+        </Link>
+        {!a ? (
+          <Holat xato={xato} onQayta={qayta} />
+        ) : (
+          <>
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-6">
+              <div className="min-w-0">
+                <h1 className="text-3xl font-semibold">{a.profil.faoliyat ?? 'Tadbirkor'}</h1>
+                <p className="mt-1 text-muted-foreground">
+                  {a.profil.shakl ? SHAKL[a.profil.shakl] : '—'}
+                  {a.profil.faoliyat_oy != null && `, ${a.profil.faoliyat_oy} oy faoliyat`}
+                  {a.profil.maqsad && `. Maqsad: ${a.profil.maqsad}`}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                  <HukmYorliq hukm={a.natija.hukm} />
+                  <QarorYorliq holat={a.qaror.holat} />
+                  <span className="text-sm text-muted-foreground">Yangilangan {vaqt(a.yangilangan)}</span>
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">Yangilangan: {vaqt(a.yangilangan)}</p>
-            <Karta>
-              <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 text-sm">
-                {profilQatorlari(a.profil).map(([k, v]) => (
-                  <div key={k} className="contents">
-                    <dt className="text-muted-foreground">{k}</dt>
-                    <dd className="tabular-nums">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </Karta>
-          </div>
-          <div className="space-y-3">
-            <QarorPanel ariza={a} onSaqlandi={setJoriy} />
-            <HukmBlok natija={a.natija} />
-            {a.profil.oylik_tushum != null && a.profil.oylik_xarajat != null && (
-              <PulOqimiBlok
-                tushum={a.profil.oylik_tushum}
-                xarajat={a.profil.oylik_xarajat}
-                foyda={a.natija.hisob.oylik_foyda}
-                tolov={a.natija.hisob.oylik_tolov}
-                stavka={a.natija.hisob.yillik_stavka}
+
+            <Korsatkichlar>
+              <Korsatkich
+                nom="So'ralgan kredit"
+                qiymat={a.profil.kredit_summa != null ? `${qisqaSom(a.profil.kredit_summa)} so'm` : '—'}
+                izoh={a.profil.kredit_muddat_oy != null ? `${a.profil.kredit_muddat_oy} oyga` : undefined}
               />
-            )}
-            {a.profil.garov_qiymati != null && (
-              <GarovBlok bor={a.profil.garov_qiymati} kerak={a.natija.hisob.kerakli_garov} />
-            )}
-            <YolXaritasiBlok qadamlar={a.natija.qadamlar} />
-          </div>
-        </div>
-      )}
+              <Korsatkich nom="Oylik foyda" qiymat={`${qisqaSom(a.natija.hisob.oylik_foyda)} so'm`} />
+              <Korsatkich
+                nom="Oylik to'lov"
+                qiymat={`${qisqaSom(a.natija.hisob.oylik_tolov)} so'm`}
+                izoh={<>taxminiy, qoplash <Qoplash a={a} /></>}
+              />
+              <Korsatkich nom="Garov" qiymat={<Garov a={a} />} />
+            </Korsatkichlar>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="space-y-4">
+                <HukmBlok natija={a.natija} />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {a.profil.oylik_tushum != null && a.profil.oylik_xarajat != null && (
+                    <PulOqimiBlok
+                      tushum={a.profil.oylik_tushum}
+                      xarajat={a.profil.oylik_xarajat}
+                      foyda={a.natija.hisob.oylik_foyda}
+                      tolov={a.natija.hisob.oylik_tolov}
+                      stavka={a.natija.hisob.yillik_stavka}
+                    />
+                  )}
+                  {a.profil.garov_qiymati != null && <GarovBlok bor={a.profil.garov_qiymati} kerak={a.natija.hisob.kerakli_garov} />}
+                </div>
+                <YolXaritasiBlok qadamlar={a.natija.qadamlar} />
+              </div>
+
+              <div className="space-y-4 lg:sticky lg:top-0 lg:self-start">
+                <QarorPanel ariza={a} onSaqlandi={setJoriy} />
+                <section className="rounded-xl border border-border bg-card">
+                  <h2 className="border-b border-border px-5 py-3.5 font-semibold">Tadbirkor ma'lumotlari</h2>
+                  <dl className="px-5">
+                    <Malumot nom="Oylik tushum" qiymat={pul(a.profil.oylik_tushum)} />
+                    <Malumot nom="Oylik xarajat" qiymat={pul(a.profil.oylik_xarajat)} />
+                    <Malumot nom="Garov qiymati" qiymat={pul(a.profil.garov_qiymati)} />
+                    <Malumot nom="Kredit tarixi" qiymat={a.profil.kredit_tarixi ? TARIX[a.profil.kredit_tarixi] : '—'} />
+                    <Malumot nom="Avval mikrokredit" qiymat={haYoq(a.profil.avval_mikrokredit)} />
+                    <Malumot nom="Elektron imzo" qiymat={haYoq(a.profil.eri_bor)} />
+                  </dl>
+                </section>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </main>
   )
 }
