@@ -44,6 +44,8 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-18 | AI xarajati dekda «LLM xarajati» deb yoziladi | Jamoa qarori |
 | 2026-11-18 | Hujjat yig'ishning yangi varianti: tadbirkor notarial ishonchnoma beradi, vakilimiz hujjatlarni uning nomidan oladi (pullik xizmat). Doirasini yurist tasdiqlaydi, ERI kaliti olinmaydi | Jamoa qarori |
 
+| 2026-11-18 | Narx: hujjatlarni biz yig'amiz (ishonchnoma bilan my.gov.uz va soliqdan) — 50–100 ming so'm; qolgan hammasi bepul. Eski «hujjat tayyorlash 10–20 ming» o'rniga | Jamoa qarori |
+
 ## Hali hal qilinmagan
 
 - Bankka yuborish yo'li: to'g'ridan-to'g'ri yoki TadbirCore orqali
