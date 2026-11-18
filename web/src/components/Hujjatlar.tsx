@@ -70,7 +70,7 @@ function Chip({ children }: { children: ReactNode }) {
 
 function Yoriqnoma({ olish }: { olish: OlishYoli | null }) {
   if (!olish) {
-    return <p className="text-sm text-muted-foreground">Qayerdan olish hali aniqlanmagan — bankdan so'rang.</p>
+    return <p className="text-sm text-muted-foreground">Bu hujjat haqida bank xodimidan so'rang: «Bu hujjatni qayerdan olaman?»</p>
   }
   return (
     <div className="space-y-2 text-sm">

@@ -78,8 +78,8 @@ describe("mahsulotlarniMoslash", () => {
     expect(t.oylik_tolov).toBe(Math.round(oylikTolov(40_000_000, 21, 36)));
   });
 
-  it("2 oylik o'zini band — ko'proq «ha» bo'lgan Biznesga qadam birinchi", () => {
+  it("2 oylik o'zini band — ikkalasi ham ta'minot so'raydi, arzoni (21%) birinchi", () => {
     const p: Profil = { shakl: "ozini_band", faoliyat_oy: 2, oylik_tushum: 8e6, oylik_xarajat: 3e6, kredit_summa: 15e6, kredit_muddat_oy: 24, garov_qiymati: 0, kredit_tarixi: "yoq", eri_bor: false };
-    expect(mahsulotlarniMoslash(p)[0].kalit).toBe("hamkorbank_biznesga_qadam");
+    expect(mahsulotlarniMoslash(p).slice(0, 2).map((m) => m.kalit)).toEqual(["mikrokreditbank_birinchi_qadam", "hamkorbank_biznesga_qadam"]);
   });
 });

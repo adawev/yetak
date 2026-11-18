@@ -9,8 +9,9 @@ Asos: `yetak_banklar_toliq_research.html` (manbasiz). Undagi tasdiqlanmagan da'v
 - Summa: 10 mln dan 600 mln so'mgacha. Muddat: 3–36 oy. Yillik stavka: 33–38%.
 - Garovsiz, to'liq onlayn (TBC Business ilovasi). Garovsiz kredit chegarasi 300 mln dan 600 mln so'mga oshirilgan.
 - Alohida garovli mahsulot ham bor: 12 mlrd so'mgacha.
-- Faoliyat muddati talabi manbalarda ko'rsatilmagan — topilmadi.
-- Manba: Spot.uz, 2026-05-01 (reklama materiali) — https://www.spot.uz/ru/2026/05/01/tbc/ ; Trend, 2026-10-08 — https://www.trend.az/casia/uzbekistan/4232477.html
+- Talablar (bank sahifasi): «kamida 6 oylik faoliyat»; «ijobiy kredit tarixi» (muddati o'tgan qarz yo'q); «bloklangan hisobraqamlarsiz»; «O'zbekiston fuqarosi bo'lgan asoschilar». YaTT va yuridik shaxs uchun shartnoma namunalari bor.
+- Hujjatlar (bank sahifasi): «Hujjatlar to'plamini yig'ish, kafil topish yoki garov qo'yish talab qilinmaydi.» Ariza TBC Business kabinetida: «Kreditlar» → «Ariza yuborish» → summa va muddat. Javob bir necha soatda, «uzog'i bilan uch ish kuni ichida».
+- Manba: bank sahifasi (2026-11-18) — https://tbcbank.uz/uz/business/product/credit/ ; Spot.uz, 2026-05-01 (reklama materiali) — https://www.spot.uz/ru/2026/05/01/tbc/ ; Trend, 2026-10-08 — https://www.trend.az/casia/uzbekistan/4232477.html
 
 ## 2. Ipak Yo'li Banki — tadbirkorlar uchun onlayn kredit (garovsiz)
 

@@ -182,8 +182,7 @@ export function baholash(
     topilmalar.push({
       kalit: "shakl",
       daraja: "ogohlantirish",
-      matn: "O'zini o'zi band qilganlarga biznes krediti shartlarini hali aniqlay olmadik. Bankdan so'rash kerak.",
-      taxmin: true,
+      matn: "O'zini o'zi band qilganlarga hamma bank ham biznes krediti bermaydi. Ular uchun alohida dasturlar bor — mos bankni quyida ko'rasiz.",
     });
   } else {
     topilmalar.push({

@@ -153,4 +153,23 @@ describe("hujjatlar.json", () => {
     expect(hammasi.length).toBeGreaterThan(0);
     for (const [k, v] of hammasi) expect(v.olish, k).toBeTruthy();
   });
+
+  it("har hujjatda «qanday olish» qadamlari bor — agent «aniqlay olmadik» demasin", () => {
+    const hammasi = Object.entries((manba as unknown as { hujjatlar: Record<string, { olish: { qadamlar: string[] } }> }).hujjatlar);
+    for (const [k, v] of hammasi) expect(v.olish.qadamlar.length, k).toBeGreaterThan(0);
+  });
+});
+
+describe("bank bo'yicha hujjat yo'li", () => {
+  it("TBC tanlansa — ariza TBC Business ilovasida, manba bank sahifasi", () => {
+    const papka = yasash(yatt, "tbc_onlayn")!;
+    const ariza = papka.hujjatlar.find((h) => h.kalit === "ariza")!;
+    expect(ariza.olish!.qayerda).toContain("TBC Business");
+    expect(ariza.olish!.manba).toContain("tbcbank.uz");
+  });
+
+  it("boshqa bankda ariza — umumiy yo'l, TBC qadamlari aralashmaydi", () => {
+    const ariza = yasash(mchj)!.hujjatlar.find((h) => h.kalit === "ariza")!;
+    expect(ariza.olish!.qayerda).not.toContain("TBC");
+  });
 });

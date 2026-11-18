@@ -10,7 +10,11 @@
       "olish": {
         "qayerda": "bankning o'zida — ariza shaklini bank beradi (onlayn kreditda — bank ilovasida)",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Bank filialiga yoki bank ilovasining biznes bo'limiga kiring",
+          "Biznes krediti uchun ariza shaklini so'rang",
+          "Yetak hisoblagan summa, muddat va maqsadni yozing — imzoni o'zingiz qo'yasiz"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -26,7 +30,10 @@
       "olish": {
         "qayerda": "o'zingizda (ID-karta yoki pasport)",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "ID-karta yoki pasportning asl nusxasini olib boring",
+          "Rasmga olib «Hujjatlar» ga yuklang — Yetak ism va muddatini tekshiradi"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -42,7 +49,11 @@
       "olish": {
         "qayerda": "korxonangizda (ustav va uning o'zgarishlari)",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Korxona ustavi va barcha o'zgarishlarini toping (odatda direktor yoki hisobchida)",
+          "Har sahifani rasmga oling yoki skaner qiling",
+          "Nusxa yo'q bo'lsa — korxonani ro'yxatdan o'tkazgan joydan so'rang"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -58,7 +69,11 @@
       "olish": {
         "qayerda": "korxona o'zi yozadi (ta'sischilar yig'ilishi qarori)",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Ta'sischilar yig'ilishini o'tkazing",
+          "Qarorga yozing: qaysi bankdan, qancha summa, qancha muddatga, nima maqsadda; garov bo'lsa — qaysi mulk",
+          "Hamma ta'sischilar imzolaydi, korxona muhri bosiladi"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -157,7 +172,11 @@
       "olish": {
         "qayerda": "o'zingiz yozasiz (qayerdan qancha tushum keladi)",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Qayerdan pul tushishini yozing: savdo, xizmat, ijara va h.k.",
+          "Har biriga oyiga taxminan qancha tushishini yozing — Yetakka aytgan raqamlaringiz bilan bir xil bo'lsin",
+          "Imzolang"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -173,7 +192,10 @@
       "olish": {
         "qayerda": "o'zingiz tuzasiz — bankda shakli bo'lsa, shuni so'rang",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Yetak buni siz aytgan raqamlardan o'zi tuzadi — papka PDF ida bor",
+          "Bankning o'z shakli bo'lsa — raqamlarni o'shanga ko'chiring"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -189,7 +211,11 @@
       "olish": {
         "qayerda": "sotuvchidan — nima sotib olsangiz, o'sha shartnoma yoki invoys",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Nima sotib olmoqchi bo'lsangiz — o'sha sotuvchidan so'rang",
+          "Hujjatda tovar nomi, soni, narxi va sotuvchi rekvizitlari bo'lsin",
+          "Shartnoma yoki invoysni rasmga olib yuklang"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -288,7 +314,11 @@
       "olish": {
         "qayerda": "baholash tashkiloti (pullik, o'zingiz tanlaysiz)",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Garov mulkingizni baholash tashkilotiga baholating (o'zingiz tanlaysiz)",
+          "Bankdan qaysi baholovchilarni qabul qilishini oldindan so'rang",
+          "Hisobotni olib, papkaga yuklang"
+        ],
         "vaqt": null,
         "narx": "pullik",
         "eri_kerak": null,
@@ -305,7 +335,11 @@
       "olish": {
         "qayerda": "kafil bo'ladigan korxonadan",
         "qidiruv": null,
-        "qadamlar": [],
+        "qadamlar": [
+          "Kafil bo'ladigan korxona rahbari bilan kelishing",
+          "Undan so'rang: ta'sischilar roziligi (qaror), oxirgi balans, ta'sis hujjatlari, aylanma ma'lumotnomasi",
+          "Hujjatlarni rasmga olib papkaga yuklang"
+        ],
         "vaqt": null,
         "narx": null,
         "eri_kerak": null,
@@ -676,7 +710,21 @@
       "hujjatlar": [
         {
           "hujjat": "ariza",
-          "shart": "ilovada"
+          "shart": "ilovada",
+          "olish": {
+            "qayerda": "Ipak Yuli Business ilovasi",
+            "qidiruv": null,
+            "qadamlar": [
+              "Ipak Yo'li Bankida hisob raqami bo'lsin (bo'lmasa — oching)",
+              "Ipak Yuli Business ilovasida onlayn kredit so'rovini yuboring",
+              "Bank aylanmangizni o'zi tekshiradi — tasdiqlansa pul hisobingizga tushadi"
+            ],
+            "vaqt": null,
+            "narx": "komissiya yo'q",
+            "eri_kerak": null,
+            "havola": null,
+            "manba": "https://en.ipakyulibank.uz/legal/credit/online-loan-for-business"
+          }
         }
       ],
       "bank_ozi_tekshiradi": [
@@ -688,8 +736,8 @@
       "id": "tbc_onlayn",
       "bank": "TBC Bank",
       "nom": "TBC Business onlayn kredit",
-      "manba": "https://www.spot.uz/ru/2026/05/01/tbc/",
-      "manba_holati": "matbuot (reklama)",
+      "manba": "https://tbcbank.uz/uz/business/product/credit/",
+      "manba_holati": "tasdiqlangan (bank sahifasi, 2026-11-18)",
       "summa_som": [
         10000000,
         600000000
@@ -706,13 +754,39 @@
       "hujjatlar": [
         {
           "hujjat": "ariza",
-          "shart": "ilovada"
+          "shart": "ilovada",
+          "olish": {
+            "qayerda": "TBC Business ilovasi yoki shaxsiy kabineti (tbcbusiness.uz)",
+            "qidiruv": null,
+            "qadamlar": [
+              "tbcbusiness.uz da biznes hisob raqamini oching — STIR va pasport bilan",
+              "«Kreditlar» bo'limini oching va «Ariza yuborish» ni bosing",
+              "Summa va muddatni tanlang (MChJ bo'lsa — ta'sischilar ma'lumotini kiriting)"
+            ],
+            "vaqt": "javob odatda bir necha soatda, uzog'i bilan 3 ish kuni",
+            "narx": null,
+            "eri_kerak": null,
+            "havola": "https://tbcbusiness.uz",
+            "manba": "https://tbcbank.uz/uz/business/product/credit/"
+          }
         }
       ],
       "bank_ozi_tekshiradi": [
         "kredit_tarixi"
-      ]
+      ],
+      "kimga": {
+        "subyekt": [
+          "yuridik_shaxs",
+          "yatt"
+        ],
+        "faoliyat_oy_min": 6,
+        "kredit_tarixi": "ijobiy, muddati o'tgan qarz yo'q",
+        "bloklangan_hisob": false,
+        "asoschilar": "O'zbekiston fuqarosi",
+        "shu_bankda_hisob": "TBC Business (onlayn ochiladi)"
+      },
+      "izoh": "Bank sahifasi: «Hujjatlar to'plamini yig'ish, kafil topish yoki garov qo'yish talab qilinmaydi.»"
     }
   ],
-  "_izoh_olish": "«olish» — hujjatni qanday olish (2026-11-18, manbali; manba null = yo'l umumiy, aniq tartib topilmadi)."
+  "_izoh_olish": "«olish» — hujjatni qanday olish (2026-11-18, manbali; manba null = yo'l umumiy, aniq tartib topilmadi). Manba null bo'lgan qadamlar — umumiy tartib (kim tayyorlaydi); ularda raqam, narx va muddat yozilmaydi."
 }

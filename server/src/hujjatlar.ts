@@ -15,7 +15,8 @@ interface JsonMahsulot {
   id: string;
   bank: string;
   nom: string;
-  hujjatlar: { hujjat: string; shart?: string }[];
+  /** olish — shu bankda boshqacha bo'lsa (masalan, ariza faqat bank ilovasida). */
+  hujjatlar: { hujjat: string; shart?: string; olish?: OlishYoli }[];
   bank_ozi_tekshiradi?: string[];
 }
 
@@ -143,7 +144,7 @@ export function papkaYasash(
       shart: s.matn,
       bank_ozi_oladi: false,
       tavsiya: false,
-      olish: j?.olish ?? null,
+      olish: h.olish ?? j?.olish ?? null,
       fayl: fayllar[h.hujjat] ?? null,
       qoralama: h.hujjat === "pul_oqimi" && pulOqimiQoralamaBor(p) ? PUL_OQIMI_QORALAMA : null,
     });

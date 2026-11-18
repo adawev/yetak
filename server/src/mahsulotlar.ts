@@ -88,7 +88,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
     bank: "TBC Bank",
     nom: "TBC Business onlayn kredit",
     qisqa: "10–600 mln · garovsiz · 33–38% · 3–36 oy · onlayn",
-    manba: { nom: "Spot.uz — TBC (reklama materiali)", url: "https://www.spot.uz/ru/2026/05/01/tbc/" },
+    manba: { nom: "TBC Bank sahifasi", url: "https://tbcbank.uz/uz/business/product/credit/" },
     summa_max: mln(600),
     muddat_max: 36,
     foiz: [33, 38],
@@ -99,8 +99,11 @@ export const MAHSULOTLAR: Mahsulot[] = [
         p.kredit_muddat_oy,
         () => p.kredit_muddat_oy! >= 3 && p.kredit_muddat_oy! <= 36,
       ),
-      { matn: "Garov kerak emas", holat: "ha" },
-      nomalum("Faoliyat muddati va kimlarga berilishi — bankdan aniqlang"),
+      tekshir("YaTT yoki MChJ", p.shakl, () => p.shakl === "yatt" || p.shakl === "mchj"),
+      tekshir("Kamida 6 oy faoliyat", p.faoliyat_oy, () => p.faoliyat_oy! >= 6),
+      tekshir("Kredit tarixida muddati o'tgan qarz yo'q", p.kredit_tarixi, () => p.kredit_tarixi !== "yomon"),
+      { matn: "Garov va kafil kerak emas", holat: "ha" },
+      nomalum("TBC Business'da hisob raqami (onlayn ochiladi)"),
     ],
   },
   {
@@ -259,6 +262,13 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
     const yoqSoni = (x: MahsulotMoslik) => x.shartlar.filter((s) => s.holat === "yoq").length;
     const y = yoqSoni(a) - yoqSoni(b);
     if (y !== 0) return y;
+    // Kamroq «?» — aniqroq mos mahsulot.
+    const nSoni = (x: MahsulotMoslik) => x.shartlar.filter((s) => s.holat === "nomalum").length;
+    const n = nSoni(a) - nSoni(b);
+    if (n !== 0) return n;
+    // Tadbirkorga arzoni oldin: yuqori foiz kamroq bo'lgan mahsulot.
+    const f = (a.taklif?.foiz_max ?? 100) - (b.taklif?.foiz_max ?? 100);
+    if (f !== 0) return f;
     // Ko'proq tasdiqlangan («ha») shart — aniqroq mos mahsulot.
     const haSoni = (x: MahsulotMoslik) => x.shartlar.filter((s) => s.holat === "ha").length;
     return haSoni(b) - haSoni(a);
