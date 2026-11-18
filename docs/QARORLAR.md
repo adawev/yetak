@@ -22,7 +22,7 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-17 | Server: Node + Hono, ma'lumot bitta JSON faylda, 30 kun ishlatilmagan sessiya o'chadi | Demo uchun tez va oddiy; keraksiz ma'lumot saqlanmaydi |
 | 2026-11-17 | Agent hisoblamaydi: profilni to'ldiradi, natijani `rules.ts` beradi | «Hisobni kod qiladi» qoidasi |
 | 2026-11-17 | Manbasi yo'q qoida kodda «taxmin» belgisi bilan turadi va tadbirkorga shunday aytiladi | Faktni o'ylab topmaymiz, lekin demo to'xtamasin |
-| 2026-11-17 | Server manzili vaqtincha `yetak-api.63-177-216-224.sslip.io` | Domen hali tanlanmagan; HTTPS kerak |
+| 2026-11-17 | API manzili: `yetak-api.diyorjon.com` (kichik server). Veb: Netlify, `yetak.diyorjon.com` | API uzoq Claude javobi va fayl saqlash uchun serverda qoladi; Netlify vebni o'zi yig'adi |
 | 2026-11-17 | RAG: Claude citations, korpus — docs'dagi tekshirilgan hujjatlar, vektor bazasiz | Korpus kichik (~8 ming belgi); har javobda manba ko'rinadi, o'ylab topilgan fakt kamayadi |
 | 2026-11-17 | Chatda boy bloklar: agent tanlaydi, raqamni server qo'yadi. Soxta API yo'q, web haqiqiy serverga ulangan | Tadbirkor diagrammani matndan yaxshi tushunadi; «hisobni kod qiladi» qoidasi saqlanadi |
 

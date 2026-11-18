@@ -6,4 +6,4 @@
 
 [build.environment]
   NODE_VERSION = "24"
-  VITE_API_URL = "https://yetak-api.63-177-216-224.sslip.io"
+  VITE_API_URL = "https://yetak-api.diyorjon.com"

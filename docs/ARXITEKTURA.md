@@ -20,7 +20,7 @@ assets/           — belgi
 
 ## API
 
-Asos: lokal `http://localhost:8787`, server `https://yetak-api.63-177-216-224.sslip.io` (web'da `VITE_API_URL`). Hammasi JSON. Xato bo'lsa: 4xx/5xx va `{ "xato": "sabab" }` — `xato` matnini tadbirkorga to'g'ridan-to'g'ri ko'rsatsa bo'ladi.
+Asos: lokal `http://localhost:8787`, server `https://yetak-api.diyorjon.com` (web'da `VITE_API_URL`). Hammasi JSON. Xato bo'lsa: 4xx/5xx va `{ "xato": "sabab" }` — `xato` matnini tadbirkorga to'g'ridan-to'g'ri ko'rsatsa bo'ladi.
 
 Xato kodlari (web shularni ajratadi):
 
