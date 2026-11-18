@@ -584,7 +584,7 @@ export function HujjatQadamlari({
       {onRozilik &&
         (holat.bank_roziligi ? (
           <div className="rounded-xl bg-success/10 p-3 text-sm">
-            <p className="font-semibold text-success">Papka {p.mahsulot.bank} ga yuborildi</p>
+            <p className="font-semibold text-success">Papka {p.mahsulot.bank}ga yuborildi</p>
             <p className="text-muted-foreground">Bank xodimi papkangizni ko'radi. Bankka faqat imzoga borasiz.</p>
             <button type="button" onClick={() => onRozilik(false)} className="mt-1 text-xs text-muted-foreground underline">
               Rozilikni qaytarib olish
@@ -597,7 +597,7 @@ export function HujjatQadamlari({
               onClick={() => onRozilik(true)}
               className="min-h-12 w-full rounded-xl bg-primary px-4 text-[15px] font-semibold text-white hover:opacity-90"
             >
-              Papkani {p.mahsulot.bank} ga yuborish
+              Papkani {p.mahsulot.bank}ga yuborish
             </button>
             <p className="text-center text-xs text-muted-foreground">
               Roziligingiz bilan bank xodimi papkani ko'radi. Bankka faqat imzoga borasiz.
