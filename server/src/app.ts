@@ -3,8 +3,10 @@
 import { randomUUID } from "node:crypto";
 import { Hono, type Context } from "hono";
 import { cors } from "hono/cors";
-import type { BankArizasi, SessiyaHolati, XatoJavobi } from "../../shared/types";
+import type { SessiyaHolati, XatoJavobi } from "../../shared/types";
 import { AgentXatosi, SALOM, type Agent } from "./agent";
+import { Hisoblar } from "./hisoblar";
+import { kabinetYollari } from "./kabinet";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { baholash, kerakliMaydonlar, toldirilganSoni } from "./rules";
 import type { Sessiya, Store } from "./store";
@@ -13,6 +15,8 @@ export interface AppSozlama {
   store: Store;
   agent: Agent | null; // null — kalit yo'q
   corsOrigin: string;
+  /** Login, banklar, qarorlar. Berilmasa — xotirada. */
+  hisoblar?: Hisoblar;
 }
 
 const MAX_MATN = 2000;
@@ -59,11 +63,12 @@ async function jsonOqish(c: Context): Promise<Record<string, unknown> | null> {
   }
 }
 
-export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
+export function appYaratish({ store, agent, corsOrigin, hisoblar = new Hisoblar() }: AppSozlama) {
   const app = new Hono();
   const band = new Set<string>(); // javob kutilayotgan sessiyalar
   const xabarChegara = chegara(20);
   const sessiyaChegara = chegara(10);
+  const kirishChegara = chegara(10);
   const ip = (c: Context) =>
     c.req.header("x-real-ip") ?? c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "lokal";
 
@@ -72,7 +77,7 @@ export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
     cors({
       origin: corsOrigin === "*" ? "*" : corsOrigin.split(",").map((s) => s.trim()),
       allowMethods: ["GET", "POST", "OPTIONS"],
-      allowHeaders: ["Content-Type"],
+      allowHeaders: ["Content-Type", "Authorization"],
     }),
   );
 
@@ -180,27 +185,8 @@ export function appYaratish({ store, agent, corsOrigin }: AppSozlama) {
     return c.json(holat(s));
   });
 
-  const bankArizasi = (s: Sessiya): BankArizasi | null => {
-    const natija = baholash(s.profil, s.bajarilgan);
-    if (!s.bank_roziligi || !natija) return null;
-    return { id: s.id, yangilangan: s.yangilangan, profil: s.profil, natija };
-  };
-
-  app.get("/api/bank/arizalar", (c) => {
-    const royxat = store
-      .hammasi()
-      .map(bankArizasi)
-      .filter((a): a is BankArizasi => a !== null)
-      .sort((a, b) => b.yangilangan.localeCompare(a.yangilangan));
-    return c.json(royxat);
-  });
-
-  app.get("/api/bank/arizalar/:id", (c) => {
-    const s = store.olish(c.req.param("id"));
-    const a = s ? bankArizasi(s) : null;
-    if (!a) return xato(c, 404, "Ariza topilmadi yoki tadbirkor rozilikni qaytarib oldi.");
-    return c.json(a);
-  });
+  // Login, tadbirkor kabineti, bank oynasi (login bilan), admin panel
+  kabinetYollari(app, { store, hisoblar, chegara: kirishChegara, ip });
 
   app.notFound((c) => xato(c, 404, "Bunday manzil yo'q."));
   app.onError((e, c) => {

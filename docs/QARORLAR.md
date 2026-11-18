@@ -25,6 +25,12 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-17 | API manzili: `yetak-api.diyorjon.com` (kichik server). Veb: Netlify, `yetak.diyorjon.com` | API uzoq Claude javobi va fayl saqlash uchun serverda qoladi; Netlify vebni o'zi yig'adi |
 | 2026-11-17 | RAG: Claude citations, korpus — docs'dagi tekshirilgan hujjatlar, vektor bazasiz | Korpus kichik (~8 ming belgi); har javobda manba ko'rinadi, o'ylab topilgan fakt kamayadi |
 | 2026-11-17 | Chatda boy bloklar: agent tanlaydi, raqamni server qo'yadi. Soxta API yo'q, web haqiqiy serverga ulangan | Tadbirkor diagrammani matndan yaxshi tushunadi; «hisobni kod qiladi» qoidasi saqlanadi |
+| 2026-11-18 | Uchta rol: tadbirkor (ro'yxatdan o'tish ixtiyoriy), bank xodimi va admin. Bank xodimini admin ochadi | Bank oynasi ochiq turmasin; demoda bank tomoni ham ko'rinsin |
+| 2026-11-18 | Biznes modeli mahsulot ichida: tadbirkor 0 so'm, bank «kredit berildi» qarori uchun komissiya to'laydi, komissiyani server hisoblaydi | Pul modeli faqat slaydda emas, ishlaydigan tizimda ko'rinsin |
+| 2026-11-18 | Tadbirkorga bitta suhbat. Kirganda o'z suhbati ochiladi, boshqa qurilmadan ham | Ko'p suhbat chalg'itadi; tadbirkorning bitta yo'li bor |
+| 2026-11-18 | Manzillar inglizcha: `/login`, `/register`, `/chat`, `/bank`, `/admin`, yangi API ham. Chat `/` dan `/chat` ga ko'chdi, `/` — bosh sahifa | Chat egasi qarori |
+| 2026-11-18 | Demoda haqiqiy bank nomi ishlatilishi mumkin; shartnoma yo'qligi so'ralsa ochiq aytiladi | Chat egasi qarori |
+| 2026-11-18 | Kredit tarixi kartasi demoda simulyatsiya; pitchda og'zaki aytiladi | Kredit byurosiga ulanish uchun litsenziyali hamkor kerak |
 
 ## Hali hal qilinmagan
 

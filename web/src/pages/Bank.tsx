@@ -1,5 +1,6 @@
-import type { BankArizasi, Hukm, Profil } from '@shared/types'
+import type { ArizaHolati, BankArizasiHolat, BankHisobi, Hukm, Profil } from '@shared/types'
 import { ArrowLeft, ChevronRight, Inbox, Loader2, RotateCcw } from 'lucide-react'
+import { QAROR, QarorPanel, QarorYorliq } from '@/components/Qaror'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { GarovBlok, HukmBlok, Karta, PulOqimiBlok, YolXaritasiBlok } from '@/components/bloklar'
@@ -33,6 +34,27 @@ function useYukla<T>(yukla: () => Promise<T>) {
   return { data, xato, qayta }
 }
 
+function Hisob({ h }: { h: BankHisobi }) {
+  const qatorlar: [string, string][] = [
+    ['Arizalar', String(h.jami)],
+    ['Kredit berildi', String(h.holatlar.berildi)],
+    ['Berilgan summa', `${qisqaSom(h.berilgan_summa)} so'm`],
+    [`Komissiya (${h.bank.komissiya_foiz}%)`, `${qisqaSom(h.komissiya)} so'm`],
+  ]
+  return (
+    <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {qatorlar.map(([k, v]) => (
+        <Karta key={k}>
+          <p className="text-xs text-muted-foreground">{k}</p>
+          <p className="font-display text-xl font-semibold tabular-nums">{v}</p>
+        </Karta>
+      ))}
+    </div>
+  )
+}
+
+const FILTR: (ArizaHolati | 'hammasi')[] = ['hammasi', 'yangi', 'korilmoqda', 'berildi', 'rad']
+
 function Holat({ xato, onQayta }: { xato: string | null; onQayta: () => void }) {
   if (!xato) return <Loader2 className="mx-auto mt-10 animate-spin text-muted-foreground" />
   return (
@@ -47,46 +69,79 @@ function Holat({ xato, onQayta }: { xato: string | null; onQayta: () => void }) 
 
 export default function Bank() {
   const { data, xato, qayta } = useYukla(api.arizalar)
+  const hisob = useYukla(api.bankHisob)
+  const [filtr, setFiltr] = useState<(typeof FILTR)[number]>('hammasi')
+  const yangila = () => {
+    qayta()
+    hisob.qayta()
+  }
+  const royxat = (data ?? []).filter((a) => filtr === 'hammasi' || a.qaror.holat === filtr)
 
   return (
     <main className="mx-auto h-full max-w-4xl overflow-y-auto p-4">
       <div className="mb-4 flex items-center justify-between gap-2">
         <div>
-          <h1 className="font-display text-2xl font-bold">Bank oynasi</h1>
-          <p className="text-sm text-muted-foreground">Ma'lumotini ko'rsatishga rozilik bergan tadbirkorlar</p>
+          <h1 className="font-display text-2xl font-bold">{hisob.data?.bank.nom ?? 'Bank oynasi'}</h1>
+          <p className="text-sm text-muted-foreground">Ma'lumotini ko'rsatishga rozilik bergan, tekshirilgan tadbirkorlar</p>
         </div>
-        <button type="button" onClick={qayta} className="flex min-h-10 items-center gap-1 rounded-lg border border-border px-3 text-sm">
-          <RotateCcw size={14} /> Yangilash
+        <button type="button" onClick={yangila} aria-label="Yangilash" title="Yangilash" className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground">
+          <RotateCcw size={17} />
         </button>
       </div>
 
+      {hisob.data && <Hisob h={hisob.data} />}
+
       {!data ? (
         <Holat xato={xato} onQayta={qayta} />
-      ) : data.length === 0 ? (
-        <div className="mt-10 flex flex-col items-center gap-2 text-center text-muted-foreground">
-          <Inbox size={32} />
-          <p>Hozircha ariza yo'q. Tadbirkor chatda rozilik bergach, shu yerda chiqadi.</p>
-        </div>
       ) : (
-        <ul className="divide-y divide-border rounded-lg border border-border bg-card">
-          {[...data]
-            .sort((a, b) => b.yangilangan.localeCompare(a.yangilangan))
-            .map((a) => (
-              <li key={a.id}>
-                <Link to={`/bank/${a.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-foreground/5">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{a.profil.faoliyat ?? 'Tadbirkor'}</p>
-                    <p className="text-sm text-muted-foreground tabular-nums">
-                      {a.profil.kredit_summa != null ? qisqaSom(a.profil.kredit_summa) + " so'm" : '—'} ·{' '}
-                      {vaqt(a.yangilangan)}
-                    </p>
-                  </div>
-                  <HukmYorliq hukm={a.natija.hukm} />
-                  <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
-                </Link>
-              </li>
+        <>
+          <div className="mb-3 flex gap-1 overflow-x-auto">
+            {FILTR.map((f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setFiltr(f)}
+                className={`min-h-9 shrink-0 rounded-full px-3 text-sm ${filtr === f ? 'bg-foreground text-background' : 'border border-border'}`}
+              >
+                {f === 'hammasi' ? 'Hammasi' : QAROR[f].matn}
+                <span className="ml-1 tabular-nums opacity-70">
+                  {f === 'hammasi' ? data.length : data.filter((a) => a.qaror.holat === f).length}
+                </span>
+              </button>
             ))}
-        </ul>
+          </div>
+          {royxat.length === 0 ? (
+            <div className="mt-10 flex flex-col items-center gap-2 text-center text-muted-foreground">
+              <Inbox size={32} />
+              <p>
+                {data.length === 0
+                  ? "Hozircha ariza yo'q. Tadbirkor chatda rozilik bergach, shu yerda chiqadi."
+                  : "Bu holatda ariza yo'q."}
+              </p>
+            </div>
+          ) : (
+            <ul className="divide-y divide-border rounded-lg border border-border bg-card">
+              {royxat.map((a) => (
+                <li key={a.id}>
+                  <Link to={`/bank/${a.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-foreground/5">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{a.profil.faoliyat ?? 'Tadbirkor'}</p>
+                      <p className="text-sm text-muted-foreground tabular-nums">
+                        {a.profil.kredit_summa != null ? qisqaSom(a.profil.kredit_summa) + " so'm" : '—'} ·{' '}
+                        {vaqt(a.yangilangan)}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 sm:flex-row sm:items-center">
+                      <HukmYorliq hukm={a.natija.hukm} />
+                      <QarorYorliq holat={a.qaror.holat} />
+                    </div>
+                    <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </main>
   )
@@ -126,26 +181,28 @@ function profilQatorlari(p: Profil): [string, string][] {
 export function BankAriza() {
   const { id = '' } = useParams()
   const yukla = useCallback(() => api.ariza(id), [id])
-  const { data, xato, qayta } = useYukla<BankArizasi>(yukla)
+  const { data, xato, qayta } = useYukla<BankArizasiHolat>(yukla)
+  const [joriy, setJoriy] = useState<BankArizasiHolat | null>(null)
+  const a = joriy ?? data
 
   return (
     <main className="mx-auto h-full max-w-4xl overflow-y-auto p-4">
       <Link to="/bank" className="mb-3 inline-flex min-h-9 items-center gap-1 text-sm text-muted-foreground">
         <ArrowLeft size={16} /> Arizalar
       </Link>
-      {!data ? (
+      {!a ? (
         <Holat xato={xato} onQayta={qayta} />
       ) : (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h1 className="font-display text-2xl font-bold">{data.profil.faoliyat ?? 'Tadbirkor'}</h1>
-              <HukmYorliq hukm={data.natija.hukm} />
+              <h1 className="font-display text-2xl font-bold">{a.profil.faoliyat ?? 'Tadbirkor'}</h1>
+              <HukmYorliq hukm={a.natija.hukm} />
             </div>
-            <p className="text-sm text-muted-foreground">Yangilangan: {vaqt(data.yangilangan)}</p>
+            <p className="text-sm text-muted-foreground">Yangilangan: {vaqt(a.yangilangan)}</p>
             <Karta>
               <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 text-sm">
-                {profilQatorlari(data.profil).map(([k, v]) => (
+                {profilQatorlari(a.profil).map(([k, v]) => (
                   <div key={k} className="contents">
                     <dt className="text-muted-foreground">{k}</dt>
                     <dd className="tabular-nums">{v}</dd>
@@ -155,20 +212,21 @@ export function BankAriza() {
             </Karta>
           </div>
           <div className="space-y-3">
-            <HukmBlok natija={data.natija} />
-            {data.profil.oylik_tushum != null && data.profil.oylik_xarajat != null && (
+            <QarorPanel ariza={a} onSaqlandi={setJoriy} />
+            <HukmBlok natija={a.natija} />
+            {a.profil.oylik_tushum != null && a.profil.oylik_xarajat != null && (
               <PulOqimiBlok
-                tushum={data.profil.oylik_tushum}
-                xarajat={data.profil.oylik_xarajat}
-                foyda={data.natija.hisob.oylik_foyda}
-                tolov={data.natija.hisob.oylik_tolov}
-                stavka={data.natija.hisob.yillik_stavka}
+                tushum={a.profil.oylik_tushum}
+                xarajat={a.profil.oylik_xarajat}
+                foyda={a.natija.hisob.oylik_foyda}
+                tolov={a.natija.hisob.oylik_tolov}
+                stavka={a.natija.hisob.yillik_stavka}
               />
             )}
-            {data.profil.garov_qiymati != null && (
-              <GarovBlok bor={data.profil.garov_qiymati} kerak={data.natija.hisob.kerakli_garov} />
+            {a.profil.garov_qiymati != null && (
+              <GarovBlok bor={a.profil.garov_qiymati} kerak={a.natija.hisob.kerakli_garov} />
             )}
-            <YolXaritasiBlok qadamlar={data.natija.qadamlar} />
+            <YolXaritasiBlok qadamlar={a.natija.qadamlar} />
           </div>
         </div>
       )}

@@ -7,8 +7,10 @@ Raqamlar faqat `VISION.md`, `TANQID.md`, `MANBALAR.md` dan. Yangi raqam qo'shils
 
 ## Tayyorgarlik (taqdimotdan 15 daqiqa oldin)
 
-- [ ] Telefonda `https://yetak.diyorjon.com` ochiq, «Yangi suhbat» bosilgan (eski suhbat ko'rinmasin).
-- [ ] Kompyuterda ikkinchi oyna: `https://yetak.diyorjon.com/bank`.
+- [ ] Telefonda **maxfiy oynada** `https://yetak.diyorjon.com` (bosh sahifa) ochiq — eski suhbat va login ko'rinmasin.
+- [ ] Admin (`/admin`, kirish `/login`) da hamkor bank va bank xodimi ochilgan, shartnoma «Faol». Admin paroli serverda `ADMIN_TELEFON` / `ADMIN_PAROL` dan.
+- [ ] Kompyuterda ikkinchi oyna: `https://yetak.diyorjon.com/bank`, bank xodimi bilan kirilgan.
+- [ ] Haqiqiy bank nomi ishlatilsa: shartnoma yo'q. Hakam so'rasa — «demo uchun namuna, shartnoma hali yo'q» deb ayting.
 - [ ] `https://yetak-api.diyorjon.com/api/health` → `"agent": true`.
 - [ ] Pastdagi 3 ta xabar telefon zametkasida tayyor (nusxa olib qo'yish uchun).
 - [ ] Zaxira video noutbukda, internetsiz ochiladi.
@@ -29,6 +31,8 @@ Raqamlar faqat `VISION.md`, `TANQID.md`, `MANBALAR.md` dan. Yangi raqam qo'shils
 ### 3. Demo — 2 daqiqa
 
 Qahramon: **non sexi egasi**. Garovi yetmaydi, elektron imzosi yo'q — eng ko'p uchraydigan holat.
+
+**Qadam 0 — bosh sahifa (5 soniya).** Birinchi ekranni ko'rsating → «Biznesim haqida yozaman» bosing. «0 so'm» blokini «Pul» qismida ko'rsatasiz.
 
 **Qadam 1 — tadbirkor o'z so'zi bilan gapiradi.** Agent anketa bermaydi — «biznesingiz haqida o'z so'zingiz bilan yozing» deydi. Yozing (yoki nusxa qo'ying):
 
@@ -67,7 +71,8 @@ Ekranda: muloyim rad javobi.
 ⚠️ «Simulyatsiya» degan gapni albatta ayting. Natija tadbirkor aytgan javobdan chiziladi, byurodan emas.
 
 **Qadam 4 — yo'l xaritasi va bank.** «Reja» yorlig'ida birinchi qadamni belgilang → «Bankka ko'rsatishga roziman» bosing.
-Kompyuterdagi `/bank` oynasida «Yangilash» → ariza chiqadi, oching.
+Kompyuterdagi `/bank` oynasida «Yangilash» → ariza chiqadi, oching → «Kredit berildi», summa → komissiya chiqadi. `/admin` → «Hisobot»: voronka va daromad.
+> «Tadbirkor bepul. Bank faqat kredit berganda to'laydi — komissiyani tizim o'zi hisoblaydi.»
 > «Roziligisiz hech narsa bankka bormaydi. Bank xodimi tayyor, tekshirilgan mijozni ko'radi.»
 
 ### 4. Farq — 20 soniya

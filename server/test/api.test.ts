@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { SessiyaHolati } from "../../shared/types";
 import { AgentXatosi, type Agent } from "../src/agent";
 import { appYaratish } from "../src/app";
+import { Hisoblar } from "../src/hisoblar";
 import { NAMUNALAR } from "../src/namunalar";
 import { XotiraStore } from "../src/store";
 
@@ -31,7 +32,14 @@ describe("API", () => {
   });
 
   it("to'liq yo'l: sessiya → xabar → qadam → rozilik → bank", async () => {
-    const app = yangiApp();
+    // Faol shartnomali bank va uning xodimi
+    const hisoblar = new Hisoblar();
+    const bank = hisoblar.bankYarat({ nom: "Bank", shartnoma: "faol", komissiya_foiz: 1 });
+    const xodim = hisoblar.yarat({ ism: "X", telefon: "998901112233", parol: "parol123", rol: "bank", bank_id: bank.id })!;
+    const auth = { headers: { Authorization: `Bearer ${hisoblar.tokenBer(xodim.id)}` } };
+    const app = appYaratish({ store: new XotiraStore(), agent: soxtaAgent, corsOrigin: "*", hisoblar });
+    expect((await app.request("/api/bank/applications")).status).toBe(401);
+
     const s = (await (await app.request("/api/sessions", post())).json()) as SessiyaHolati;
     expect(s.xabarlar[0].kim).toBe("agent");
     expect(s.natija).toBeNull();
@@ -47,21 +55,21 @@ describe("API", () => {
     expect(h.tugmalar).toEqual(["Ha"]);
 
     // Bank rozilikgacha hech narsa ko'rmaydi
-    expect(await (await app.request("/api/bank/arizalar")).json()).toEqual([]);
-    expect((await app.request(`/api/bank/arizalar/${s.id}`)).status).toBe(404);
+    expect(await (await app.request("/api/bank/applications", auth)).json()).toEqual([]);
+    expect((await app.request(`/api/bank/applications/${s.id}`, auth)).status).toBe(404);
 
     const q = await app.request(`/api/sessions/${s.id}/qadamlar/ariza`, post({ bajarildi: true }));
     expect(((await q.json()) as SessiyaHolati).natija?.qadamlar.find((x) => x.kalit === "ariza")?.bajarildi).toBe(true);
     expect((await app.request(`/api/sessions/${s.id}/qadamlar/yoq`, post({ bajarildi: true }))).status).toBe(404);
 
     await app.request(`/api/sessions/${s.id}/rozilik`, post({ rozi: true }));
-    const royxat = (await (await app.request("/api/bank/arizalar")).json()) as unknown[];
+    const royxat = (await (await app.request("/api/bank/applications", auth)).json()) as unknown[];
     expect(royxat).toHaveLength(1);
-    expect((await app.request(`/api/bank/arizalar/${s.id}`)).status).toBe(200);
+    expect((await app.request(`/api/bank/applications/${s.id}`, auth)).status).toBe(200);
 
     // Rozilikni qaytarib olsa — bank ko'rmaydi
     await app.request(`/api/sessions/${s.id}/rozilik`, post({ rozi: false }));
-    expect(await (await app.request("/api/bank/arizalar")).json()).toEqual([]);
+    expect(await (await app.request("/api/bank/applications", auth)).json()).toEqual([]);
   });
 
   it("xato holatlari haqiqiy sababni aytadi", async () => {

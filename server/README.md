@@ -31,6 +31,8 @@ Kalitsiz ham ishlaydi: sessiya, qadam, rozilik, bank oynasi ishlaydi; xabar yubo
 | `DATA_DIR` | `./data` | Sessiyalar fayli |
 | `CORS_ORIGIN` | `*` | Vergul bilan ruxsat etilgan manzillar |
 | `SAQLASH_KUN` | `30` | Necha kundan keyin eski sessiya o'chadi |
+| `ADMIN_TELEFON` | — | Birinchi admin telefoni (admin yo'q bo'lsa yaratiladi) |
+| `ADMIN_PAROL` | — | Birinchi admin paroli. Faqat `.env` da, kodda emas |
 
 ## Joylash
 

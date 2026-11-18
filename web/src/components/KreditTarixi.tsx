@@ -58,7 +58,7 @@ export function KreditTarixiBlok({ tarix, mikrokredit }: { tarix: KreditTarixi; 
           <button
             type="button"
             onClick={tekshir}
-            className="mt-2 min-h-11 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:opacity-90"
+            className="mt-2 min-h-11 rounded-lg bg-primary px-3 text-sm font-medium text-white hover:opacity-90"
           >
             Roziman — tekshiring
           </button>
