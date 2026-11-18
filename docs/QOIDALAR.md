@@ -23,13 +23,20 @@ Hozir bor (ochiq manbalardan, bank bilan tasdiqlanmagan):
 
 ## 2. Davlat dasturlari
 
+Asosiy yangilik: **PF–193 farmoni (11.09.2026)** — imtiyozli kredit va kompensatsiya qarorlarini endi **tuman (shahar) shtabi** qabul qiladi ([Anhor](https://anhor.uz/uz/news/ayrim-lider-tadbirkorlarga-5-mlrd-somgacha-garovsiz-kredit-beriladi), [Spot](https://www.spot.uz/oz/2026/09/12/loans-entrepreneurs/)).
+
 | Dastur | Kimga | Shart | Qancha | Manba | Holat |
 |---|---|---|---|---|---|
-| Kafolat (Tadbirkorlikni rivojlantirish kompaniyasi) | Garovi yetmaydiganlarga | ? | Kredit summasining 75 foizigacha | [gov.uz](https://gov.uz/oz/quvasoy/news/view/224414) | tasdiqlangan; to'liq shartlar topilmadi |
-| Garovsiz mikrokredit | Ilgari mikrokredit olgan, tarixi yaxshi | ? | 200 mln so'mgacha | [Anhor](https://anhor.uz/news/microcredit-boost/) | matbuot |
-| Foiz kompensatsiyasi | ? | Kredit tarixini shart qilish taqiqlangan | ? | [Spot](https://www.spot.uz/oz/2026/09/12/loans-entrepreneurs/) | matbuot |
-| «Biznes start» | ? | ? | 200 mln so'mgacha garovsiz | [gov.uz](https://gov.uz/oz/bv-jizzax/news/view/207503) | to'liq shartlar topilmadi |
-| Oilaviy tadbirkorlik | ? | ? | ? | | topilmadi |
+| Kafillik (Tadbirkorlikni rivojlantirish kompaniyasi, TRK) | Garovi yetmaydigan korxonalar | Kredit, bank kafolati, akkreditiv va lizing bo'yicha. Yaxshi kredit tarixi va kafillikdan yaxshi foydalanganlarga miqdor 1,5 baravargacha oshiriladi | 75 foizgacha, lekin **10 mlrd so'mdan oshmaydi** | [gov.uz](https://gov.uz/oz/quvasoy/news/view/224414), [Spot 01.09.2026](https://www.spot.uz/oz/2026/09/01/loans-expansion/), [Spot 2025](https://www.spot.uz/oz/2025/09/29/business-guarantee/) | tasdiqlangan (gov.uz) + matbuot; ariza tartibi va hujjatlar topilmadi |
+| Foiz kompensatsiyasi (PF–193, 1-oktabr 2026 dan) | O'zini o'zi band qilganlar, kichik va o'rta biznes | Tuman shtabi qarori bilan; mablag' TRK hisobidan. Kredit tarixi, toifa, reyting kabi qo'shimcha talab qo'yish taqiqlangan. Bir xarajat ikki marta qoplanmaydi. TRK'ga to'g'ridan-to'g'ri murojaat huquqi saqlanadi | **necha foiz punkt — topilmadi** | [Spot](https://www.spot.uz/oz/2026/09/12/loans-entrepreneurs/), [UzA](https://uza.uz/ar/posts/5-milliard-somgacha-garovsiz-kredit-ajratiladi_909065) | matbuot; foiz miqdori topilmadi |
+| Garovsiz kredit «lider tadbirkor» uchun (PF–193) | Ijtimoiy reyestrdagi oilalarni kooperatsiyaga jalb qilgan tadbirkor | Tuman shtabi qarori bilan, garovsiz | 5 mlrd so'mgacha; har jalb qilingan oila uchun 50 mln | [Spot](https://www.spot.uz/oz/2026/09/12/loans-entrepreneurs/) | matbuot |
+| PQ–312 «Kichik biznesga ko'mak» | Kamida 1 yil ishlagan, ijobiy kredit tarixi bor kichik biznes | 3-bo'limga qarang | 300 mln gacha | [NBU](https://nbu.uz/kichik-biznes/kreditlar/kichik-biznes-uchun-kredit-mahsulotlari-pq312), [Hamkorbank](https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf) | tasdiqlangan |
+| Garovsiz mikrokredit | Ilgari mikrokredit olgan, tarixi yaxshi | topilmadi | 200 mln so'mgacha | [Anhor](https://anhor.uz/news/microcredit-boost/) | matbuot |
+| «Biznes start» | Yangi tadbirkorlar | Tayyor biznes-reja beriladi; muddat, foiz, bank, qaror raqami — topilmadi | 200 mln so'mgacha garovsiz; dasturga 100 mlrd so'm | [gov.uz](https://gov.uz/oz/bv-jizzax/news/view/207503) | tasdiqlangan (gov.uz); to'liq shartlar topilmadi |
+| Oilaviy tadbirkorlik | Aholi va tadbirkorlar, hokim yordamchisi tavsiyasi bilan | Ariza **oilakredit.uz** orqali, bankka borish shart emas. Hokim yordamchisi 5 kunda xulosa beradi | Eng ko'pi 50 mln so'm (import naslli chorva — 100 mln; chegara mahallalari — 1 mlrd gacha). Foiz 17,5%; «og'ir» 37 tuman va 915 mahallada 1-martdan 12% | [Markaziy bank](https://cbu.uz/uz/press_center/reports/4809996/), [Spot 23.01.2026](https://www.spot.uz/oz/2026/01/23/family-business/), [Anhor](https://anhor.uz/uzl/news/55-nafar-hokim-yordamchisi-jazolandi/) | tasdiqlangan (MB) + matbuot; muddat topilmadi |
+| Oilaviy tadbirkorlik — foizsiz | Ijtimoiy reyestrning «davlat ta'minotidagi oila» toifasi a'zolari | PF–193 | 2026-yilda jami 100 mlrd, 2027-yilda 300 mlrd so'm (bir kishiga — topilmadi) | [Anhor](https://anhor.uz/uz/news/ayrim-lider-tadbirkorlarga-5-mlrd-somgacha-garovsiz-kredit-beriladi) | matbuot |
+
+Agent uchun: oilaviy tadbirkorlik bo'yicha muddat (3 yilgacha, 3–6 oy imtiyozli davr) faqat eski «Har bir oila — tadbirkor» dasturi haqidagi manbada bor — hozir amal qiladimi, topilmadi.
 
 ## 3. Aniq bank mahsulotlari (2–3 bank)
 
