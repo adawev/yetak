@@ -18,6 +18,7 @@ interface Mahsulot {
   nom: string;
   qisqa: string;
   hujjatlar: string[];
+  bank_tekshiradi: string[];
   manba: { nom: string; url: string };
   shartlar: (p: Profil) => Shart[];
 }
@@ -35,6 +36,11 @@ export const MAHSULOTLAR: Mahsulot[] = [
       "Faoliyat joyi hujjati (yoki kassa cheklari)",
       "MChJ bo'lsa — ta'sischilar roziligi",
       "100 mln dan ortiq qismi uchun garov hujjatlari",
+    ],
+    bank_tekshiradi: [
+      "Kichik biznes maqomi — soliq kabineti yoki integratsiya orqali",
+      "Faoliyat muddati — guvohnoma yoki integratsiya orqali",
+      "Kredit tarixi — kredit byurosidan",
     ],
     manba: {
       nom: "Hamkorbank kredit pasporti",
@@ -72,6 +78,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "Tadbirkorlar uchun onlayn kredit",
     qisqa: "200 mln gacha · garovsiz · 30% · 12 oygacha · onlayn",
     hujjatlar: ["Ipak Yo'li Bankida hisob raqami", "Ipak Yuli Business ilovasida onlayn ariza"],
+    bank_tekshiradi: ["Hisob raqamdagi aylanma — avtomatik, qaror bir necha daqiqada"],
     manba: { nom: "Ipak Yo'li Banki sahifasi", url: "https://en.ipakyulibank.uz/legal/credit/online-loan-for-business" },
     shartlar: (p) => [
       tekshir("Faqat YaTT", p.shakl, () => p.shakl === "yatt"),
@@ -88,6 +95,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "TBC Business onlayn kredit",
     qisqa: "10–600 mln · garovsiz · 33–38% · 3–36 oy · onlayn",
     hujjatlar: ["TBC Business ilovasida hisob va onlayn ariza"],
+    bank_tekshiradi: [],
     manba: { nom: "Spot.uz — TBC (reklama materiali)", url: "https://www.spot.uz/ru/2026/05/01/tbc/" },
     shartlar: (p) => [
       tekshir("Summa 10–600 mln", p.kredit_summa, () => p.kredit_summa! >= mln(10) && p.kredit_summa! <= mln(600)),
@@ -106,6 +114,7 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "«Biznesga birinchi qadam»",
     qisqa: "50 mln gacha · 21% · 24–84 oy · 125% garov yoki kafil",
     hujjatlar: ["ID-karta yoki pasport", "O'zini o'zi band qilganlik guvohnomasi", "Garov yoki kafillik hujjatlari"],
+    bank_tekshiradi: [],
     manba: {
       nom: "Mikrokreditbank sahifasi",
       url: "https://mkbank.uz/uz/private/crediting/biznesga-birinchi-qadam-mikroqarz/",
@@ -139,7 +148,17 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
     const shartlar = m.shartlar(p);
     const yoq = shartlar.filter((s) => s.holat === "yoq").length;
     const mos: MahsulotMoslik["mos"] = yoq > 0 ? "mos_emas" : shartlar.some((s) => s.holat === "nomalum") ? "qisman" : "mos";
-    return { kalit: m.kalit, bank: m.bank, nom: m.nom, qisqa: m.qisqa, shartlar, mos, hujjatlar: m.hujjatlar, manba: m.manba };
+    return {
+      kalit: m.kalit,
+      bank: m.bank,
+      nom: m.nom,
+      qisqa: m.qisqa,
+      shartlar,
+      mos,
+      hujjatlar: m.hujjatlar,
+      bank_tekshiradi: m.bank_tekshiradi,
+      manba: m.manba,
+    };
   }).sort((a, b) => {
     const t = TARTIB[a.mos] - TARTIB[b.mos];
     if (t !== 0) return t;

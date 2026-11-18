@@ -88,7 +88,10 @@ export interface MahsulotMoslik {
   shartlar: { matn: string; holat: ShartHolati }[];
   /** mos — hamma shart ✓; qisman — ✗ yo'q, lekin ? bor; mos_emas — kamida bitta ✗ */
   mos: "mos" | "qisman" | "mos_emas";
+  /** Tadbirkor o'zi olib boradigan hujjatlar */
   hujjatlar: string[];
+  /** Bank davlat tizimi yoki o'z tizimidan o'zi tekshiradi (manbada aytilganlari) */
+  bank_tekshiradi: string[];
   manba: Manba;
 }
 

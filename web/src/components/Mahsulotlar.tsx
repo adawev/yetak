@@ -50,12 +50,25 @@ function Mahsulot({ m, ochiqBoshla }: { m: MahsulotMoslik; ochiqBoshla: boolean 
 
       {ochiq && (
         <div className="mt-2 border-t border-border pt-2 text-sm">
-          <p className="mb-1 text-xs font-medium text-muted-foreground">Kerakli hujjatlar</p>
+          <p className="mb-1 text-xs font-medium text-muted-foreground">Siz olib borasiz</p>
           <ul className="list-disc space-y-0.5 pl-5">
             {m.hujjatlar.map((h) => (
               <li key={h}>{h}</li>
             ))}
           </ul>
+          {m.bank_tekshiradi.length > 0 && (
+            <>
+              <p className="mt-2 mb-1 text-xs font-medium text-muted-foreground">Bank o'zi tekshiradi — olib bormaysiz</p>
+              <ul className="space-y-0.5">
+                {m.bank_tekshiradi.map((h) => (
+                  <li key={h} className="flex gap-1.5">
+                    {BELGI.ha}
+                    <span className="min-w-0">{h}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
           <a
             href={m.manba.url}
             target="_blank"
