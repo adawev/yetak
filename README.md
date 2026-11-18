@@ -12,6 +12,19 @@ TadbirCore — bankning eshigi. Yetak — o'sha eshikkacha bo'lgan yo'l.</p>
 
 Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026 · Tadbirkorlik yo'nalishi, 20-muammo (kichik biznes krediti).
 
+## Pitch dek
+
+12 slayd, Sequoia tartibida. [PDF](docs/Yetak-pitch-dek.pdf) · [raqamlar va farazlar](docs/PITCH-RAQAMLAR.md) · [manba](docs/pitch/)
+
+| | |
+|---|---|
+| ![Muqova](docs/pitch/slaydlar/01.png) | ![Muammo](docs/pitch/slaydlar/02.png) |
+| ![Yechim](docs/pitch/slaydlar/03.png) | ![Ishonchnoma bilan hujjat yig'ish](docs/pitch/slaydlar/04.png) |
+| ![Nega hozir](docs/pitch/slaydlar/05.png) | ![Bozor](docs/pitch/slaydlar/06.png) |
+| ![Raqobat](docs/pitch/slaydlar/07.png) | ![Mahsulot](docs/pitch/slaydlar/08.png) |
+| ![Biznes model](docs/pitch/slaydlar/09.png) | ![Unit-ekonomika](docs/pitch/slaydlar/10.png) |
+| ![Jamoa](docs/pitch/slaydlar/11.png) | ![Moliya va vizyon](docs/pitch/slaydlar/12.png) |
+
 ## Muammo
 
 - Tadbirkorga pul kerak, lekin qaysi bank va qaysi kredit unga mosligini bilmaydi.
@@ -79,8 +92,8 @@ Batafsil: [Arxitektura](docs/ARXITEKTURA.md) · [Vision](docs/VISION.md) · [Raq
 
 | | Rol |
 |---|---|
-| [adawev](https://github.com/adawev) | Sardor, server va agent |
-| [muhammadnuruz](https://github.com/muhammadnuruz) | Web |
-| [AlibekIsayev](https://github.com/AlibekIsayev) | Tadqiqot: banklar va hujjatlar |
-| [Ilyos056](https://github.com/Ilyos056) | Dalil va xavflar |
-| [shoxjahon20007-gif](https://github.com/shoxjahon20007-gif) | Taqdimot |
+| Diyor Adashev ([adawev](https://github.com/adawev)) | Texnik lead |
+| Shoxjahon ([shoxjahon20007-gif](https://github.com/shoxjahon20007-gif)) | Sotuv |
+| Muhammadnur ([muhammadnuruz](https://github.com/muhammadnuruz)) | Dasturchi |
+| Ilyos ([Ilyos056](https://github.com/Ilyos056)) | Dasturchi |
+| Ali ([AlibekIsayev](https://github.com/AlibekIsayev)) | Dizayner |
