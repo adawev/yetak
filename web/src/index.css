@@ -51,3 +51,25 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+/* Bosh sahifa: nuqtali fon, sekin suzish, yo'l chizig'i */
+.nuqtali {
+  background-image: radial-gradient(color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@keyframes suz {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-6px) rotate(var(--r, 0deg)); }
+}
+.suzadi { animation: suz 7s ease-in-out infinite; }
+.suzadi-2 { animation: suz 8s ease-in-out -2.5s infinite; }
+.suzadi-3 { animation: suz 9s ease-in-out -5s infinite; }
+
+@keyframes chiz { to { stroke-dashoffset: 0; } }
+.chiziladi { stroke-dasharray: 400; stroke-dashoffset: 400; animation: chiz 1.4s .4s ease-out forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .suzadi, .suzadi-2, .suzadi-3 { animation: none; }
+  .chiziladi { animation: none; stroke-dashoffset: 0; }
+}
