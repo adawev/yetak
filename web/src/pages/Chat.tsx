@@ -51,7 +51,7 @@ export default function Chat() {
     requestAnimationFrame(() => {
       if (yangiAgent) {
         const el = ruyxat.current?.querySelector<HTMLElement>(`[data-xabar="${soni - 1}"]`)
-        el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        el?.scrollIntoView({ behavior: 'auto', block: 'start' })
       } else {
         oxiri.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
       }
