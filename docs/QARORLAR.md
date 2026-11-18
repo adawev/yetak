@@ -40,6 +40,9 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-18 | Demoda haqiqiy bank nomi ishlatilishi mumkin; shartnoma yo'qligi so'ralsa ochiq aytiladi | Chat egasi qarori |
 | 2026-11-18 | Kredit tarixi kartasi demoda simulyatsiya; pitchda og'zaki aytiladi | Kredit byurosiga ulanish uchun litsenziyali hamkor kerak |
 | 2026-11-18 | Yo'nalish aniqlandi: kredit turlari va har tur bo'yicha kreditni eng oson beradigan banklar katalogi. Agent tadbirkor holatidan turni, turdan bankni tanlaydi. Asos: `tadqiqot/kredit_turlari_banklar.md` | «Bir klikda kredit» iste'mol qarzi; tadbirkorga kerakli tur va bank ko'rinmaydi. Jamoa qarori |
+| 2026-11-18 | Pitch dek Sequoia tartibida, unit-ekonomika (CAC, LTV, LTV/CAC), breakdown, jamoa o'sishi va 3 yillik ssenariy bilan. Raqamlar va farazlar: `PITCH-RAQAMLAR.md` | Biznes mentor mezonlari (B2, B4, B5) |
+| 2026-11-18 | AI xarajati dekda «LLM xarajati» deb yoziladi | Jamoa qarori |
+| 2026-11-18 | Hujjat yig'ishning yangi varianti: tadbirkor notarial ishonchnoma beradi, vakilimiz hujjatlarni uning nomidan oladi (pullik xizmat). Doirasini yurist tasdiqlaydi, ERI kaliti olinmaydi | Jamoa qarori |
 
 ## Hali hal qilinmagan
 
