@@ -15,6 +15,29 @@ export const QORALAMA_MATNI: Record<QoralamaKalit, string> = {
   pul_oqimi: "Yetak siz aytgan raqamlardan 12 oylik jadval tuzdi — tekshirib, imzolaysiz.",
 };
 
+/**
+ * Qoralama bankda haqiqatda qanday o'tadi (2026-11-18 tekshirildi). Tadbirkorga ham, PDF ga ham shu yozuv chiqadi.
+ * Manbasiz da'vo yo'q: topilmagan narsa «bank shakliga ko'chiriladi» deb halol aytiladi.
+ */
+export const QORALAMA_ASOSI: Record<QoralamaKalit, { matn: string; manba: string | null }> = {
+  ariza: {
+    matn: "Bank arizani o'z shaklida so'raydi (Hamkorbankda — «buyurtmanoma»). Yetak barcha ma'lumotni tayyorlab qo'ydi — bank shakliga ko'chiriladi. Demoda — Yetak namunasi.",
+    manba: "https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf",
+  },
+  tasischi_qarori: {
+    matn: "MChJ qonuni (O'RQ-1137): yirik bitimni ishtirokchilar umumiy yig'ilishi hal qiladi; bayonnomada vaqt va joy, ovozlar, rais va kotib, kun tartibi va qaror bo'ladi. Notarius shart emas. Hamkorbank «boshqaruv organining kredit olish uchun roziligi» ni so'raydi.",
+    manba: "https://lex.uz/uz/docs/-8151376",
+  },
+  pul_oqimi: {
+    matn: "Hamkorbank «o'zini o'zi qoplashi ko'rsatilgan pul oqimlari prognozi» ni so'raydi — jadval kredit to'lovi foydadan qoplanishini oyma-oy ko'rsatadi. Bankda o'z shakli bo'lsa, raqamlar ko'chiriladi.",
+    manba: "https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf",
+  },
+  daromad_manbalari: {
+    matn: "Yordamchi hujjat. Daromadning asosiy dalili — soliq deklaratsiyasi; bank uni soliq tizimidan o'zi tekshiradi.",
+    manba: "https://depozit.uz/news/yakka-tartibdagi-tadbirkor-jismoniy-shaxs-sifatida-kredit-olishi-mumkinmi",
+  },
+};
+
 /** Shu hujjatning qoralamasini tuzishga ma'lumot yetarlimi. */
 export function qoralamaBormi(kalit: string, p: Profil): kalit is QoralamaKalit {
   switch (kalit) {
@@ -53,6 +76,8 @@ export interface QoralamaSahifa {
   qatorlar: [string, string][];
   /** Pastdagi imzo joylari */
   imzo: string[];
+  /** Bankda haqiqatda qanday o'tadi (QORALAMA_ASOSI) */
+  asos: string;
 }
 
 const BOSH = "____________________";
@@ -76,6 +101,10 @@ export function tolovMatni(k: QoralamaKirish): { tolov: number; foiz: string } {
 }
 
 export function qoralamaSahifa(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: QoralamaKirish): QoralamaSahifa {
+  return { ...sahifaMaydonlari(kalit, k), asos: QORALAMA_ASOSI[kalit].matn };
+}
+
+function sahifaMaydonlari(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: QoralamaKirish): Omit<QoralamaSahifa, "asos"> {
   const p = k.profil;
   const ism = k.ism?.trim() || BOSH;
   if (kalit === "ariza") {
@@ -108,19 +137,22 @@ export function qoralamaSahifa(kalit: Exclude<QoralamaKalit, "pul_oqimi">, k: Qo
   }
   if (kalit === "tasischi_qarori") {
     return {
-      sarlavha: "Ta'sischilar umumiy yig'ilishi qarori",
-      izoh: `Kredit olish va ta'minot berishga rozilik. ${IZOH}`,
+      sarlavha: "Ishtirokchilar umumiy yig'ilishi bayonnomasi",
+      izoh: `Kredit olish va ta'minot berishga rozilik. Tarkib MChJ qonuni (O'RQ-1137) bayonnoma talablariga ko'ra. ${IZOH}`,
       qatorlar: [
         ["Jamiyat nomi", BOSH],
-        ["Yig'ilish sanasi va joyi", BOSH],
-        ["Ishtirok etgan ta'sischilar", BOSH],
-        ["Kun tartibi", `${k.bank} dan kredit olish to'g'risida`],
+        ["Yig'ilish vaqti va joyi", BOSH],
+        ["Ishtirok etgan ishtirokchilar va ularning ovozlari (ulushi)", BOSH],
+        ["Yig'ilish raisi", BOSH],
+        ["Kotib", BOSH],
+        ["Kun tartibi", `${k.bank} dan kredit olish va ta'minot berish to'g'risida`],
+        ["Ovoz berish natijasi", "Yoqlab: ____  Qarshi: ____  Betaraf: ____"],
         ["Qaror", `Jamiyat ${k.bank} dan ${p.kredit_summa != null ? somda(p.kredit_summa) : BOSH} miqdorida, ${p.kredit_muddat_oy ?? BOSH} oy muddatga kredit olishga rozilik beradi.`],
         ["Kredit maqsadi", p.maqsad ?? BOSH],
         ["Ta'minot", p.garov_qiymati ? `Jamiyat mol-mulki garovga qo'yiladi (taxminiy qiymati ${somda(p.garov_qiymati)}).` : "Garovsiz yoki bank talab qilgan ta'minot bilan."],
         ["Vakolat", "Jamiyat direktoriga kredit va ta'minot shartnomalarini imzolash vakolati beriladi."],
       ],
-      imzo: ["Yig'ilish raisi", "Kotib", "Ta'sischilar imzolari", "Muhr"],
+      imzo: ["Yig'ilish raisi", "Kotib", "Ishtirokchilar imzolari", "Muhr"],
     };
   }
   const foyda = (p.oylik_tushum ?? 0) - (p.oylik_xarajat ?? 0);

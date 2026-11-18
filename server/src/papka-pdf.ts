@@ -136,6 +136,7 @@ function qoralamaChiz(w: Yozuvchi, q: QoralamaSahifa) {
   w.qator("YETAK TAYYORLADI - QORALAMA", { size: 9, bold: true, rang: [0.85, 0.45, 0.1] });
   w.qator(q.sarlavha, { size: 18, bold: true });
   w.qator(q.izoh, { size: 9.5, rang: kulrang });
+  w.qator(`Bankda: ${q.asos}`, { size: 9.5, rang: [0.1, 0.45, 0.3] });
   w.bosh(12);
   for (const [nom, qiymat] of q.qatorlar) {
     w.qator(nom, { size: 9, rang: kulrang });

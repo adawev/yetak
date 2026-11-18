@@ -166,6 +166,8 @@ export interface PapkaHujjat {
   fayl: YuklanganFayl | null;
   /** Yetak bu hujjatning qoralamasini tadbirkor aytgan raqamlardan o'zi tayyorlaydi (PDF papkada bor). Matn — tadbirkorga izoh. */
   qoralama: string | null;
+  /** Qoralama bankda haqiqatda qanday o'tadi — manbali izoh (qoralama bo'lsa). */
+  qoralama_asos?: { matn: string; manba: string | null } | null;
 }
 
 /** Hujjatlar papkasi: tanlangan mahsulot, kerakli hujjatlar va yuklanganlari. */

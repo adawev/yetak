@@ -91,6 +91,7 @@ C. Hujjatlar — Yetak tayyorlaydi, tadbirkor faqat o'zida bor narsani yuklaydi.
    - Tugmalar: "Keyingi hujjat", "Qanday olaman?".
    - "Keyingi hujjat" desa — «sizdan_kerak» dagi navbatdagi hujjat: nomi + 2–3 qisqa qadam (papkadagi «qadamlar», qidiruv, havola). Hammasi tayyor bo'lsa: "Papkangiz tayyor. Roziligingiz bilan uni bankka yuboraman — «Bankka yuborish» tugmasini bosing. Bankka faqat imzoga borasiz. Qarorni bank qiladi."
    - Qoralamasi bor hujjat haqida so'rasa: "Buni men sizning javoblaringizdan to'ldirdim — papka PDF ida. Tekshirib, imzolaysiz." "O'zingiz tuzasiz/yozasiz", "bankdan shaklini oling" DEMA.
+   - "Bank buni qabul qiladimi?", "haqiqatda o'tadimi?" desa — o'sha hujjatning «bankda_qanday_otadi» ini halol, qisqa ayt (masalan: ariza bank shakliga ko'chiriladi; qaror MChJ qonuni talabiga mos; daromad ma'lumoti yordamchi, asosiysi soliq deklaratsiyasi). Ko'paytirib va'da berma.
    - Hujjatni qanday olishni so'rasa — faqat papkadagi qayerda / qidiruv / qadamlar / vaqt / narx dan, 2–3 qisqa qadam. Vaqt yoki narx yo'q bo'lsa — tilga olma. Sayt menyusini, narxni yoki muddatni o'zingdan to'qima.
    - Tadbirkor boshqa bankka o'tsa — bank_tanlash, keyin yangi papka bo'yicha gapir. Papkadagi bankdan boshqa bankning hujjatlarini aytma.
    - <holat> da «ogohlantirish» bo'lsa — shuni birinchi o'ringa qo'y.
@@ -356,7 +357,7 @@ function papkaQisqa(p: Papka | null | undefined) {
             ? "Yetak tayyorladi — imzo kerak"
             : "yuklanmagan",
       ...(h.tavsiya ? { tavsiya: true } : {}),
-      ...(h.qoralama ? { qoralama: h.qoralama } : {}),
+      ...(h.qoralama ? { qoralama: h.qoralama, bankda_qanday_otadi: h.qoralama_asos?.matn } : {}),
       ...(h.olish
         ? { qayerda: h.olish.qayerda, qidiruv: h.olish.qidiruv, qadamlar: h.olish.qadamlar, vaqt: h.olish.vaqt, narx: h.olish.narx, havola: h.olish.havola }
         : {}),

@@ -223,6 +223,17 @@ function Hujjat({
           <span className="font-semibold">Yetak tayyorladi.</span> {h.qoralama}
         </p>
       )}
+      {yetakniki && !tekshirilmoqda && h.qoralama_asos && (
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          <span className="font-medium text-foreground">Bankda qanday o'tadi: </span>
+          {h.qoralama_asos.matn}{' '}
+          {h.qoralama_asos.manba && (
+            <a href={h.qoralama_asos.manba} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 underline">
+              Manba <ExternalLink size={10} />
+            </a>
+          )}
+        </p>
+      )}
       {tekshirilmoqda && (
         <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground" role="status">
           <Loader2 size={14} className="animate-spin" />

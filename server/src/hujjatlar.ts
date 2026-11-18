@@ -5,7 +5,7 @@
 import manbaJson from "../../docs/tadqiqot/hujjatlar.json";
 import type { MahsulotMoslik, OlishYoli, Papka, PapkaHujjat, Profil, YuklanganFayl } from "../../shared/types";
 import { matnTozala } from "./papka-pdf";
-import { QORALAMA_MATNI, qoralamaBormi } from "./qoralamalar";
+import { QORALAMA_ASOSI, QORALAMA_MATNI, qoralamaBormi } from "./qoralamalar";
 
 interface JsonHujjat {
   nom: string;
@@ -148,6 +148,7 @@ export function papkaYasash(
       olish: h.olish ?? j?.olish ?? null,
       fayl: fayllar[h.hujjat] ?? null,
       qoralama: qoralamaBormi(h.hujjat, p) ? QORALAMA_MATNI[h.hujjat] : null,
+      qoralama_asos: qoralamaBormi(h.hujjat, p) ? QORALAMA_ASOSI[h.hujjat] : null,
     });
   }
   for (const k of TAVSIYA) {
