@@ -136,7 +136,7 @@ export default function Chat() {
                   role="tab"
                   aria-selected={yorliq === y}
                   onClick={() => setYorliq(y)}
-                  className={`min-h-9 rounded-lg ${yorliq === y ? 'bg-card shadow-sm' : 'text-muted-foreground'}`}
+                  className={`min-h-9 rounded-lg transition-colors ${yorliq === y ? 'bg-background text-foreground shadow-sm ring-1 ring-border' : 'text-muted-foreground hover:text-foreground'}`}
                 >
                   {y === 'suhbat' ? 'Suhbat' : papkaBor ? `Batafsil · hujjatlar ${h.papka?.tayyor ?? 0}/${h.papka?.jami ?? 0}` : 'Batafsil'}
                 </button>
