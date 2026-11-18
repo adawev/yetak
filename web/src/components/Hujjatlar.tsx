@@ -15,6 +15,7 @@ import {
   FolderOpen,
   Loader2,
   Upload,
+  X,
 } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
 import { papkaPdfUrl } from '@/lib/api'
@@ -281,6 +282,38 @@ function Guruh({ sarlavha, izoh, children }: { sarlavha: string; izoh?: string; 
   )
 }
 
+function TayyorlashTaklifi() {
+  const [ochiq, setOchiq] = useState(false)
+  return (
+    <div className="space-y-2 rounded-lg border border-border bg-card p-3">
+      <div className="flex items-center justify-between gap-2">
+        <h4 className="font-medium">Hujjatlarni biz tayyorlaymiz</h4>
+        <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-medium text-muted-foreground">Demo</span>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        Yetak mutaxassisi hujjatlaringizni yig'ishga va tekshirishga yordam beradi, papkani bankka tayyor holga keltiradi.
+      </p>
+      <p className="text-sm font-medium">20 000 so'm</p>
+      {ochiq ? (
+        <div role="status" className="flex items-start gap-2 rounded-lg bg-foreground/5 px-3 py-2 text-sm">
+          <span className="min-w-0 flex-1">Demo: to'lov hali ulanmagan. Taqdimotdan keyin ishga tushadi.</span>
+          <button type="button" onClick={() => setOchiq(false)} aria-label="Yopish" className="p-1">
+            <X size={16} />
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOchiq(true)}
+          className="min-h-11 w-full rounded-lg border border-border px-4 text-sm font-medium hover:border-primary hover:text-primary"
+        >
+          Buyurtma berish
+        </button>
+      )}
+    </div>
+  )
+}
+
 export function HujjatlarPapka({ holat, amallar }: { holat: SessiyaHolati; amallar: HujjatAmallari }) {
   const p = holat.papka
   if (!p) return null
@@ -382,6 +415,8 @@ export function HujjatlarPapka({ holat, amallar }: { holat: SessiyaHolati; amall
           ))}
         </Guruh>
       )}
+
+      <TayyorlashTaklifi />
 
       <div className="border-t border-border pt-3">
         {yuklangan > 0 ? (

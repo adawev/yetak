@@ -48,6 +48,16 @@ export const api = {
   sessiya: (id: string) => sorov<BoySessiya>(`/api/sessions/${id}`),
   xabar: (id: string, matn: string) =>
     sorov<BoySessiya>(`/api/sessions/${id}/messages`, post({ matn })),
+  rasmliXabar: (id: string, matn: string, rasm: File) => {
+    const forma = new FormData()
+    forma.append('matn', matn)
+    forma.append('rasm', rasm)
+    return sorov<BoySessiya>(
+      `/api/sessions/${id}/hujjatlar/skrinshot`,
+      { method: 'POST', body: forma },
+      90_000,
+    )
+  },
   qadam: (id: string, kalit: string, bajarildi: boolean) =>
     sorov<BoySessiya>(`/api/sessions/${id}/qadamlar/${kalit}`, post({ bajarildi })),
   rozilik: (id: string, rozi: boolean) =>

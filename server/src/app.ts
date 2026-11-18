@@ -131,11 +131,13 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
     return c.json(holat(s));
   });
 
-  app.post("/api/sessions/:id/messages", async (c) => {
-    const s = store.olish(c.req.param("id"));
-    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
-    const body = await jsonOqish(c);
-    const matn = typeof body?.matn === "string" ? body.matn.trim() : "";
+  /** Tadbirkor xabari (ixtiyoriy skrinshot bilan) → agent javobi. Rasm saqlanmaydi, faqat shu so'rovda o'qiladi. */
+  const xabarYuborish = async (
+    c: Context,
+    s: Sessiya,
+    matn: string,
+    rasm?: { tur: Exclude<RuxsatTur, "application/pdf">; data: Buffer },
+  ) => {
     if (!matn) return xato(c, 400, "Xabar bo'sh. Biror narsa yozing.");
     if (matn.length > MAX_MATN) return xato(c, 413, `Xabar juda uzun. ${MAX_MATN} belgidan qisqa yozing.`);
     if (s.xabarlar.length >= MAX_XABAR) return xato(c, 409, "Suhbat juda uzun bo'lib ketdi. Yangi suhbat boshlang.");
@@ -145,13 +147,19 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
 
     band.add(s.id);
     try {
-      const yangiXabar = { kim: "tadbirkor" as const, matn, vaqt: new Date().toISOString() };
+      const yangiXabar = {
+        kim: "tadbirkor" as const,
+        matn,
+        vaqt: new Date().toISOString(),
+        ...(rasm ? { rasm: true } : {}),
+      };
       const j = await agent.javob({
         xabarlar: [...s.xabarlar, yangiXabar],
         profil: s.profil,
         bajarilgan: s.bajarilgan,
         mahsulot: s.mahsulot,
         fayllar: s.fayllar,
+        ...(rasm ? { rasm: { tur: rasm.tur, data: rasm.data.toString("base64") } } : {}),
       });
       s.xabarlar.push(yangiXabar, {
         kim: "agent",
@@ -172,6 +180,37 @@ export function appYaratish({ store, agent, corsOrigin, fayllar, tekshiruvchi }:
     } finally {
       band.delete(s.id);
     }
+  };
+
+  app.post("/api/sessions/:id/messages", async (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
+    const body = await jsonOqish(c);
+    const matn = typeof body?.matn === "string" ? body.matn.trim() : "";
+    return xabarYuborish(c, s, matn);
+  });
+
+  // Skrinshot bilan xabar. Yo'l /hujjatlar/ ostida — nginx shu yo'lga katta fayl ruxsat bergan.
+  app.post("/api/sessions/:id/hujjatlar/skrinshot", async (c) => {
+    const s = store.olish(c.req.param("id"));
+    if (!s) return xato(c, 404, "Suhbat topilmadi. Yangi suhbat boshlang.");
+    if (Number(c.req.header("content-length") ?? 0) > MAX_FAYL + 64 * 1024) {
+      return xato(c, 413, "Rasm juda katta. 10 MB dan kichik rasm yuboring.");
+    }
+    let forma: Record<string, unknown>;
+    try {
+      forma = await c.req.parseBody();
+    } catch {
+      return xato(c, 400, "Rasm yetib kelmadi. Qayta yuboring.");
+    }
+    const fayl = forma.rasm instanceof File ? forma.rasm : null;
+    if (!fayl || fayl.size === 0) return xato(c, 400, "Rasm tanlanmagan yoki bo'sh.");
+    if (fayl.size > MAX_FAYL) return xato(c, 413, "Rasm juda katta. 10 MB dan kichik rasm yuboring.");
+    const data = Buffer.from(await fayl.arrayBuffer());
+    const tur = faylTuri(data);
+    if (!tur || tur === "application/pdf") return xato(c, 422, "Bu yerga faqat rasm (skrinshot) yuboring: JPG yoki PNG.");
+    const matn = (typeof forma.matn === "string" ? forma.matn.trim() : "") || "(rasm)";
+    return xabarYuborish(c, s, matn, { tur, data });
   });
 
   app.post("/api/sessions/:id/qadamlar/:kalit", async (c) => {

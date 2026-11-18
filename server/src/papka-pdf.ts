@@ -3,7 +3,7 @@
 
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { Papka, Profil } from "../../shared/types";
-import { somda } from "./rules";
+import { biznesToifasi, somda } from "./rules";
 
 const A4: [number, number] = [595.28, 841.89];
 const CHET = 50;
@@ -155,6 +155,7 @@ export async function papkaPdf(k: {
   const qatorlar: [string, string | undefined][] = [
     ["Faoliyat", p.faoliyat],
     ["Shakl", p.shakl ? shakl[p.shakl] : undefined],
+    ["Biznes toifasi", biznesToifasi(p) ?? undefined],
     ["Necha oydan beri ishlaydi", p.faoliyat_oy != null ? `${p.faoliyat_oy} oy` : undefined],
     ["Oylik tushum", p.oylik_tushum != null ? somda(p.oylik_tushum) : undefined],
     ["Oylik xarajat", p.oylik_xarajat != null ? somda(p.oylik_xarajat) : undefined],

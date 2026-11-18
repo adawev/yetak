@@ -4,7 +4,7 @@
 
 import type { MahsulotMoslik, Profil, ShartHolati } from "../../shared/types";
 import { mahsulotHujjatNomlari, mahsulotBankTekshiradi } from "./hujjatlar";
-import { somda } from "./rules";
+import { oylikTolov, somda } from "./rules";
 
 type Shart = { matn: string; holat: ShartHolati };
 
@@ -19,6 +19,10 @@ interface Mahsulot {
   nom: string;
   qisqa: string;
   manba: { nom: string; url: string };
+  /** Chegaralar — faqat manbadan (hujjatlar.json). null — manbada yo'q. */
+  summa_max: number | null;
+  muddat_max: number | null;
+  foiz: [number, number] | null;
   shartlar: (p: Profil) => Shart[];
 }
 
@@ -32,6 +36,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
       nom: "Hamkorbank kredit pasporti",
       url: "https://hamkorbank.uz/uz/assets/docs/business/credits/Kichik_biznesga_komak_kredit_pasporti_uz.pdf",
     },
+    summa_max: mln(300),
+    muddat_max: 84,
+    foiz: [18, 24],
     shartlar: (p) => {
       const s = p.kredit_summa;
       const garov: Shart =
@@ -64,6 +71,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "Tadbirkorlar uchun onlayn kredit",
     qisqa: "200 mln gacha · garovsiz · 30% · 12 oygacha · onlayn",
     manba: { nom: "Ipak Yo'li Banki sahifasi", url: "https://en.ipakyulibank.uz/legal/credit/online-loan-for-business" },
+    summa_max: mln(200),
+    muddat_max: 12,
+    foiz: [30, 30],
     shartlar: (p) => [
       tekshir("Faqat YaTT", p.shakl, () => p.shakl === "yatt"),
       tekshir("Oxirgi 12 oyda aylanma (kamida 1 yil faoliyat)", p.faoliyat_oy, () => p.faoliyat_oy! >= 12),
@@ -79,6 +89,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "TBC Business onlayn kredit",
     qisqa: "10–600 mln · garovsiz · 33–38% · 3–36 oy · onlayn",
     manba: { nom: "Spot.uz — TBC (reklama materiali)", url: "https://www.spot.uz/ru/2026/05/01/tbc/" },
+    summa_max: mln(600),
+    muddat_max: 36,
+    foiz: [33, 38],
     shartlar: (p) => [
       tekshir("Summa 10–600 mln", p.kredit_summa, () => p.kredit_summa! >= mln(10) && p.kredit_summa! <= mln(600)),
       tekshir(
@@ -99,6 +112,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
       nom: "Mikrokreditbank sahifasi",
       url: "https://mkbank.uz/uz/private/crediting/biznesga-birinchi-qadam-mikroqarz/",
     },
+    summa_max: mln(50),
+    muddat_max: 84,
+    foiz: [21, 21],
     shartlar: (p) => {
       const s = p.kredit_summa;
       const garovYetadi = s != null && p.garov_qiymati != null && p.garov_qiymati >= s * 1.25;
@@ -126,6 +142,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
       nom: "Hamkorbank kredit pasporti",
       url: "https://hamkorbank.uz/uz/assets/docs/business/credits/Biznesga_qadam_kredit_pasporti_uz.pdf",
     },
+    summa_max: mln(100),
+    muddat_max: 36,
+    foiz: [25, 28],
     shartlar: (p) => [
       tekshir("Faqat o'zini o'zi band qilganlar", p.shakl, () => p.shakl === "ozini_band"),
       tekshir("Ro'yxatdan o'tganiga 6 oydan oshmagan", p.faoliyat_oy, () => p.faoliyat_oy! <= 6),
@@ -144,6 +163,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "«Tezkor+»",
     qisqa: "25% · 36 oygacha · 3 oy imtiyoz · garov 135%",
     manba: { nom: "SQB sahifasi", url: "https://sqb.uz/uz/business/small-business-credits/tezkor-krediti" },
+    summa_max: null,
+    muddat_max: 36,
+    foiz: [25, 25],
     shartlar: (p) => {
       const s = p.kredit_summa;
       return [
@@ -169,6 +191,9 @@ export const MAHSULOTLAR: Mahsulot[] = [
     nom: "Standart biznes krediti",
     qisqa: "Garov 125% · 6 oydan ishlaganlarga · shartlar reklama materialidan",
     manba: { nom: "Spot.uz — Kapitalbank (reklama materiali)", url: "https://www.spot.uz/oz/2026/10/07/kapitalbank-kredit/" },
+    summa_max: null,
+    muddat_max: null,
+    foiz: null,
     shartlar: (p) => {
       const s = p.kredit_summa;
       return [
@@ -200,6 +225,22 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
     const shartlar = m.shartlar(p);
     const yoq = shartlar.filter((s) => s.holat === "yoq").length;
     const mos: MahsulotMoslik["mos"] = yoq > 0 ? "mos_emas" : shartlar.some((s) => s.holat === "nomalum") ? "qisman" : "mos";
+    let taklif: MahsulotMoslik["taklif"] = null;
+    if (mos !== "mos_emas" && m.foiz && p.kredit_muddat_oy != null) {
+      const summa = Math.min(p.kredit_summa!, m.summa_max ?? p.kredit_summa!);
+      const muddat_oy = Math.min(p.kredit_muddat_oy, m.muddat_max ?? p.kredit_muddat_oy);
+      taklif = {
+        summa,
+        foiz_min: m.foiz[0],
+        foiz_max: m.foiz[1],
+        muddat_oy,
+        oylik_tolov: Math.round(oylikTolov(summa, m.foiz[1], muddat_oy)),
+        izoh:
+          m.kalit === "hamkorbank_pq312" && summa > mln(100)
+            ? "18–24% faqat 100 mln gacha qismiga; qolgani bankning odatiy foizida — to'lov biroz ko'proq bo'lishi mumkin."
+            : null,
+      };
+    }
     return {
       kalit: m.kalit,
       bank: m.bank,
@@ -207,6 +248,7 @@ export function mahsulotlarniMoslash(p: Profil): MahsulotMoslik[] {
       qisqa: m.qisqa,
       shartlar,
       mos,
+      taklif,
       hujjatlar: mahsulotHujjatNomlari(m.kalit, p),
       bank_tekshiradi: mahsulotBankTekshiradi(m.kalit),
       manba: m.manba,

@@ -92,6 +92,24 @@ export function profilTolami(p: Profil): boolean {
   return yetishmayotgan(p).length === 0;
 }
 
+/**
+ * Biznes toifasi — yillik daromad bo'yicha (PF-21, 10.02.2023; matbuot: buxgalter.uz, tashkenttimes.uz).
+ * Mikrofirma ≤ 1 mlrd, kichik 1–10 mlrd, o'rta 10–100 mlrd, yirik ≥ 100 mlrd so'm. YaTT — kichik biznes.
+ * Yillik daromad = oylik tushum × 12 (tadbirkor aytgan o'rtacha) — taxmin.
+ */
+export function biznesToifasi(p: Profil): string | null {
+  if (p.shakl === "yatt") return "Kichik biznes (YaTT)";
+  if (p.shakl === "ozini_band") return "O'zini o'zi band qilgan";
+  if (p.shakl === "norasmiy") return "Ro'yxatdan o'tmagan";
+  if (p.oylik_tushum == null) return null;
+  const yillik = p.oylik_tushum * 12;
+  const mlrd = 1_000_000_000;
+  if (yillik <= mlrd) return "Mikrofirma (yillik daromad 1 mlrd so'mgacha)";
+  if (yillik <= 10 * mlrd) return "Kichik korxona (yillik daromad 1–10 mlrd so'm)";
+  if (yillik <= 100 * mlrd) return "O'rta biznes (yillik daromad 10–100 mlrd so'm)";
+  return "Yirik biznes (yillik daromad 100 mlrd so'mdan ko'p)";
+}
+
 /** "12 500 000 so'm" */
 export function somda(n: number): string {
   return `${Math.round(n).toLocaleString("en-US").replace(/,/g, " ")} so'm`;

@@ -9,7 +9,7 @@ import { KORPUS } from "./korpus.generated";
 import { MAHSULOTLAR, mahsulotlarniMoslash } from "./mahsulotlar";
 import { profilniTozalash } from "./profil";
 import { natijaHisobla } from "./natija";
-import { yetishmayotgan } from "./rules";
+import { biznesToifasi, yetishmayotgan } from "./rules";
 
 export interface AgentKirish {
   xabarlar: Xabar[]; // oxirgisi — tadbirkorning yangi xabari
@@ -19,6 +19,8 @@ export interface AgentKirish {
   mahsulot?: string;
   /** Yuklangan hujjatlar — papka holati uchun. */
   fayllar?: Record<string, YuklanganFayl>;
+  /** Oxirgi xabarga ilova qilingan skrinshot (saqlanmaydi). */
+  rasm?: { tur: "image/jpeg" | "image/png" | "image/webp"; data: string };
 }
 
 export interface AgentJavob {
@@ -99,7 +101,9 @@ Qat'iy qoidalar:
 - Asbob, tizim, blok, tugma haqida tadbirkorga hech qachon yozma ("Tugmalar qo'yildi", "Blok ko'rsatildi", "Savolingizga javob berdim" — YO'Q). Har xabarda tadbirkorning savoliga mazmunli javob bo'lsin. Asboblarni faqat asbob sifatida chaqir — hech qachon matn ichiga XML yoki kod yozma.
 - Natija chiqmaguncha (natija = null) bank nomini yoki hujjatlar ro'yxatini aytma — avval savollarni tugat. Tadbirkor so'rasa: "Yana 2–3 savoldan keyin aniq aytaman."
 - Garov, kafolat va shu kabilar haqida savol bersa — avval savolning o'ziga bir gapda javob ber, keyin keyingi qadam.
-- Va'da berma. "Kredit olasiz", "albatta berishadi" dema. Hukm "tayyor" bo'lsa: "Arizangiz tayyor. Qarorni bank qiladi."
+- Va'da berma. "Kredit olasiz", "albatta berishadi", "Arizangiz tayyor" dema — hujjatlar hali yig'ilmagan. Hukm "tayyor" bo'lsa: "Mos bank topildi — endi hujjatlar kerak. Qarorni bank qiladi." Hukm gapida summa, foiz, muddat va oylik to'lovni papkadagi bank «taklif» idan ayt (bo'lsa).
+- Tadbirkor savolnoma o'rtasida o'z savolini bersa ("YaTT qanday ochiladi?", "garov nima?") — AVVAL shu savolga 2–3 qisqa qadam bilan javob ber, keyin "Davom etamizmi?" deb oldingi savolga qayt.
+- Tadbirkor "internetni bilmayman", "telefonda qila olmayman" desa — papkada «Davlat xizmatlari markazi» yozilgan hujjatlar uchun o'sha yerga pasport bilan borishni ayt; boshqasi uchun "yaqinlaringizdan yordam so'rang yoki ekranni rasmga olib yuboring — qaysi tugmani bosishni aytaman".
 - Natijada yo'q dastur, bank, foiz, shart, muddat yoki hujjatni o'ylab topma. Bilmasang: "Buni hali aniqlay olmadik."
 - Topilmada taxmin: true bo'lsa — bu bizning hisob yoki bank bilan tasdiqlanmagan ma'lumot ekanini ayt.
 - Bank atamasini ishlatsang, darhol oddiy so'z bilan tushuntir. Masalan: "garov — qarz qaytmasa bank oladigan mol-mulk".
@@ -321,7 +325,8 @@ function papkaQisqa(p: Papka | null | undefined) {
     tayyor: `${p.tayyor}/${p.jami}`,
     hujjatlar: p.hujjatlar.map((h) => ({
       nom: h.nom,
-      ...(h.shart ? { shart: h.shart } : {}),
+      ...(h.olish ? { qayerda: h.olish.qayerda, qidiruv: h.olish.qidiruv, vaqt: h.olish.vaqt, narx: h.olish.narx } : {}),
+      ...(h.qoralama ? { qoralama: h.qoralama } : {}),
       holat: h.bank_ozi_oladi ? "bank o'zi oladi" : !h.fayl ? "yuklanmagan" : h.fayl.tekshiruv?.holat === "mos" ? "tayyor" : "muammo bor",
       ...(h.olish ? { qayerda: h.olish.qayerda, qidiruv: h.olish.qidiruv, vaqt: h.olish.vaqt, narx: h.olish.narx } : {}),
     })),
@@ -350,6 +355,7 @@ function holatMatni({ profil, bajarilgan, mahsulot, fayllar }: HolatKirish) {
   return JSON.stringify({
     profil,
     yetishmayotgan: yetishmayotgan(profil),
+    biznes_toifasi: biznesToifasi(profil),
     ogohlantirish: ertaOgohlantirish(profil),
     natija: natijaQisqa(natijaHisobla(profil, bajarilgan)),
     mahsulotlar: mahsulotlar.map((m) => ({
@@ -359,6 +365,7 @@ function holatMatni({ profil, bajarilgan, mahsulot, fayllar }: HolatKirish) {
       qisqa: m.qisqa,
       mos: m.mos,
       shartlar: m.shartlar.map((s) => `${s.holat}: ${s.matn}`),
+      ...(m.taklif ? { taklif: m.taklif } : {}),
     })),
     papka: papkaQisqa(papka),
   });
@@ -372,12 +379,15 @@ function suhbatniTuzish(k: AgentKirish): Anthropic.Beta.BetaMessageParam[] {
   k.xabarlar.forEach((x, i) => {
     const role = x.kim === "agent" ? "assistant" : "user";
     const oxirgi = i === k.xabarlar.length - 1;
-    const content: Anthropic.Beta.BetaTextBlockParam[] = oxirgi
+    const rasmBlok: Anthropic.Beta.BetaContentBlockParam[] =
+      oxirgi && k.rasm ? [{ type: "image", source: { type: "base64", media_type: k.rasm.tur, data: k.rasm.data } }] : [];
+    const content: Anthropic.Beta.BetaContentBlockParam[] = oxirgi
       ? [
           { type: "text", text: `<holat>${holatMatni(k)}</holat>` },
-          { type: "text", text: x.matn },
+          ...rasmBlok,
+          { type: "text", text: k.rasm ? `(Tadbirkor ekran rasmini yubordi.) ${x.matn}` : x.matn },
         ]
-      : [{ type: "text", text: x.matn }];
+      : [{ type: "text", text: x.rasm ? `(rasm yuborgan edi) ${x.matn}` : x.matn }];
     const avvalgi = msgs[msgs.length - 1];
     if (avvalgi.role === role) {
       // Ketma-ket bir xil rol — bitta xabarga birlashtiriladi.

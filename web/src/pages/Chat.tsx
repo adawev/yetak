@@ -90,10 +90,10 @@ export default function Chat() {
             />
           ))}
           {s.kutilayotgan && (
-            <XabarPufak xabar={{ kim: 'tadbirkor', matn: s.kutilayotgan }} natija={null} holati="yuborilmoqda" />
+            <XabarPufak xabar={{ kim: 'tadbirkor', matn: s.kutilayotgan, rasm: !!s.kutilayotganRasm }} rasmUrl={s.kutilayotganRasm} natija={null} holati="yuborilmoqda" />
           )}
           {s.yuborilmagan && (
-            <XabarPufak xabar={{ kim: 'tadbirkor', matn: s.yuborilmagan }} natija={null} holati="yuborilmadi" />
+            <XabarPufak xabar={{ kim: 'tadbirkor', matn: s.yuborilmagan, rasm: !!s.yuborilmaganFayl }} natija={null} holati="yuborilmadi" />
           )}
           {s.yuborilmoqda && <Kutish />}
           {!s.yuborilmoqda && (
@@ -105,11 +105,11 @@ export default function Chat() {
           {s.xato && (
             <XatoBanner
               matn={s.xato}
-              onQayta={s.yuborilmagan ? () => void s.yubor(s.yuborilmagan!) : undefined}
+              onQayta={s.yuborilmagan ? () => void s.yubor(s.yuborilmagan!, s.yuborilmaganFayl) : undefined}
               onYop={s.xatoniYop}
             />
           )}
-          <Kiritish band={s.yuborilmoqda} onYubor={(m) => void s.yubor(m)} />
+          <Kiritish band={s.yuborilmoqda} onYubor={(m, f) => void s.yubor(m, f)} />
         </div>
       </section>
 

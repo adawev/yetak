@@ -88,6 +88,23 @@ export interface MahsulotMoslik {
   shartlar: { matn: string; holat: ShartHolati }[];
   /** mos — hamma shart ✓; qisman — ✗ yo'q, lekin ? bor; mos_emas — kamida bitta ✗ */
   mos: "mos" | "qisman" | "mos_emas";
+  /**
+   * Shu bankdan tadbirkorga taxminiy taklif — kod hisoblaydi (mahsulot chegaralari va bank foizi bilan).
+   * null — mahsulot mos emas yoki foiz manbada yo'q.
+   */
+  taklif: {
+    /** Olsa bo'ladigan summa: so'ragani yoki mahsulot chegarasi (qaysi kichik bo'lsa) */
+    summa: number;
+    /** Bank e'lon qilgan foiz oralig'i, yillik */
+    foiz_min: number;
+    foiz_max: number;
+    /** Muddat, oy: so'ragani yoki mahsulot chegarasi */
+    muddat_oy: number;
+    /** Foizga izoh (masalan, foiz faqat summaning bir qismiga tegishli). null — izoh yo'q */
+    izoh: string | null;
+        /** Oylik to'lov — yuqori foiz bilan (ehtiyotkor hisob), annuitet */
+    oylik_tolov: number;
+  } | null;
   /** Tadbirkor o'zi olib boradigan hujjatlar */
   hujjatlar: string[];
   /** Bank davlat tizimi yoki o'z tizimidan o'zi tekshiradi (manbada aytilganlari) */
@@ -191,6 +208,8 @@ export interface Xabar {
   kim: "agent" | "tadbirkor";
   matn: string;
   vaqt: string; // ISO
+  /** Tadbirkor xabarga ekran rasmini (skrinshot) qo'shgan. Rasmning o'zi saqlanmaydi. */
+  rasm?: boolean;
   bloklar?: Blok[];
   manbalar?: Iqtibos[];
 }

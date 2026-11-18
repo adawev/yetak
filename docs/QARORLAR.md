@@ -28,6 +28,11 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-18 | Asosiy qiymat — hujjatlar papkasi: aniq bank mahsuloti uchun kerakli hujjatlar, har birini qayerdan va qanday olish (my.gov.uz qidiruvi, vaqt, narx), yuklash, AI tekshiruvi va bitta PDF papka | Oddiy savol-javob va «bankka boring» qiymat bermaydi; tadbirkorning asl og'rig'i — hujjat yig'ish |
 | 2026-11-18 | Hujjatlar ro'yxatining yagona manbasi — `docs/tadqiqot/hujjatlar.json` | Ikki joyda ikki xil ro'yxat bo'lmasin |
 | 2026-11-18 | Kredit tarixi kartasi — namuna (simulyatsiya), ekranda «Namuna» deb yozilgan | Kredit byurosiga ulanmaganmiz; foydalanuvchini aldamaslik |
+| 2026-11-18 | Yangi vizyon: Yetak tadbirkorni bankka tayyor mijoz qiladi — eng mos 1–2 bank (summa, foiz, muddat, oylik to'lov), hujjatlarni birga tayyorlash, skrinshot orqali yo'l ko'rsatish, bitta PDF papka | Bankda ariza ko'p, kredit kam — mijozlar tayyor emas |
+| 2026-11-18 | Faqat biznes krediti; ipoteka va iste'mol krediti — keyingi bosqich | Tekshirilgan ma'lumot faqat biznes kreditlari bo'yicha |
+| 2026-11-18 | Pul (reja): yo'l ko'rsatish bepul; «hujjatlarni biz tayyorlaymiz» 10–20 ming so'm (demoda to'lov ulanmagan); bank tayyor mijoz uchun haq to'laydi | Aralash model; hech kim hali to'lamagan |
+| 2026-11-18 | Hujjatlarni my.gov.uz dan avtomatik yig'ish — faqat davlat bilan rasmiy kelishuvdan keyin; hozir yo'l ko'rsatamiz | Kirish tadbirkorning OneID/ERI si orqali, imzoni faqat egasi ishlatadi |
+| 2026-11-18 | Biznes toifasi yillik daromaddan kod bilan aniqlanadi (PF-21: mikro ≤1 mlrd, kichik 1–10, o'rta 10–100, yirik ≥100 mlrd so'm), qo'shimcha savol yo'q | Savollar kam bo'lsin |
 
 ## Hali hal qilinmagan
 

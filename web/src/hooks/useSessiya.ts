@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api } from '@/lib/api'
 import type { BoySessiya } from '@/lib/bloklar'
-import { hujjatniTayyorla } from '@/lib/rasm'
+import { hujjatniTayyorla, rasmmi } from '@/lib/rasm'
 
 const KALIT = 'yetak.sessiya_id'
 
@@ -25,6 +25,9 @@ export function useSessiya() {
   const [kutilayotgan, setKutilayotgan] = useState<string | null>(null)
   /** Yuborilmay qolgan xabar — qayta urinish uchun. */
   const [yuborilmagan, setYuborilmagan] = useState<string | null>(null)
+  /** Kutilayotgan xabardagi rasm (mahalliy kichik rasm). */
+  const [kutilayotganRasm, setKutilayotganRasm] = useState<string | null>(null)
+  const [yuborilmaganFayl, setYuborilmaganFayl] = useState<File | null>(null)
   const [xato, setXato] = useState<string | null>(null)
   const band = useRef(false)
   /** Hozir tekshirilayotgan hujjatlar (kalit bo'yicha). */
@@ -35,6 +38,7 @@ export function useSessiya() {
     setYuklanmoqda(true)
     setXato(null)
     setYuborilmagan(null)
+    setYuborilmaganFayl(null)
     try {
       const h = await api.yangiSessiya()
       idSaqla(h.id)
@@ -75,22 +79,35 @@ export function useSessiya() {
   }, [boshla])
 
   const yubor = useCallback(
-    async (matn: string) => {
-      const t = matn.trim()
+    async (matn: string, fayl?: File | null) => {
+      const t = matn.trim() || (fayl ? '(rasm)' : '')
       if (!t || !holat || band.current) return
       band.current = true
       setYuborilmoqda(true)
       setKutilayotgan(t)
       setYuborilmagan(null)
+      setYuborilmaganFayl(null)
       setXato(null)
+      let url: string | null = null
       try {
-        setHolat(await api.xabar(holat.id, t))
+        if (fayl) {
+          if (!rasmmi(fayl)) throw new Error("Bu yerga faqat rasm (skrinshot) yuboring.")
+          const tayyor = await hujjatniTayyorla(fayl)
+          url = URL.createObjectURL(tayyor)
+          setKutilayotganRasm(url)
+          setHolat(await api.rasmliXabar(holat.id, t, tayyor))
+        } else {
+          setHolat(await api.xabar(holat.id, t))
+        }
       } catch (e) {
         setYuborilmagan(t)
+        setYuborilmaganFayl(fayl ?? null)
         setXato(xatoMatni(e))
       } finally {
+        if (url) URL.revokeObjectURL(url)
         band.current = false
         setKutilayotgan(null)
+        setKutilayotganRasm(null)
         setYuborilmoqda(false)
       }
     },
@@ -196,7 +213,9 @@ export function useSessiya() {
     yuklanmoqda,
     yuborilmoqda,
     kutilayotgan,
+    kutilayotganRasm,
     yuborilmagan,
+    yuborilmaganFayl,
     xato,
     yubor,
     qadamBelgila,
