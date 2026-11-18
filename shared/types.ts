@@ -30,8 +30,6 @@ export const PROFIL_MAYDONLARI: (keyof Profil)[] = [
   "maqsad",
   "garov_qiymati",
   "kredit_tarixi",
-  "avval_mikrokredit",
-  "eri_bor",
 ];
 
 export type Hukm = "tayyor" | "hali_emas" | "olmang";
@@ -231,6 +229,8 @@ export interface SessiyaHolati {
   mahsulotlar?: MahsulotMoslik[];
   /** Hujjatlar papkasi. Mahsulot tanlanmaguncha (shakl va summa noma'lum) null. */
   papka?: Papka | null;
+  /** Tadbirkor bankni o'zi tanladimi (tanlamagan bo'lsa papka eng mos bank bo'yicha). */
+  bank_tanlangan?: boolean;
 }
 
 export interface BankArizasi {

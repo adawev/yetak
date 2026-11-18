@@ -11,7 +11,7 @@ import { kabinetYollari } from "./kabinet";
 import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { papkaPdf } from "./papka-pdf";
 import { natijaHisobla } from "./natija";
-import { kerakliMaydonlar, kreditTolovi, toldirilganSoni } from "./rules";
+import { kreditTolovi, savolJarayoni } from "./rules";
 import { XotiraFaylOmbor, type FaylOmbor, type Sessiya, type Store } from "./store";
 import { RUXSAT_TURLAR, type HujjatTekshiruvchi, type RuxsatTur } from "./tekshiruv";
 
@@ -40,10 +40,11 @@ function holat(s: Sessiya): SessiyaHolati {
     profil: s.profil,
     natija: natijaHisobla(s.profil, s.bajarilgan),
     tugmalar: s.tugmalar,
-    jarayon: { toldirilgan: toldirilganSoni(s.profil), jami: kerakliMaydonlar(s.profil).length },
+    jarayon: savolJarayoni(s.profil),
     bank_roziligi: s.bank_roziligi,
     mahsulotlar: mahsulotlarniMoslash(s.profil),
     papka: sessiyaPapkasi(s),
+    bank_tanlangan: !!s.mahsulot,
   };
 }
 

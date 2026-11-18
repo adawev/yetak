@@ -1,27 +1,68 @@
 import { Loader2, RotateCcw } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { ChatImkon } from '@/components/bloklar'
 import { Kiritish, Kutish, Tugmalar, XabarPufak, XatoBanner } from '@/components/chat'
 import { HujjatlarPapka, hujjatlarHodisasi, PAPKA_ID } from '@/components/Hujjatlar'
-import { Jarayon, Panel } from '@/components/Panel'
+import { Panel } from '@/components/Panel'
 import { useSessiya } from '@/hooks/useSessiya'
 
-type Yorliq = 'suhbat' | 'reja' | 'hujjatlar'
+type Yorliq = 'suhbat' | 'batafsil' | 'hujjatlar'
+
+/** 6 ta savol jarayoni — nuqtalar bilan. Natija chiqqach yashiriladi. */
+function Savollar({ toldirilgan, jami }: { toldirilgan: number; jami: number }) {
+  return (
+    <div className="flex items-center gap-3" aria-label={`Savollar: ${toldirilgan} / ${jami}`}>
+      <div className="flex flex-1 gap-1.5">
+        {Array.from({ length: jami }, (_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 flex-1 rounded-full transition-colors duration-500 ${i < toldirilgan ? 'bg-primary' : 'bg-foreground/10'}`}
+          />
+        ))}
+      </div>
+      <span className="shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
+        {toldirilgan < jami ? `${toldirilgan + 1}-savol, ${jami} tadan` : 'Banklar tanlanmoqda'}
+      </span>
+    </div>
+  )
+}
 
 export default function Chat() {
   const s = useSessiya()
   const [yorliq, setYorliq] = useState<Yorliq>('suhbat')
   const oxiri = useRef<HTMLDivElement>(null)
+  const ruyxat = useRef<HTMLDivElement>(null)
   const h = s.holat
 
-  const birinchi = useRef(true)
-  useEffect(() => {
-    if (!oxiri.current) return
-    // Birinchi ochilishda darhol, keyin silliq pastga tushadi
-    oxiri.current.scrollIntoView({ behavior: birinchi.current ? 'auto' : 'smooth', block: 'end' })
-    birinchi.current = false
-  }, [h?.xabarlar.length, s.kutilayotgan, yorliq])
+  // Sahifa ochilganda bor xabarlar — eski; keyin kelganlari animatsiya bilan chiqadi.
+  const boshlangich = useRef<number | null>(null)
+  if (h && boshlangich.current === null) boshlangich.current = h.xabarlar.length
 
-  // Chatdagi "Hujjatlarni ochish" tugmasi: telefonda yorliq, kompyuterda panelga o'tadi
+  // Yangi agent xabari kelsa — uning BOSHIGA aylantiramiz (uzun kartalar tepadan o'qiladi).
+  // Tadbirkor yozganda va birinchi ochilishda — oxiriga.
+  const avvalgiSoni = useRef(0)
+  const xabarSoni = h?.xabarlar.length ?? 0
+  const oxirgiKim = h?.xabarlar[xabarSoni - 1]?.kim
+  useEffect(() => {
+    if (!xabarSoni) return
+    const soni = xabarSoni
+    const yangiAgent = avvalgiSoni.current > 0 && soni > avvalgiSoni.current && oxirgiKim === 'agent'
+    avvalgiSoni.current = soni
+    requestAnimationFrame(() => {
+      if (yangiAgent) {
+        const el = ruyxat.current?.querySelector<HTMLElement>(`[data-xabar="${soni - 1}"]`)
+        el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } else {
+        oxiri.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
+      }
+    })
+  }, [xabarSoni, oxirgiKim])
+
+  useEffect(() => {
+    if (s.kutilayotgan) oxiri.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [s.kutilayotgan])
+
+  // Chatdagi "Hujjatlarni ochish": telefonda yorliq, kompyuterda panelga o'tadi
   useEffect(() => {
     const och = () => {
       setYorliq('hujjatlar')
@@ -33,6 +74,14 @@ export default function Chat() {
     window.addEventListener(hujjatlarHodisasi, och)
     return () => window.removeEventListener(hujjatlarHodisasi, och)
   }, [])
+
+  const oxirgiHujjatlar = useMemo(() => {
+    if (!h) return -1
+    for (let i = h.xabarlar.length - 1; i >= 0; i--) {
+      if (h.xabarlar[i].bloklar?.some((b) => b.tur === 'hujjatlar')) return i
+    }
+    return -1
+  }, [h])
 
   if (!h) {
     return (
@@ -55,50 +104,77 @@ export default function Chat() {
     )
   }
 
+  const yubor = (m: string) => void s.yubor(m)
+  const imkon = (i: number): ChatImkon => ({
+    holat: h,
+    amallar: s.hujjatAmallari,
+    onYubor: yubor,
+    yangi: i >= (boshlangich.current ?? 0),
+    oxirgiHujjatlar: i === oxirgiHujjatlar,
+  })
+  const papkaBor = !!h.papka && !!h.bank_tanlangan
+  const panelBor = !!h.natija
+  const yorliqlar: Yorliq[] = ['suhbat', ...(panelBor ? (['batafsil'] as const) : []), ...(papkaBor ? (['hujjatlar'] as const) : [])]
+  const tahlil = s.yuborilmoqda && !h.natija && h.jarayon.toldirilgan >= h.jarayon.jami - 1
 
   return (
-    <div className="mx-auto flex h-full max-w-6xl flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_380px]">
-      {/* Telefon: jarayon va yorliqlar */}
-      <div className="space-y-2 border-b border-border px-4 py-2 lg:hidden">
-        <Jarayon {...h.jarayon} />
-        <div className="grid rounded-lg bg-foreground/5 p-1 text-sm font-medium" role="tablist" style={{ gridTemplateColumns: `repeat(${h.papka ? 3 : 2}, minmax(0, 1fr))` }}>
-          {(h.papka ? (['suhbat', 'reja', 'hujjatlar'] as const) : (['suhbat', 'reja'] as const)).map((y) => (
-            <button
-              key={y}
-              type="button"
-              role="tab"
-              aria-selected={yorliq === y}
-              onClick={() => setYorliq(y)}
-              className={`min-h-9 rounded-md ${yorliq === y ? 'bg-card shadow-none' : 'text-muted-foreground'}`}
+    <div
+      className={`mx-auto flex h-full w-full flex-col ${panelBor ? 'max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_380px]' : 'max-w-3xl'}`}
+    >
+      {/* Tepada: savollar jarayoni yoki (telefonda) yorliqlar */}
+      {(!h.natija || yorliqlar.length > 1) && (
+        <div className={`space-y-2 border-b border-border px-4 py-2.5 ${h.natija ? 'lg:hidden' : ''} lg:col-span-2`}>
+          {!h.natija && <Savollar {...h.jarayon} />}
+          {yorliqlar.length > 1 && (
+            <div
+              className="grid rounded-xl bg-foreground/5 p-1 text-sm font-medium lg:hidden"
+              role="tablist"
+              style={{ gridTemplateColumns: `repeat(${yorliqlar.length}, minmax(0, 1fr))` }}
             >
-              {y === 'suhbat' ? 'Suhbat' : y === 'hujjatlar' ? `Hujjatlar ${h.papka?.tayyor ?? 0}/${h.papka?.jami ?? 0}` : h.natija ? 'Reja •' : 'Reja'}
-            </button>
-          ))}
+              {yorliqlar.map((y) => (
+                <button
+                  key={y}
+                  type="button"
+                  role="tab"
+                  aria-selected={yorliq === y}
+                  onClick={() => setYorliq(y)}
+                  className={`min-h-9 rounded-lg ${yorliq === y ? 'bg-card shadow-sm' : 'text-muted-foreground'}`}
+                >
+                  {y === 'suhbat' ? 'Suhbat' : y === 'hujjatlar' ? `Hujjatlar ${h.papka?.tayyor ?? 0}/${h.papka?.jami ?? 0}` : 'Batafsil'}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       {/* Suhbat */}
       <section className={`${yorliq !== 'suhbat' ? 'hidden' : 'flex'} min-h-0 flex-1 flex-col lg:flex`}>
-        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4" aria-live="polite">
+        <div ref={ruyxat} className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5" aria-live="polite">
           {h.xabarlar.map((x, i) => (
-            <XabarPufak
-              key={`${x.vaqt}-${i}`}
-              xabar={x}
-              natija={h.natija}
-              papka={h.papka}
-              onBelgila={s.qadamBelgila}
-            />
+            <div key={`${x.vaqt}-${i}`} data-xabar={i} className="scroll-mt-3">
+              <XabarPufak
+                xabar={x}
+                natija={h.natija}
+                papka={h.papka}
+                onBelgila={s.qadamBelgila}
+                chat={x.kim === 'agent' ? imkon(i) : undefined}
+              />
+            </div>
           ))}
           {s.kutilayotgan && (
-            <XabarPufak xabar={{ kim: 'tadbirkor', matn: s.kutilayotgan, rasm: !!s.kutilayotganRasm }} rasmUrl={s.kutilayotganRasm} natija={null} holati="yuborilmoqda" />
+            <XabarPufak
+              xabar={{ kim: 'tadbirkor', matn: s.kutilayotgan, rasm: !!s.kutilayotganRasm }}
+              rasmUrl={s.kutilayotganRasm}
+              natija={null}
+              holati="yuborilmoqda"
+            />
           )}
           {s.yuborilmagan && (
             <XabarPufak xabar={{ kim: 'tadbirkor', matn: s.yuborilmagan, rasm: !!s.yuborilmaganFayl }} natija={null} holati="yuborilmadi" />
           )}
-          {s.yuborilmoqda && <Kutish />}
-          {!s.yuborilmoqda && (
-            <Tugmalar tugmalar={h.tugmalar} onTanla={(t) => void s.yubor(t)} />
-          )}
+          {s.yuborilmoqda && <Kutish tahlil={tahlil} />}
+          {!s.yuborilmoqda && <Tugmalar tugmalar={h.tugmalar} onTanla={yubor} />}
           <div ref={oxiri} />
         </div>
         <div className="space-y-2 border-t border-border px-4 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
@@ -110,31 +186,38 @@ export default function Chat() {
             />
           )}
           <Kiritish band={s.yuborilmoqda} onYubor={(m, f) => void s.yubor(m, f)} />
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => void s.yangiSuhbat()}
+              className="flex min-h-8 items-center gap-1 rounded-md px-2 text-xs text-muted-foreground hover:bg-foreground/5"
+            >
+              <RotateCcw size={12} /> Yangi suhbat
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Holat paneli */}
-      <aside
-        className={`${yorliq === 'suhbat' ? 'hidden' : 'block'} min-h-0 flex-1 overflow-y-auto border-border p-4 lg:block lg:border-l`}
-      >
-        <div className={yorliq === 'hujjatlar' ? 'hidden lg:block' : ''}>
-          <Panel s={s} />
-        </div>
-        {yorliq === 'hujjatlar' && h.papka && (
-          <div className="lg:hidden">
-            <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />
+      {/* Natija chiqqach: batafsil va hujjatlar paneli */}
+      {panelBor && (
+        <aside
+          className={`${yorliq === 'suhbat' ? 'hidden' : 'block'} min-h-0 flex-1 overflow-y-auto border-border p-4 lg:block lg:border-l`}
+        >
+          <div className={yorliq === 'hujjatlar' ? 'hidden lg:block' : ''}>
+            {papkaBor && (
+              <div className="mb-4 hidden lg:block">
+                <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />
+              </div>
+            )}
+            <Panel s={s} />
           </div>
-        )}
-        <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
-          <button
-            type="button"
-            onClick={() => void s.yangiSuhbat()}
-            className="flex min-h-9 items-center gap-1 rounded-md px-2 hover:bg-foreground/5"
-          >
-            <RotateCcw size={14} /> Yangi suhbat
-          </button>
-        </div>
-      </aside>
+          {yorliq === 'hujjatlar' && papkaBor && (
+            <div className="lg:hidden">
+              <HujjatlarPapka holat={h} amallar={s.hujjatAmallari} />
+            </div>
+          )}
+        </aside>
+      )}
     </div>
   )
 }

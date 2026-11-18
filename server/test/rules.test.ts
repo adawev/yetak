@@ -73,12 +73,13 @@ describe("baholash", () => {
     }
   });
 
-  it("mikrokredit savoli faqat garovsiz yo'l ochiq bo'lsa kerak", () => {
-    const { avval_mikrokredit: _, ...garovli } = NAMUNALAR.tayyor;
-    expect(yetishmayotgan(garovli)).toEqual([]);
-    expect(baholash(garovli)?.hukm).toBe("tayyor");
-    const garovsiz = { ...garovli, garov_qiymati: 0, kredit_tarixi: "yaxshi" as const };
-    expect(yetishmayotgan(garovsiz)).toEqual(["avval_mikrokredit"]);
-    expect(baholash(garovsiz)).toBeNull();
+  it("mikrokredit va ERI so'ralmaydi — ularsiz ham hukm chiqadi", () => {
+    const { avval_mikrokredit: _, eri_bor: __, ...qisqa } = NAMUNALAR.tayyor;
+    expect(yetishmayotgan(qisqa)).toEqual([]);
+    expect(baholash(qisqa)?.hukm).toBe("tayyor");
+    const garovsiz = { ...qisqa, garov_qiymati: 0, kredit_tarixi: "yaxshi" as const };
+    expect(yetishmayotgan(garovsiz)).toEqual([]);
+    expect(baholash(garovsiz)).not.toBeNull();
+    expect(baholash(qisqa)!.topilmalar.some((t) => t.kalit === "eri")).toBe(false);
   });
 });

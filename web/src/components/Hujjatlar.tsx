@@ -18,6 +18,7 @@ import {
   X,
 } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
+import { BankLogo } from '@/components/BankKartalar'
 import { papkaPdfUrl } from '@/lib/api'
 import { PDF_KATTA, RASM_XOM_MAKS, rasmmi } from '@/lib/rasm'
 
@@ -170,8 +171,8 @@ function Natija({ h }: { h: PapkaHujjat }) {
   )
 }
 
-function Hujjat({ h, a }: { h: PapkaHujjat; a: HujjatAmallari }) {
-  const [ochiq, setOchiq] = useState(false)
+function Hujjat({ h, a, boshidanOchiq = false }: { h: PapkaHujjat; a: HujjatAmallari; boshidanOchiq?: boolean }) {
+  const [ochiq, setOchiq] = useState(boshidanOchiq)
   const input = useRef<HTMLInputElement>(null)
   const tekshirilmoqda = !!a.yuklanayotgan[h.kalit]
   const xato = a.xatolar[h.kalit]
@@ -442,6 +443,82 @@ export function HujjatlarPapka({ holat, amallar }: { holat: SessiyaHolati; amall
           Hamma hujjat bitta faylda: muqova, ro'yxat va yuklaganlaringiz.
         </p>
       </div>
+    </div>
+  )
+}
+
+const tayyormi = (h: PapkaHujjat) => h.fayl?.tekshiruv?.holat === 'mos' || (!h.fayl && !!h.qoralama)
+
+/**
+ * Chatdagi hujjatlar — bitta-bitta: tepada bank va jarayon, navbatdagi hujjat ochiq turadi
+ * (qanday olish + yuklash), qolganlari qisqa qator. Bosilgan qator navbatdagi bo'ladi.
+ */
+export function HujjatQadamlari({ holat, amallar }: { holat: SessiyaHolati; amallar: HujjatAmallari }) {
+  const p = holat.papka
+  const kerak = (p?.hujjatlar ?? []).filter((h) => !h.bank_ozi_oladi)
+  const birinchi = kerak.find((h) => !tayyormi(h))?.kalit ?? null
+  const [tanlangan, setTanlangan] = useState<string | null>(null)
+  if (!p) return null
+  const joriy = tanlangan ?? birinchi
+  const foiz = p.jami ? (p.tayyor / p.jami) * 100 : 0
+  const pdfBor = p.hujjatlar.some((h) => h.fayl || h.qoralama)
+
+  return (
+    <div className="kirish space-y-3 rounded-2xl border border-border bg-card p-4">
+      <div className="flex items-center gap-3">
+        <BankLogo bank={p.mahsulot.bank} />
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold leading-tight">{p.mahsulot.bank} uchun hujjatlar</p>
+          <p className="truncate text-sm text-muted-foreground">{p.mahsulot.nom}</p>
+        </div>
+        <span className="shrink-0 text-sm font-semibold tabular-nums">
+          {p.tayyor}/{p.jami}
+        </span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-foreground/10" role="progressbar" aria-valuenow={p.tayyor} aria-valuemax={p.jami}>
+        <div
+          className={`h-full rounded-full transition-all ${p.jami && p.tayyor >= p.jami ? 'bg-success' : 'bg-primary'}`}
+          style={{ width: `${foiz}%` }}
+        />
+      </div>
+
+      <ol className="space-y-1">
+        {kerak.map((h, i) =>
+          h.kalit === joriy ? (
+            <Hujjat key={h.kalit} h={h} a={amallar} boshidanOchiq />
+          ) : (
+            <li key={h.kalit}>
+              <button
+                type="button"
+                onClick={() => setTanlangan(h.kalit)}
+                className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-2 text-left text-sm hover:bg-foreground/5"
+              >
+                {tayyormi(h) ? (
+                  <CheckCircle2 size={20} className="shrink-0 text-success" />
+                ) : (
+                  <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border border-border text-[11px] text-muted-foreground">
+                    {i + 1}
+                  </span>
+                )}
+                <span className={`min-w-0 flex-1 ${tayyormi(h) ? 'text-muted-foreground' : ''}`}>{h.nom}</span>
+                {h.tavsiya && <span className="shrink-0 text-xs text-muted-foreground">tavsiya</span>}
+              </button>
+            </li>
+          ),
+        )}
+      </ol>
+
+      {pdfBor && (
+        <a
+          href={papkaPdfUrl(holat.id)}
+          target="_blank"
+          rel="noreferrer"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border px-4 text-sm font-medium hover:bg-foreground/5"
+        >
+          <Download size={16} />
+          Papkani yuklab olish (PDF)
+        </a>
+      )}
     </div>
   )
 }

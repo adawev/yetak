@@ -65,19 +65,27 @@ export const QOIDA = {
 };
 
 /**
- * Hukm uchun kerakli maydonlar. «avval_mikrokredit» faqat garovsiz mikrokredit yo'li
- * ochiq bo'lganda so'raladi: tarix yaxshi, garov yetmaydi, summa chegarada.
+ * Hukm uchun kerakli maydonlar (6 ta savolda so'raladi). «avval_mikrokredit» va «eri_bor» so'ralmaydi:
+ * tadbirkor o'zi aytsa saqlanadi, aytmasa hukmga ta'sir qilmaydi.
  */
-export function kerakliMaydonlar(p: Profil): (keyof Profil)[] {
-  const s = p.kredit_summa;
-  const g = p.garov_qiymati;
-  const mikrokreditKerak =
-    p.kredit_tarixi === "yaxshi" &&
-    s != null &&
-    g != null &&
-    g < Math.round(s * QOIDA.garovUlushi) &&
-    s <= QOIDA.mikrokreditMax;
-  return PROFIL_MAYDONLARI.filter((k) => k !== "avval_mikrokredit" || mikrokreditKerak);
+export function kerakliMaydonlar(_p: Profil): (keyof Profil)[] {
+  return PROFIL_MAYDONLARI;
+}
+
+/** Tadbirkorga beriladigan 6 ta savol — har biri bir yoki bir nechta maydonni to'ldiradi. */
+export const SAVOLLAR: (keyof Profil)[][] = [
+  ["faoliyat"],
+  ["shakl", "faoliyat_oy"],
+  ["oylik_tushum", "oylik_xarajat"],
+  ["kredit_summa", "kredit_muddat_oy", "maqsad"],
+  ["garov_qiymati"],
+  ["kredit_tarixi"],
+];
+
+/** Jarayon chizig'i uchun: nechta savolga to'liq javob berilgan. */
+export function savolJarayoni(p: Profil): { toldirilgan: number; jami: number } {
+  const bor = (k: keyof Profil) => p[k] !== undefined && p[k] !== null;
+  return { toldirilgan: SAVOLLAR.filter((g) => g.every(bor)).length, jami: SAVOLLAR.length };
 }
 
 export function toldirilganSoni(p: Profil): number {
@@ -363,10 +371,10 @@ export function baholash(
     }
   }
 
-  // --- 7. Elektron imzo ---
-  if (p.eri_bor) {
+  // --- 7. Elektron imzo (so'ralmaydi; tadbirkor aytgan bo'lsagina) ---
+  if (p.eri_bor === true) {
     topilmalar.push({ kalit: "eri", daraja: "yaxshi", matn: "Elektron imzongiz bor." });
-  } else {
+  } else if (p.eri_bor === false) {
     topilmalar.push({
       kalit: "eri",
       daraja: "ogohlantirish",

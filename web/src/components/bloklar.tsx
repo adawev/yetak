@@ -16,8 +16,20 @@ import {
   Hand,
 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
-import { HujjatlarKarta } from '@/components/Hujjatlar'
+import { BankKartalar } from '@/components/BankKartalar'
+import { HujjatlarKarta, HujjatQadamlari, type HujjatAmallari } from '@/components/Hujjatlar'
 import { MahsulotlarBlok } from '@/components/Mahsulotlar'
+import type { SessiyaHolati } from '@shared/types'
+
+export interface ChatImkon {
+  holat: SessiyaHolati
+  amallar: HujjatAmallari
+  onYubor: (matn: string) => void
+  /** Xabar hozir keldi (sahifa ochilgandan keyin) — animatsiya bilan */
+  yangi: boolean
+  /** Bu xabar — hujjatlar blokli oxirgi xabar (faqat u jonli) */
+  oxirgiHujjatlar: boolean
+}
 import type { Blok } from '@/lib/bloklar'
 import { foiz, qisqaSom, som } from '@/lib/format'
 
@@ -278,12 +290,28 @@ export function BlokKorsat({
   natija,
   papka,
   onBelgila,
+  chat,
 }: {
   blok: Blok
   natija: Natija | null
   papka?: Papka | null
   onBelgila?: (kalit: string, bajarildi: boolean) => void
+  /** Chatdagi jonli bloklar uchun: bank tanlash, hujjat yuklash, animatsiya. */
+  chat?: ChatImkon
 }) {
+  if (chat && blok.tur === 'mahsulotlar') {
+    return (
+      <BankKartalar
+        mahsulotlar={blok.mahsulotlar}
+        tanlangan={chat.holat.bank_tanlangan ? (chat.holat.papka?.mahsulot.kalit ?? null) : null}
+        onTanla={chat.onYubor}
+        yangi={chat.yangi}
+      />
+    )
+  }
+  if (chat && blok.tur === 'hujjatlar' && chat.oxirgiHujjatlar) {
+    return <HujjatQadamlari holat={chat.holat} amallar={chat.amallar} />
+  }
   switch (blok.tur) {
     case 'summa':
       return <SummaBlok sarlavha={blok.sarlavha} qiymat={blok.qiymat} />

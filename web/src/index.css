@@ -63,3 +63,13 @@ h1, h2, h3, .font-display {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
+
+/* Chat: yangi blok yumshoq chiqadi */
+@keyframes yetak-kirish {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.kirish { animation: yetak-kirish 0.35s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .kirish { animation: none; }
+}

@@ -1,11 +1,24 @@
 import type { Natija, Papka } from '@shared/types'
 import { AlertCircle, ArrowUp, Image as RasmIkon, ImagePlus, RotateCcw, X } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { BlokKorsat } from '@/components/bloklar'
+import { TahlilKutish } from '@/components/BankKartalar'
+import { BlokKorsat, type ChatImkon } from '@/components/bloklar'
 import { ManbaChiplari } from '@/components/Manbalar'
 import { Matn } from '@/components/Matn'
 import { rasmmi } from '@/lib/rasm'
 import type { BoyXabar } from '@/lib/bloklar'
+
+/** Yetak belgisi — agent xabarlari yonida. */
+export function YetakAvatar() {
+  return (
+    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border bg-card" aria-hidden>
+      <picture>
+        <source srcSet="/yetak-mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img src="/yetak-mark.svg" alt="" className="h-4 w-4" />
+      </picture>
+    </span>
+  )
+}
 
 export function XabarPufak({
   xabar,
@@ -14,6 +27,7 @@ export function XabarPufak({
   onBelgila,
   holati,
   rasmUrl,
+  chat,
 }: {
   xabar: Pick<BoyXabar, 'kim' | 'matn' | 'bloklar' | 'manbalar' | 'rasm'>
   natija: Natija | null
@@ -21,12 +35,13 @@ export function XabarPufak({
   onBelgila?: (kalit: string, bajarildi: boolean) => void
   holati?: 'yuborilmoqda' | 'yuborilmadi'
   rasmUrl?: string | null
+  chat?: ChatImkon
 }) {
   if (xabar.kim === 'tadbirkor') {
     return (
       <div className="flex flex-col items-end">
         <div
-          className={`max-w-[80%] rounded-lg bg-primary-soft px-3 py-2 whitespace-pre-wrap ${holati ? 'opacity-70' : ''}`}
+          className={`max-w-[80%] rounded-2xl rounded-br-md bg-foreground px-4 py-2.5 whitespace-pre-wrap text-background ${holati ? 'opacity-70' : ''}`}
         >
           {rasmUrl && <img src={rasmUrl} alt="" className="mb-1 max-h-40 rounded-md" />}
           {xabar.matn}
@@ -41,34 +56,49 @@ export function XabarPufak({
     )
   }
   return (
-    <div className="flex max-w-[92%] flex-col gap-2 sm:max-w-[85%]">
-      {xabar.matn && (
-        <div className="rounded-lg border border-border bg-card px-3 py-2">
-          <Matn matn={xabar.matn} />
-        </div>
-      )}
-      {xabar.bloklar?.map((b, i) => (
-        <BlokKorsat key={i} blok={b} natija={natija} papka={papka} onBelgila={onBelgila} />
-      ))}
-      {xabar.manbalar && <ManbaChiplari manbalar={xabar.manbalar} />}
+    <div className="flex gap-2.5">
+      <YetakAvatar />
+      <div className="flex min-w-0 flex-1 flex-col gap-3 sm:max-w-[85%]">
+        {xabar.matn && (
+          <div className="w-fit max-w-full rounded-2xl rounded-tl-md bg-surface px-4 py-2.5">
+            <Matn matn={xabar.matn} />
+          </div>
+        )}
+        {xabar.bloklar?.map((b, i) => (
+          <BlokKorsat key={i} blok={b} natija={natija} papka={papka} onBelgila={onBelgila} chat={chat} />
+        ))}
+        {xabar.manbalar && <ManbaChiplari manbalar={xabar.manbalar} />}
+      </div>
     </div>
   )
 }
 
-export function Kutish() {
+/** Agent javobini kutish. `tahlil` — oxirgi savoldan keyin: banklarni qidirish animatsiyasi. */
+export function Kutish({ tahlil = false }: { tahlil?: boolean }) {
   const [soniya, setSoniya] = useState(0)
   useEffect(() => {
     const t = setInterval(() => setSoniya((s) => s + 1), 1000)
     return () => clearInterval(t)
   }, [])
+  if (tahlil) {
+    return (
+      <div className="flex gap-2.5">
+        <YetakAvatar />
+        <div className="min-w-0 flex-1 sm:max-w-[85%]">
+          <TahlilKutish />
+        </div>
+      </div>
+    )
+  }
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground" role="status">
-      <span className="flex gap-1 rounded-lg border border-border bg-card px-3 py-3">
+    <div className="flex items-center gap-2.5 text-sm text-muted-foreground" role="status">
+      <YetakAvatar />
+      <span className="flex gap-1 rounded-2xl rounded-tl-md bg-surface px-4 py-3.5">
         {[0, 150, 300].map((d) => (
           <span key={d} className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground" style={{ animationDelay: `${d}ms` }} />
         ))}
       </span>
-      {soniya >= 10 && <span>Agent o'ylayapti, biroz kuting…</span>}
+      {soniya >= 10 && <span>Biroz kuting…</span>}
     </div>
   )
 }
@@ -76,13 +106,13 @@ export function Kutish() {
 export function Tugmalar({ tugmalar, onTanla }: { tugmalar: string[]; onTanla: (t: string) => void }) {
   if (!tugmalar.length) return null
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="kirish flex flex-wrap gap-2 pl-[42px]">
       {tugmalar.map((t) => (
         <button
           key={t}
           type="button"
           onClick={() => onTanla(t)}
-          className="min-h-11 rounded-full border border-border bg-card px-4 text-sm font-medium hover:border-primary hover:text-primary"
+          className="min-h-11 rounded-full border border-primary/40 bg-card px-4 text-sm font-medium text-primary hover:bg-primary-soft"
         >
           {t}
         </button>
