@@ -6,7 +6,7 @@ Muhimligi bo'yicha. Javob topilsa, shu yerga yoziladi.
 |---|---|---|---|
 | 1 | Bank tayyorlangan mijoz uchun to'laydimi? Qancha? | Bank xodimi | — |
 | 2 | TadbirCore arizalari nega rad etiladi? Eng ko'p 3 sabab. | Bank xodimi | — |
-| 3 | Garovi yo'q tadbirkorga nima taklif qilamiz? | Bank, ochiq manbalar | — |
+| 3 | Garovi yo'q tadbirkorga nima taklif qilamiz? | Bank, ochiq manbalar | Qisman: onlayn garovsiz kreditlar, NBU «Imkoniyat» (sug'urta bilan), PQ–312 garovsiz qismi, 75% kafillik, kontr-kafolat. `tadqiqot/kredit_turlari_banklar.md`, 1, 2, 3, 12-bo'limlar |
 | 4 | Kredit bo'yicha vositachilikka ruxsat yoki litsenziya kerakmi? | Yurist, Markaziy bank | — |
 | 5 | Bankka qanday yuboramiz: to'g'ridan-to'g'ri yoki TadbirCore orqali? | Bank, mentorlar | — |
 | 6 | TadbirCore yetishmayotgan hujjatni aytadimi? | O'zimiz ochib ko'ramiz | — |

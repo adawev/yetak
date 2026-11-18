@@ -39,6 +39,7 @@ Jamoa qabul qilgan qarorlar. Yangisi pastga qo'shiladi.
 | 2026-11-18 | Manzillar inglizcha: `/login`, `/register`, `/chat`, `/bank`, `/admin`, yangi API ham. Chat `/` dan `/chat` ga ko'chdi, `/` — bosh sahifa | Chat egasi qarori |
 | 2026-11-18 | Demoda haqiqiy bank nomi ishlatilishi mumkin; shartnoma yo'qligi so'ralsa ochiq aytiladi | Chat egasi qarori |
 | 2026-11-18 | Kredit tarixi kartasi demoda simulyatsiya; pitchda og'zaki aytiladi | Kredit byurosiga ulanish uchun litsenziyali hamkor kerak |
+| 2026-11-18 | Yo'nalish aniqlandi: kredit turlari va har tur bo'yicha kreditni eng oson beradigan banklar katalogi. Agent tadbirkor holatidan turni, turdan bankni tanlaydi. Asos: `tadqiqot/kredit_turlari_banklar.md` | «Bir klikda kredit» iste'mol qarzi; tadbirkorga kerakli tur va bank ko'rinmaydi. Jamoa qarori |
 
 ## Hali hal qilinmagan
 

@@ -11,6 +11,7 @@ Umummilliy AI Xakaton, Toshkent, 17–19-noyabr 2026. Tadbirkorlik yo'nalishi, 2
 - `docs/OCHIQ-SAVOLLAR.md` — hali javobi yo'q savollar
 - `docs/MEZONLAR.md` — xakaton baholash mezonlari
 - `docs/MANBALAR.md` — raqamlar va havolalar
+- `docs/tadqiqot/kredit_turlari_banklar.md` — kredit turlari va har tur bo'yicha eng qulay banklar (manbasi bilan)
 - `docs/tadqiqot/` — to'liq tadqiqot hisoboti va yozuvlar
 
 ## Muhim sanalar
