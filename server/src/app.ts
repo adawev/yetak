@@ -5,6 +5,7 @@ import { Hono, type Context } from "hono";
 import { cors } from "hono/cors";
 import type { BankArizasi, SessiyaHolati, XatoJavobi } from "../../shared/types";
 import { AgentXatosi, SALOM, type Agent } from "./agent";
+import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { baholash, kerakliMaydonlar, toldirilganSoni } from "./rules";
 import type { Sessiya, Store } from "./store";
 
@@ -26,6 +27,7 @@ function holat(s: Sessiya): SessiyaHolati {
     tugmalar: s.tugmalar,
     jarayon: { toldirilgan: toldirilganSoni(s.profil), jami: kerakliMaydonlar(s.profil).length },
     bank_roziligi: s.bank_roziligi,
+    mahsulotlar: mahsulotlarniMoslash(s.profil),
   };
 }
 

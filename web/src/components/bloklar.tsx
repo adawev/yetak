@@ -16,6 +16,7 @@ import {
   Hand,
 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
+import { MahsulotlarBlok } from '@/components/Mahsulotlar'
 import type { Blok } from '@/lib/bloklar'
 import { foiz, qisqaSom, som } from '@/lib/format'
 
@@ -293,5 +294,7 @@ export function BlokKorsat({
       return natija ? <YolXaritasiBlok qadamlar={natija.qadamlar} onBelgila={onBelgila} /> : null
     case 'atama':
       return <AtamaBlok atama={blok.atama} izoh={blok.izoh} />
+    case 'mahsulotlar':
+      return <MahsulotlarBlok mahsulotlar={blok.mahsulotlar} />
   }
 }

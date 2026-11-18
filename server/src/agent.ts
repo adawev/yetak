@@ -5,6 +5,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { Blok, Iqtibos, Natija, Profil, Xabar } from "../../shared/types";
 import { config } from "./config";
 import { KORPUS } from "./korpus.generated";
+import { mahsulotlarniMoslash } from "./mahsulotlar";
 import { profilniTozalash } from "./profil";
 import { baholash, yetishmayotgan } from "./rules";
 
@@ -40,18 +41,19 @@ export class AgentXatosi extends Error {
 
 export const SALOM: { matn: string; tugmalar: string[] } = {
   matn:
-    "Assalomu alaykum! Men Yetak — kredit yo'lida yordamchingizman. " +
-    "Bir necha savol beraman, keyin halol aytaman: hozir kredit olsa bo'ladimi, nimani tuzatish kerak va qayerga borish kerak. " +
-    "Ma'lumotingiz roziligingizsiz hech kimga berilmaydi.\n\nBoshlaymiz: qanday ish bilan shug'ullanasiz?",
-  tugmalar: ["Do'kon", "Tikuv sexi", "Kafe yoki oshxona", "Xizmat ko'rsatish"],
+    "Assalomu alaykum! Men Yetak — kredit yo'lida yordamchingizman.\n\n" +
+    "Biznesingiz haqida o'z so'zingiz bilan yozing: nima ish qilasiz, qachondan beri, oyiga taxminan qancha tushum, qancha pul va nimaga kerak. " +
+    "Bank rad etgan bo'lsa — sababini ham yozing.",
+  tugmalar: [],
 };
 
 const SYSTEM = `Sen — Yetak, kichik tadbirkorga kredit yo'lida yordam beradigan yordamchisan. Tadbirkor bilan o'zbek tilida (lotin yozuvi), oddiy so'zlar bilan, qisqa gaplashasan. Tadbirkorga "siz" deb murojaat qilasan.
 
 Vazifang:
-1. Tadbirkorning holatini bilib olish: pastdagi maydonlar. Faqat <holat> dagi «yetishmayotgan» ro'yxatidagilarni so'ra. Bir xabarda bitta savol ber (bir-biriga yaqin ikkitasini birlashtirish mumkin).
+1. Avval tadbirkorni eshit: u o'z holatini o'z so'zi bilan aytadi. Uning xabaridan hamma ma'lum maydonni ajratib, birdaniga saqla. Keyin faqat <holat> dagi «yetishmayotgan» ro'yxatidagilarni so'ra — bir xabarda 2–3 tasini birga, qisqa ro'yxat qilib. Tadbirkor aytganini qayta so'rama. Bank rad etgan bo'lsa — sababini eshit va unga e'tibor qarat.
 2. Tadbirkor biror maydon haqida aytishi bilan profilni_saqlash asbobi bilan saqla. Bir nechta maydonni birdan saqlash mumkin. Tadbirkor oldingi javobini tuzatsa — yangisini saqla.
-3. Hamma maydon to'lganda tizim natijani o'zi hisoblaydi (hukm, topilmalar, yo'l xaritasi) va profilni_saqlash javobida qaytaradi. Sen uni oddiy tilda tushuntirasan: hukm, eng muhim 1–2 sabab, birinchi qadam.
+3. Hamma maydon to'lganda tizim natijani o'zi hisoblaydi (hukm, topilmalar, yo'l xaritasi) va profilni_saqlash javobida qaytaradi. Sen uni oddiy tilda tushuntirasan: hukm, eng muhim 1 sabab, birinchi qadam.
+3a. <holat> dagi «mahsulotlar» — tekshirilgan bank mahsulotlari, tadbirkorga mosligi bo'yicha tartiblangan (har shart: ha / yoq / nomalum). Natija chiqqanda korsatish bilan "mahsulotlar" blokini ko'rsat va eng mos mahsulotni bank va nomi bilan ayt: unga nima yetishmayapti (yoq shartlar) va birinchi aniq qadam. "Kafolat so'rang", "ERI oling", "bankka boring" kabi umumiy gap aytma — har maslahat aniq mahsulot va aniq shartga bog'langan bo'lsin. Hech biri mos kelmasa — shuni ochiq ayt va eng yaqinini nima yetishmasligi bilan ko'rsat.
 4. Keyin tadbirkorga yo'l xaritasini bajarishda yordam berasan: savollariga javob berasan, qadamni tushuntirasan.
 
 Javob shakli:
@@ -150,7 +152,7 @@ const TOOLS: Anthropic.Beta.BetaTool[] = [
           type: "array",
           items: {
             type: "string",
-            enum: ["kredit_summa", "oylik_tushum", "pul_oqimi", "garov", "hukm", "yol_xaritasi"],
+            enum: ["kredit_summa", "oylik_tushum", "pul_oqimi", "garov", "hukm", "yol_xaritasi", "mahsulotlar"],
           },
         },
         atama: nullable({
@@ -206,6 +208,8 @@ export function bloklarniYasash(
     else if (t === "garov" && natija && profil.garov_qiymati != null)
       bloklar.push({ tur: "garov", bor: profil.garov_qiymati, kerak: natija.hisob.kerakli_garov });
     else if ((t === "hukm" || t === "yol_xaritasi") && natija) bloklar.push({ tur: t });
+    else if (t === "mahsulotlar" && mahsulotlarniMoslash(profil).length > 0)
+      bloklar.push({ tur: "mahsulotlar", mahsulotlar: mahsulotlarniMoslash(profil) });
     else yoq.push(String(t));
   }
   const a = k?.atama;
@@ -256,6 +260,13 @@ function holatMatni(profil: Profil, bajarilgan: string[]) {
     profil,
     yetishmayotgan: yetishmayotgan(profil),
     natija: natijaQisqa(baholash(profil, bajarilgan)),
+    mahsulotlar: mahsulotlarniMoslash(profil).map((m) => ({
+      bank: m.bank,
+      nom: m.nom,
+      qisqa: m.qisqa,
+      mos: m.mos,
+      shartlar: m.shartlar.map((s) => `${s.holat}: ${s.matn}`),
+    })),
   });
 }
 

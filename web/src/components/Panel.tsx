@@ -1,4 +1,5 @@
 import { Info } from 'lucide-react'
+import { MahsulotlarBlok } from '@/components/Mahsulotlar'
 import { GarovBlok, HukmBlok, PulOqimiBlok, RozilikBlok, YolXaritasiBlok } from '@/components/bloklar'
 import type { Sessiya } from '@/hooks/useSessiya'
 
@@ -46,6 +47,7 @@ export function Panel({ s }: { s: Sessiya }) {
       {natija && (
         <>
           <HukmBlok natija={natija} />
+          {h.mahsulotlar && <MahsulotlarBlok mahsulotlar={h.mahsulotlar} />}
           <YolXaritasiBlok qadamlar={natija.qadamlar} onBelgila={s.qadamBelgila} />
           {profil.oylik_tushum !== undefined && profil.oylik_xarajat !== undefined && (
             <PulOqimiBlok

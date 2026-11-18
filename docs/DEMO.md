@@ -1,6 +1,6 @@
 # Demo ssenariysi
 
-Taqdimot: 19-noyabr 10:00. Jami 4 daqiqa, shundan demo — 2 daqiqa.
+Oraliq tekshiruv: 18-noyabr 15:00. Pitch: **18-noyabr 19:00**. Jami 4 daqiqa, shundan demo — 2 daqiqa.
 Tartib (`VAZIFALAR.md`): muammo → Yetak → farq → demo → pul → jamoa.
 
 Raqamlar faqat `VISION.md`, `TANQID.md`, `MANBALAR.md` dan. Yangi raqam qo'shilsa — manbasi bilan.
@@ -30,17 +30,18 @@ Raqamlar faqat `VISION.md`, `TANQID.md`, `MANBALAR.md` dan. Yangi raqam qo'shils
 
 Qahramon: **non sexi egasi**. Garovi yetmaydi, elektron imzosi yo'q — eng ko'p uchraydigan holat.
 
-**Qadam 1 — holatni bitta xabarda aytadi.** Yozing (yoki nusxa qo'ying):
+**Qadam 1 — tadbirkor o'z so'zi bilan gapiradi.** Agent anketa bermaydi — «biznesingiz haqida o'z so'zingiz bilan yozing» deydi. Yozing (yoki nusxa qo'ying):
 
 ```
 Non sexim bor, YaTT, 14 oydan beri ishlayman. Oyiga 40 mln tushum, 28 mln xarajat. Tandir uchun 120 mln kerak, 24 oyga. Garovga 60 mln lik mashinam bor. Ilgari kredit olmaganman, elektron imzom yo'q.
 ```
 
 Kutish: 10–20 soniya. Shu payt ayting:
-> «Tadbirkor oddiy tilda yozadi. Agent ma'lumotni ajratib oladi, hisobni esa kod qiladi — sun'iy intellekt raqam o'ylab topmaydi.»
+> «11 ta savollik anketa yo'q. Tadbirkor o'z holatini aytadi, agent ma'lumotni ajratib oladi va faqat yetishmaganini so'raydi. Hisobni esa kod qiladi — sun'iy intellekt raqam o'ylab topmaydi.»
 
-Ekranda (2026-11-18 da jonli sinalgan, ~8 soniya): jarayon 11/11, chatda hukm kartasi (**«Hali tayyor emassiz»**), garov o'lchagichi (60 mln bor / 150 mln kerak), yo'l xaritasi, atama izohi. Pul oqimi diagrammasi — «Reja» panelida.
-> «Halol javob: hozir emas. Lekin aniq nima to'sib turganini va birinchi qadamni ko'rsatadi.»
+Ekranda: jarayon, hukm kartasi (**«Hali tayyor emassiz»**), garov o'lchagichi (60 mln bor / 150 mln kerak), yo'l xaritasi, atama izohi. Pul oqimi diagrammasi — «Reja» panelida.
+**«Sizga mos bank mahsulotlari»** kartasi: har mahsulotda ✓ / ✗ / ? shartlar. Birinchisini oching — «Siz olib borasiz» va «Bank o'zi tekshiradi» ro'yxati.
+> «Umumiy maslahat emas: aniq bank, aniq mahsulot. Har shart yonida ✓ yoki ✗ — nima yetishmasligi aniq. Qaysi hujjatni olib borish kerak, qaysini bank o'zi tizimdan oladi — shu yerda.»
 
 **Qadam 2 — manba bilan javob.** Yozing:
 
@@ -66,7 +67,8 @@ Kompyuterdagi `/bank` oynasida «Yangilash» → ariza chiqadi, oching.
 
 ### 4. Farq — 20 soniya
 
-> «TadbirCore arizani qabul qiladi va rad sababini aytadi. Yetak arizadan oldin va rad javobidan keyin ishlaydi, hali tayyor bo'lmaganlarga ham — va haftalar davomida, tadbirkor tomonida turib yetaklaydi. Biz raqib emasmiz: bizdan o'tgan odam TadbirCore'ga tayyor holda boradi.»
+> «TadbirCore arizani qabul qiladi va rad sababini aytadi. Yetak tadbirkor bilan reja tuzadi va qadamlar bajarilguncha qaytib keladi — eslatmalar keyingi bosqichda.
+>  Yetak arizadan oldin va rad javobidan keyin ishlaydi, hali tayyor bo'lmaganlarga ham — va haftalar davomida, tadbirkor tomonida turib yetaklaydi. Biz raqib emasmiz: bizdan o'tgan odam TadbirCore'ga tayyor holda boradi.»
 
 ### 5. Pul — 20 soniya
 

@@ -75,6 +75,26 @@ export interface Natija {
   hisob: Hisob;
 }
 
+export type ShartHolati = "ha" | "yoq" | "nomalum";
+
+/** Bitta bank mahsulotining tadbirkor profiliga mosligi. Hisobni server (mahsulotlar.ts) qiladi. */
+export interface MahsulotMoslik {
+  kalit: string;
+  bank: string;
+  nom: string;
+  /** Qisqa shartlar: "300 mln gacha · 18–24% · 84 oygacha" */
+  qisqa: string;
+  /** Har shart profil bilan solishtirilgan: ha ✓, yoq ✗, nomalum ? */
+  shartlar: { matn: string; holat: ShartHolati }[];
+  /** mos — hamma shart ✓; qisman — ✗ yo'q, lekin ? bor; mos_emas — kamida bitta ✗ */
+  mos: "mos" | "qisman" | "mos_emas";
+  /** Tadbirkor o'zi olib boradigan hujjatlar */
+  hujjatlar: string[];
+  /** Bank davlat tizimi yoki o'z tizimidan o'zi tekshiradi (manbada aytilganlari) */
+  bank_tekshiradi: string[];
+  manba: Manba;
+}
+
 /**
  * Chat ichidagi boy blok. Agent qaysi blokni ko'rsatishni tanlaydi,
  * raqamlarni server profil va rules.ts dan qo'yadi.
@@ -86,7 +106,8 @@ export type Blok =
   | { tur: "garov"; bor: number; kerak: number }
   | { tur: "hukm" }
   | { tur: "yol_xaritasi" }
-  | { tur: "atama"; atama: string; izoh: string };
+  | { tur: "atama"; atama: string; izoh: string }
+  | { tur: "mahsulotlar"; mahsulotlar: MahsulotMoslik[] };
 
 /** Agent javobi tayangan manba (Claude citations). `parcha` — manbadan aynan keltirilgan matn. */
 export interface Iqtibos {
@@ -116,6 +137,8 @@ export interface SessiyaHolati {
   jarayon: { toldirilgan: number; jami: number };
   /** Tadbirkor ma'lumotini bankka ko'rsatishga rozilik berganmi. */
   bank_roziligi: boolean;
+  /** Tekshirilgan bank mahsulotlariga moslik (shakl va summa ma'lum bo'lganda), eng mosi birinchi. */
+  mahsulotlar?: MahsulotMoslik[];
 }
 
 export interface BankArizasi {
