@@ -5,6 +5,7 @@ import {
   BookOpen,
   ChartColumn,
   CheckCircle2,
+  ChevronDown,
   Circle,
   CircleX,
   Clock,
@@ -14,7 +15,7 @@ import {
   ShieldCheck,
   Hand,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { Blok } from '@/lib/bloklar'
 import { foiz, qisqaSom, som } from '@/lib/format'
 
@@ -111,43 +112,69 @@ const DARAJA: Record<Topilma['daraja'], ReactNode> = {
   tosiq: <CircleX size={16} className="mt-0.5 shrink-0 text-destructive" />,
 }
 
+const DARAJA_TARTIB: Record<Topilma['daraja'], number> = { tosiq: 0, ogohlantirish: 1, yaxshi: 2 }
+
+/** Birinchi gap — qisqa ko'rinish uchun. Qolgani «Batafsil» da. */
+const birinchiGap = (m: string) => m.split(/(?<=[.!?])\s+/)[0]
+
 export function HukmBlok({ natija }: { natija: Natija }) {
+  const [batafsil, setBatafsil] = useState(false)
   const h = HUKMLAR[natija.hukm]
+  const muammolar = natija.topilmalar
+    .filter((t) => t.daraja !== 'yaxshi')
+    .sort((a, b) => DARAJA_TARTIB[a.daraja] - DARAJA_TARTIB[b.daraja])
+  const yaxshilar = natija.topilmalar.filter((t) => t.daraja === 'yaxshi')
+  const korinadigan = batafsil ? [...muammolar, ...yaxshilar] : muammolar
+
   return (
     <div className={`rounded-lg border p-3 ${h.rang}`}>
       <p className="flex items-center gap-2 font-display text-lg font-semibold">
         {h.belgi}
         {h.sarlavha}
       </p>
-      <p className="mt-1 text-sm opacity-90">{natija.xulosa}</p>
-      {natija.topilmalar.length > 0 && (
-        <ul className="mt-3 space-y-1.5 rounded-md bg-card p-2.5 text-sm text-foreground">
-          {natija.topilmalar.map((t) => (
+      {(korinadigan.length > 0 || yaxshilar.length > 0) && (
+        <ul className="mt-2 space-y-1.5 rounded-md bg-card p-2.5 text-sm text-foreground">
+          {korinadigan.map((t) => (
             <li key={t.kalit} className="flex gap-2">
               {DARAJA[t.daraja]}
               <span className="min-w-0">
-                {t.matn}
-                {t.taxmin && (
+                {batafsil ? t.matn : birinchiGap(t.matn)}
+                {batafsil && t.taxmin && (
                   <span className="ml-1.5 rounded-full bg-foreground/10 px-1.5 py-0.5 text-[11px] text-muted-foreground">
                     taxmin
                   </span>
                 )}
-                {t.manba && (
+                {batafsil && t.manba && (
                   <a
                     href={t.manba.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="ml-1.5 inline-flex items-center gap-0.5 text-xs text-muted-foreground underline"
+                    className="mt-0.5 flex items-center gap-0.5 text-xs text-muted-foreground underline"
                   >
                     {t.manba.nom}
-                    <ExternalLink size={11} />
+                    <ExternalLink size={11} className="shrink-0" />
                   </a>
                 )}
               </span>
             </li>
           ))}
+          {!batafsil && yaxshilar.length > 0 && (
+            <li className="flex gap-2 text-muted-foreground">
+              <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-success" />
+              {yaxshilar.length} ta talab bajarilgan
+            </li>
+          )}
         </ul>
       )}
+      <button
+        type="button"
+        onClick={() => setBatafsil(!batafsil)}
+        aria-expanded={batafsil}
+        className="mt-2 inline-flex min-h-8 items-center gap-1 text-xs font-medium underline underline-offset-2 opacity-80"
+      >
+        {batafsil ? 'Qisqaroq' : 'Batafsil va manbalar'}
+        <ChevronDown size={14} className={batafsil ? 'rotate-180' : ''} />
+      </button>
     </div>
   )
 }
@@ -196,8 +223,8 @@ export function YolXaritasiBlok({
                 >
                   {q.sarlavha}
                 </p>
-                {!q.bajarildi && q.izoh && <p className="text-xs text-muted-foreground">{q.izoh}</p>}
-                {q.manba && (
+                {joriy && q.izoh && <p className="text-xs text-muted-foreground">{q.izoh}</p>}
+                {joriy && q.manba && (
                   <a href={q.manba.url} target="_blank" rel="noreferrer" className="text-xs text-muted-foreground underline">
                     {q.manba.nom}
                   </a>
