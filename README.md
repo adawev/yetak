@@ -56,7 +56,10 @@ Raqib emasmiz: Yetakdan o'tgan odam TadbirCore'ga tayyor holda boradi.
 
 - Tadbirkor uchun yo'l ko'rsatish — **bepul**.
 - Hujjatlarni biz tayyorlaymiz — 10–20 ming so'm.
-- Bank faqat kredit berilganda tayyor mijoz uchun haq to'laydi. Hali hech bir bank tasdiqlamagan.
+- Ishonchnoma bilan to'liq yig'ish — tadbirkor notarial ishonchnoma beradi, hujjatlarni uning nomidan biz olamiz (narx pilotda).
+- Bank faqat kredit berilganda tayyor mijoz uchun haq to'laydi (modelda 1%). Hali hech bir bank tasdiqlamagan.
+
+Unit-ekonomika (faraz, pilotda o'lchanadi): LLM xarajati 1 xabar ≈ 360 so'm (o'lchangan), CAC 36 000, LTV ≈ 116 000, LTV/CAC ≈ 3,2. Hisob va manbalar: [docs/PITCH-RAQAMLAR.md](docs/PITCH-RAQAMLAR.md)
 
 ## Ishonch qoidalari
 
