@@ -1,6 +1,6 @@
 # Pitch dek raqamlari: manba va faraz
 
-Pitch dek (`Yetak-pitch-dek.pdf`) Sequoia tartibida: maqsad, muammo, yechim, nega hozir, bozor, raqobat, mahsulot, biznes model, jamoa, moliya, vizyon. Har raqam shu yerda: **manba** (tekshirilgan) yoki **faraz** (pilotda o'lchanadi).
+Pitch dek (`Yetak-pitch-dek.pdf`, 12 slayd) Sequoia tartibida: muammo, yechim, ishonchnoma bilan yig'ish, nega hozir, bozor, raqobat, mahsulot, biznes model, unit-ekonomika, jamoa, moliya va vizyon. Har raqam shu yerda: **manba** (tekshirilgan) yoki **faraz** (pilotda o'lchanadi).
 
 ## Manbali raqamlar
 
