@@ -37,8 +37,8 @@ export const MANBALAR = {
     url: "https://gov.uz/oz/bv-jizzax/news/view/207503",
   },
   stavka: {
-    nom: "UzDaily — milliy valyutadagi kreditlar o'rtacha stavkasi",
-    url: "https://www.uzdaily.uz/en/average-loan-rate-in-uzbekistan-falls-to-204/",
+    nom: "Markaziy bank — yuridik shaxslarga aylanma mablag' uchun o'rtacha stavka (21.09.2026)",
+    url: "https://cbu.uz/upload/medialibrary/9ca/bvticcmgifan5k0kcyg11nyajwjta1ov/Foiz_stavkalar_21_09_2026.pdf",
   },
   tadbircore: {
     nom: "UzA — TadbirCore: turli banklar takliflari bir joyda",
@@ -58,8 +58,8 @@ export const QOIDA = {
   mikrokreditMax: 200_000_000,
   /** «Biznes start»: 200 mln so'mgacha garovsiz — gov.uz, to'liq shartlari topilmadi. */
   biznesStartMax: 200_000_000,
-  /** Milliy valyutadagi kreditlar o'rtacha stavkasi, 2026-sentabr — UzDaily. Taxminiy. */
-  yillikStavka: 20.4,
+  /** Yuridik shaxslar, aylanma mablag': o'rtacha 23,1% (banklar bo'yicha 20,5–33,1%) — Markaziy bank, 21.09.2026. Har mijozga alohida. */
+  yillikStavka: 23.1,
   /** Bizning ehtiyot chegaramiz (bank qoidasi emas): to'lov foydaning yarmidan oshmasin. */
   tolovFoydaUlushiMax: 0.5,
 };
@@ -381,21 +381,32 @@ export function baholash(
     });
   }
 
-  // --- Hukm ---
+  // Umumiy qoidalar o'tsa ham, tekshirilgan mahsulotlardan hech biri to'g'ri kelmasa — «tayyor» demaymiz.
+  if (!olmangSababi && mahsulotlar.length > 0 && !mosYol) {
+    topilmalar.push({
+      kalit: "mahsulot",
+      daraja: "tosiq",
+      matn: "Biz tekshirgan bank mahsulotlaridan hech biri hozir sizga to'liq to'g'ri kelmaydi. Kartada har birida nima yetishmasligi ko'rsatilgan.",
+    });
+  }
+
+  // --- Hukm --- (hammasi tadbirkor aytgan raqamlarga tayanadi — matnda shuni aytamiz)
   const tosiqlar = topilmalar.filter((t) => t.daraja === "tosiq");
   let hukm: Hukm;
   let xulosa: string;
   if (olmangSababi) {
     hukm = "olmang";
-    xulosa = `Hozir qarz olmang: ${olmangSababi}. Avval shuni tuzating, keyin qayta tekshiramiz.`;
+    xulosa = `Siz aytgan raqamlarga ko'ra, hozircha ariza bermang: ${olmangSababi}. Avval shuni tuzating, keyin qayta tekshiramiz.`;
   } else if (tosiqlar.length > 0) {
     hukm = "hali_emas";
-    xulosa = `Hali tayyor emassiz: ${tosiqlar.length} ta to'siq bor. Yo'l xaritasidagi qadamlarni bajarsangiz, ariza berishingiz mumkin.`;
+    xulosa = `Siz aytgan raqamlarga ko'ra, hali tayyor emassiz: ${tosiqlar.length} ta to'siq bor. Yo'l xaritasidagi qadamlarni bajarsangiz, ariza berishingiz mumkin.`;
   } else {
     hukm = "tayyor";
-    xulosa = mosYol
-      ? `Sizga mos yo'l bor: ${yol}. Hujjatlarni yig'sangiz, ariza berasiz. Qarorni bank qiladi.`
-      : "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi.";
+    xulosa = !mosYol
+      ? "Arizangiz tayyor. Endi bankka yoki TadbirCore'ga ariza berishingiz mumkin. Qarorni bank qiladi."
+      : mosYol.mos === "mos"
+        ? `Siz aytgan raqamlarga ko'ra, sizga mos yo'l bor: ${yol}. Hujjatlarni yig'sangiz, ariza berasiz. Qarorni bank qiladi.`
+        : `Siz aytgan raqamlarga ko'ra, eng yaqin yo'l: ${yol}. Ba'zi shartlarni bankdan aniqlash kerak — kartada «?» bilan belgilangan. Qarorni bank qiladi.`;
   }
 
   if (hukm !== "olmang") {

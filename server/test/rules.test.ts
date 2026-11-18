@@ -45,7 +45,7 @@ describe("baholash", () => {
   it("hisob: garov 125%, to'lov annuitet", () => {
     const n = baholash(NAMUNALAR.tayyor)!;
     expect(n.hisob.kerakli_garov).toBe(125_000_000);
-    expect(n.hisob.oylik_tolov).toBe(Math.round(oylikTolov(100_000_000, 20.4, 24)));
+    expect(n.hisob.oylik_tolov).toBe(Math.round(oylikTolov(100_000_000, 23.1, 24)));
     expect(n.hisob.oylik_tolov).toBeGreaterThan(100_000_000 / 24);
   });
 

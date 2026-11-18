@@ -30,6 +30,13 @@ describe("natija va mahsulot bir-biriga zid emas", () => {
     expect(n.qadamlar.some((q) => q.kalit === "kafolat")).toBe(false);
   });
 
+  it("mahsulot faqat qisman mos — «tayyor», lekin shartlarni bankdan aniqlash kerakligi aytiladi", () => {
+    const n = natijaHisobla({ ...nonvoy, faoliyat_oy: 8, kredit_summa: 50_000_000, garov_qiymati: 80_000_000 })!;
+    expect(n.hukm).toBe("tayyor");
+    expect(n.xulosa).toContain("bankdan aniqlash");
+    expect(n.xulosa).toContain("Siz aytgan raqamlarga ko'ra");
+  });
+
   it("zarar bilan ishlasa — mahsulot bo'lsa ham «olmang»", () => {
     const n = natijaHisobla({ ...nonvoy, oylik_xarajat: 45_000_000 })!;
     expect(n.hukm).toBe("olmang");
