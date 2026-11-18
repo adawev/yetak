@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api } from '@/lib/api'
 import type { BoySessiya } from '@/lib/bloklar'
+import { hujjatniTayyorla } from '@/lib/rasm'
 
 const KALIT = 'yetak.sessiya_id'
 
@@ -144,7 +145,7 @@ export function useSessiya() {
       hujjatXatosi(kalit, null)
       setYuklanayotgan((y) => ({ ...y, [kalit]: true }))
       try {
-        setHolat(await api.hujjatYukla(holat.id, kalit, fayl))
+        setHolat(await api.hujjatYukla(holat.id, kalit, await hujjatniTayyorla(fayl)))
       } catch (e) {
         hujjatXatosi(kalit, xatoMatni(e))
       } finally {

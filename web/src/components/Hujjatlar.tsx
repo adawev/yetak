@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
 import { papkaPdfUrl } from '@/lib/api'
+import { PDF_KATTA, RASM_XOM_MAKS, rasmmi } from '@/lib/rasm'
 
 export const hujjatlarHodisasi = 'yetak:hujjatlar'
 export const PAPKA_ID = 'hujjatlar-papka'
@@ -24,7 +25,6 @@ export const PAPKA_ID = 'hujjatlar-papka'
 /** Chatdagi kartadan "Hujjatlar" bo'limini ochish (telefonda yorliq, kompyuterda panelga o'tish). */
 export const hujjatlarniOch = () => window.dispatchEvent(new Event(hujjatlarHodisasi))
 
-const RUXSAT = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
 const MAKS = 10 * 1024 * 1024
 
 export interface HujjatAmallari {
@@ -37,8 +37,9 @@ export interface HujjatAmallari {
 }
 
 function faylXatosi(f: File): string | null {
-  if (!RUXSAT.includes(f.type)) return "Faqat rasm (JPG, PNG, WebP) yoki PDF yuklash mumkin."
-  if (f.size > MAKS) return `Fayl katta (${(f.size / 1024 / 1024).toFixed(1)} MB). 10 MB dan oshmasin.`
+  if (f.type !== 'application/pdf' && !rasmmi(f)) return "Faqat rasm (JPG, PNG, WebP) yoki PDF yuklash mumkin."
+  if (f.type === 'application/pdf' && f.size > MAKS) return PDF_KATTA
+  if (f.size > RASM_XOM_MAKS) return `Fayl katta (${(f.size / 1024 / 1024).toFixed(1)} MB). 25 MB dan oshmasin.`
   return null
 }
 
