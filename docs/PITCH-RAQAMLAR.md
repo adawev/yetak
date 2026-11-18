@@ -19,7 +19,7 @@ Pitch dek (`Yetak-pitch-dek.pdf`, 12 slayd) Sequoia tartibida: muammo, yechim, i
 | Faraz | Qiymat |
 |---|---|
 | Papkani to'ldiradi | 40 |
-| Hujjat xizmatini oladi (15 000 so'm) | 12 |
+| Hujjatni bizga yig'dirtiradi (50–100 ming, o'rtacha 75 000 so'm) | 12 |
 | Kredit oladi | 8 |
 | O'rtacha kredit | 100 mln so'm |
 | Bank komissiyasi | 1% (1 mln so'm) |
@@ -29,12 +29,12 @@ Pitch dek (`Yetak-pitch-dek.pdf`, 12 slayd) Sequoia tartibida: muammo, yechim, i
 
 ## Hisob
 
-- Daromad / tadbirkor: (8 × 1 000 000 + 12 × 15 000) / 100 = **81 800 so'm**
-- LLM / tadbirkor: (40 × 25 + 60 × 5) × 360 / 100 = **4 680 so'm** (daromadning ~6%)
-- LTV: (81 800 − 4 680) × 1,5 = **115 680 ≈ 116 000 so'm**
-- LTV / CAC: 116 000 / 36 000 = **3,2**
-- Sezgirlik: bank fiks 200 000 so'm to'lasa, LTV ≈ 19 700 → LTV/CAC ≥ 3 uchun CAC ≤ 6 560 so'm (faqat bepul kanallar).
-- 3 yil (maqsad): 5 000 → 30 000 → 120 000 tadbirkor; daromad 0,41 → 2,45 → 9,82 mlrd so'm. Jamoa xarajati kirmagan.
+- Daromad / tadbirkor: (8 × 1 000 000 + 12 × 75 000) / 100 = **89 000 so'm**
+- LLM / tadbirkor: (40 × 25 + 60 × 5) × 360 / 100 = **4 680 so'm** (daromadning ~5%)
+- LTV: (89 000 − 4 680) × 1,5 = **126 480 ≈ 126 000 so'm**
+- LTV / CAC: 126 000 / 36 000 = **3,5**
+- Sezgirlik: bank fiks 200 000 so'm to'lasa, LTV ≈ 30 500 → LTV/CAC ≥ 3 uchun CAC ≤ 10 000 so'm (faqat bepul kanallar).
+- 3 yil (maqsad): 5 000 → 30 000 → 120 000 tadbirkor; daromad 0,45 → 2,67 → 10,68 mlrd so'm. Jamoa xarajati kirmagan.
 
 ## Topilmadi / tekshirish kerak
 
